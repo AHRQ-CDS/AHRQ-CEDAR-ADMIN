@@ -1,0 +1,10 @@
+# DB config specific to running in the CI environment
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  host: localhost
+  database: cedar_admin_test
+  username: postgres
+  password: postgres

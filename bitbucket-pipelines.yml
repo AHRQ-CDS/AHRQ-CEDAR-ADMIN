@@ -7,20 +7,30 @@ pipelines:
     - parallel:
       - step:
           name: Test
+          caches:
+            - bundler
+            - yarn
+          services:
+            - postgres
           script:
+            - apt-get update && apt-get install -y nodejs npm && npm install -g yarn
+            - cp config/database.ci.yml config/database.yml
+            - bundle config set path vendor
             - bundle install
+            - yarn install
+            - RAILS_ENV=test bundle exec rails db:create
             - bundle exec rake
-      - step:
-          name: Rubocop
-          script:
-            - bundle install
-            - rubocop
-      - step:
-          name: Brakeman
-          script:
-            - bundle install
-            - brakeman
-      - step:
-          name: Lint code
-          script:
-            - ruby -wc **/*.rb
+            - bundle exec rubocop
+            - bundle exec brakeman
+
+definitions:
+  caches:
+    bundler: ./vendor
+    yarn: ./node_modules
+  services:
+    postgres:
+      image: postgres
+      variables:
+        POSTGRES_DB: 'cedar_admin_test'
+        POSTGRES_USER: 'postgres'
+        POSTGRES_PASSWORD: 'postgres'
