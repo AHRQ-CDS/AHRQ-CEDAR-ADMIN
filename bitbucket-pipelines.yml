@@ -1,6 +1,6 @@
 #  Run application tests, rubocop style checking, and brakeman security evaluation
 
-image: ruby:2.7
+image: ruby:2.7.1
 
 pipelines:
   default:
