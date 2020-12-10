@@ -1,0 +1,26 @@
+#  Run application tests, rubocop style checking, and brakeman security evaluation
+
+image: ruby:2.7
+
+pipelines:
+  default:
+    - parallel:
+      - step:
+          name: Test
+          script:
+            - bundle install
+            - bundle exec rake
+      - step:
+          name: Rubocop
+          script:
+            - bundle install
+            - rubocop
+      - step:
+          name: Brakeman
+          script:
+            - bundle install
+            - brakeman
+      - step:
+          name: Lint code
+          script:
+            - ruby -wc **/*.rb
