@@ -2,12 +2,12 @@
 
 ## Prerequisites
 
-Ruby 2.7.1 or later
-Bundler
-Node.js
-Yarn
-PostgreSQL Database
-Docker (if building Docker image)
+* Ruby 2.7.1 or later
+* Bundler
+* Node.js
+* Yarn
+* PostgreSQL Database
+* Docker (if building Docker image)
 
 ## Install
 
