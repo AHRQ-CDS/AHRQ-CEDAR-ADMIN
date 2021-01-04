@@ -48,12 +48,12 @@ module Importers
         artifact = Artifact.find_or_initialize_by(
           remote_identifier: "#{Repository::USPSTF}_GR_#{id}"
         )
-        # TODO: clinicalUrl and otherUrl fields in JSON are not always resolvable
+        # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
         artifact.update!(
           title: recommendation['title'],
           repository: uspstf,
           description: ActionView::Base.full_sanitizer.sanitize(recommendation['clinical']),
-          url: recommendation['clinicalUrl'],
+          url: "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/#{recommendation['uspstfAlias']}",
           published: Date.new(recommendation['topicYear'].to_i)
         )
         association = ArtifactTypeAssociation.find_or_initialize_by(
