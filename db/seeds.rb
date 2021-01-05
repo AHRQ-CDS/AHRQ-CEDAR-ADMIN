@@ -7,5 +7,3 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 Repository.create(name: 'USPSTF', url: 'https://www.uspreventiveservicestaskforce.org/uspstf/')
-ArtifactType.create(name: ArtifactType::RECOMMENDATION, description: 'Recommendation')
-ArtifactType.create(name: ArtifactType::TOOL, description: 'Tool')

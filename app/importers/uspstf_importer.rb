@@ -18,7 +18,6 @@ class UspstfImporter
 
   def update_db!
     uspstf = Repository.where(name: 'USPSTF').first_or_create!
-    recommendation_type = ArtifactType.recommendation!
 
     # Extract specific recommendations
     @json_data['specificRecommendations'].each do |recommendation|
@@ -28,7 +27,7 @@ class UspstfImporter
         title: recommendation['title'],
         repository: uspstf,
         description: ActionView::Base.full_sanitizer.sanitize(recommendation['text']),
-        artifact_types: [recommendation_type]
+        artifact_type: 'specific_recommendation'
       )
     end
 
@@ -42,19 +41,18 @@ class UspstfImporter
         description: ActionView::Base.full_sanitizer.sanitize(recommendation['clinical']),
         url: "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/#{recommendation['uspstfAlias']}",
         published: Date.new(recommendation['topicYear'].to_i),
-        artifact_types: [recommendation_type]
+        artifact_type: 'general_recommendation'
       )
     end
 
     # Extract tools
-    tool_type = ArtifactType.tool!
     @json_data['tools'].each_pair do |id, tool|
       Artifact.update_or_create!(
         "USPSTF_TOOL_#{id}",
         title: tool['title'],
         repository: uspstf,
         url: tool['url'],
-        artifact_types: [tool_type]
+        artifact_type: 'tool'
       )
     end
   end

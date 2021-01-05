@@ -4,8 +4,12 @@
 # indexed by CEDAR.
 class Artifact < ApplicationRecord
   belongs_to :repository
-  has_many :artifact_type_associations, dependent: :destroy
-  has_many :artifact_types, through: :artifact_type_associations
+
+  enum artifact_type: {
+    specific_recommendation: 'specific_recommendation',
+    general_recommendation: 'general_recommendation',
+    tool: 'tool'
+  }
 
   def self.update_or_create!(remote_identifier, attributes)
     a = find_or_initialize_by(

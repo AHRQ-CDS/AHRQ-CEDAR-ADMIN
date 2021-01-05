@@ -5,6 +5,8 @@ class CreateArtifacts < ActiveRecord::Migration[6.0]
       t.text :description
       t.references :repository, null: false, foreign_key: true
       t.string :url
+      t.string :remote_identifier
+      t.string :artifact_type
       t.date :published
 
       t.timestamps
