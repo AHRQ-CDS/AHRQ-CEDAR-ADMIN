@@ -6,6 +6,6 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-Repository.create(name: Repository::USPSTF, url: 'https://www.uspreventiveservicestaskforce.org/uspstf/')
+Repository.create(name: 'USPSTF', url: 'https://www.uspreventiveservicestaskforce.org/uspstf/')
 ArtifactType.create(name: ArtifactType::RECOMMENDATION, description: 'Recommendation')
 ArtifactType.create(name: ArtifactType::TOOL, description: 'Tool')

@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 require 'test_helper'
-require_relative '../../lib/importers/uspstf'
 
 class UspstfImporterTest < ActiveSupport::TestCase
   test 'import USPSTF data dump into the database' do
     # Import sample data
-    uspstf_importer = Importers::UspstfRepositoryImporter.new(file_fixture('uspstf_sample.json').read)
+    uspstf_importer = UspstfImporter.new(file_fixture('uspstf_sample.json').read)
     uspstf_importer.update_db!
 
     # Check example specific recommendation
