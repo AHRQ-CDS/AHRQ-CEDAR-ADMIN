@@ -15,6 +15,6 @@ module CedarAdmin
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
-    config.uspstf_url = 'https://data.uspreventiveservicestaskforce.org/api/json?key=11382f07516445c9f7001e41bda47827'
+    config.uspstf_url = "https://data.uspreventiveservicestaskforce.org/api/json?key=#{ENV['CEDAR_USPSTF_API_KEY']}"
   end
 end

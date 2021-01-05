@@ -31,6 +31,7 @@ definitions:
     postgres:
       image: postgres
       variables:
+        CEDAR_USPSTF_API_KEY: 'DUMMY-KEY'
         POSTGRES_DB: 'cedar_admin_test'
         POSTGRES_USER: 'postgres'
         POSTGRES_PASSWORD: 'postgres'
