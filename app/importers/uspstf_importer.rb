@@ -27,7 +27,7 @@ class UspstfImporter
         title: recommendation['title'],
         repository: uspstf,
         description: ActionView::Base.full_sanitizer.sanitize(recommendation['text']),
-        artifact_type: 'specific_recommendation'
+        artifact_type: :specific_recommendation
       )
     end
 
@@ -41,7 +41,7 @@ class UspstfImporter
         description: ActionView::Base.full_sanitizer.sanitize(recommendation['clinical']),
         url: "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/#{recommendation['uspstfAlias']}",
         published: Date.new(recommendation['topicYear'].to_i),
-        artifact_type: 'general_recommendation'
+        artifact_type: :general_recommendation
       )
     end
 
@@ -52,7 +52,7 @@ class UspstfImporter
         title: tool['title'],
         repository: uspstf,
         url: tool['url'],
-        artifact_type: 'tool'
+        artifact_type: :tool
       )
     end
   end
