@@ -22,63 +22,45 @@ module Importers
     end
 
     def update_db!
-      uspstf = Repository.uspstf!
+      uspstf = Repository.where(name: 'USPSTF').first_or_create!
       recommendation_type = ArtifactType.recommendation!
 
       # Extract specific recommendations
       @json_data['specificRecommendations'].each do |recommendation|
-        artifact = Artifact.find_or_initialize_by(
-          remote_identifier: "#{Repository::USPSTF}_SR_#{recommendation['id']}"
-        )
         # TODO: publish date and url are not explicit fields in the JSON
-        artifact.update!(
+        Artifact.update_or_create!(
+          "USPSTF_SR_#{recommendation['id']}",
           title: recommendation['title'],
           repository: uspstf,
-          description: ActionView::Base.full_sanitizer.sanitize(recommendation['text'])
+          description: ActionView::Base.full_sanitizer.sanitize(recommendation['text']),
+          artifact_types: [recommendation_type]
         )
-        association = ArtifactTypeAssociation.find_or_initialize_by(
-          artifact: artifact,
-          artifact_type: recommendation_type
-        )
-        association.save!
       end
 
       # Extract general recommendations
       @json_data['generalRecommendations'].each_pair do |id, recommendation|
-        artifact = Artifact.find_or_initialize_by(
-          remote_identifier: "#{Repository::USPSTF}_GR_#{id}"
-        )
         # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
-        artifact.update!(
+        Artifact.update_or_create!(
+          "USPSTF_GR_#{id}",
           title: recommendation['title'],
           repository: uspstf,
           description: ActionView::Base.full_sanitizer.sanitize(recommendation['clinical']),
           url: "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/#{recommendation['uspstfAlias']}",
-          published: Date.new(recommendation['topicYear'].to_i)
+          published: Date.new(recommendation['topicYear'].to_i),
+          artifact_types: [recommendation_type]
         )
-        association = ArtifactTypeAssociation.find_or_initialize_by(
-          artifact: artifact,
-          artifact_type: recommendation_type
-        )
-        association.save!
       end
 
       # Extract tools
       tool_type = ArtifactType.tool!
       @json_data['tools'].each_pair do |id, tool|
-        artifact = Artifact.find_or_initialize_by(
-          remote_identifier: "#{Repository::USPSTF}_TOOL_#{id}"
-        )
-        artifact.update!(
+        Artifact.update_or_create!(
+          "USPSTF_TOOL_#{id}",
           title: tool['title'],
           repository: uspstf,
-          url: tool['url']
+          url: tool['url'],
+          artifact_types: [tool_type]
         )
-        association = ArtifactTypeAssociation.find_or_initialize_by(
-          artifact: artifact,
-          artifact_type: tool_type
-        )
-        association.save!
       end
     end
   end
