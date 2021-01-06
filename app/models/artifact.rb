@@ -12,9 +12,6 @@ class Artifact < ApplicationRecord
   }
 
   def self.update_or_create!(remote_identifier, attributes)
-    a = find_or_initialize_by(
-      remote_identifier: remote_identifier
-    )
-    a.update!(attributes)
+    find_or_initialize_by(remote_identifier: remote_identifier).update!(attributes)
   end
 end

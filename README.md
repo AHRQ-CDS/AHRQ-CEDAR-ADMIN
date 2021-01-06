@@ -18,6 +18,7 @@ bundle install
 yarn install
 rails db:create
 rails db:migrate
+rails db:seed
 ```
 
 ## Test
@@ -26,6 +27,14 @@ To run tests, run
 
 ```
 rails test
+```
+
+## Importing Data from Repositories
+
+To import data from the US Preventative Services Task Force, run
+
+```
+rake import:uspstf
 ```
 
 ## Docker
