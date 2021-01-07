@@ -23,10 +23,10 @@ class UspstfImporter
     @json_data['specificRecommendations'].each do |recommendation|
       # TODO: publish date and url are not explicit fields in the JSON
       Artifact.update_or_create!(
-        "USPSTF_SR_#{recommendation['id']}",
+        "USPSTF-SR-#{recommendation['id']}",
         title: recommendation['title'],
         repository: uspstf,
-        description: ActionView::Base.full_sanitizer.sanitize(recommendation['text']),
+        description: ActionView::Base.full_sanitizer.sanitize(recommendation['text']).squish,
         artifact_type: :specific_recommendation
       )
     end
@@ -35,10 +35,10 @@ class UspstfImporter
     @json_data['generalRecommendations'].each_pair do |id, recommendation|
       # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
       Artifact.update_or_create!(
-        "USPSTF_GR_#{id}",
+        "USPSTF-GR-#{id}",
         title: recommendation['title'],
         repository: uspstf,
-        description: ActionView::Base.full_sanitizer.sanitize(recommendation['clinical']),
+        description: ActionView::Base.full_sanitizer.sanitize(recommendation['clinical']).squish,
         url: "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/#{recommendation['uspstfAlias']}",
         published: Date.new(recommendation['topicYear'].to_i),
         artifact_type: :general_recommendation
@@ -48,7 +48,7 @@ class UspstfImporter
     # Extract tools
     @json_data['tools'].each_pair do |id, tool|
       Artifact.update_or_create!(
-        "USPSTF_TOOL_#{id}",
+        "USPSTF-TOOL-#{id}",
         title: tool['title'],
         repository: uspstf,
         url: tool['url'],
