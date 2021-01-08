@@ -21,8 +21,12 @@ RUN update-ca-certificates
 #RUN yarn install
 
 COPY . .
+RUN rm -r node_modules log tmp
 
 RUN yarn install
+
+# TODO: We will likely want to precompile at some point, but this currently fails
+# RUN bundle exec rake assets:precompile
 
 ENV RAILS_LOG_TO_STDOUT true
 
@@ -31,5 +35,5 @@ EXPOSE 3000
 # This image can be used both to run the server and background job;
 # the actual commands are specified in the docker-compose.yml file
 
-# CMD ["rails", "server", "--binding", "0.0.0.0"]
+# CMD ["bundle", "exec", "rails", "server", "--environment", "production"]
 # CMD bundle exec whenever --update-crontab && cron -f -L15

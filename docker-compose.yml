@@ -1,12 +1,26 @@
 version: '3'
 services:
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      # TODO: Temporary until production config is set up
+      POSTGRES_DB: 'cedar_admin_production'
+      POSTGRES_USER: 'cedar_admin'
+      POSTGRES_PASSWORD: ${CEDAR_ADMIN_DATABASE_PASSWORD}
   web:
     build: .
     env_file: .env
-    command: ["bundle", "exec", "rails", "server", "--binding", "0.0.0.0"]
+    # TODO: We likely want a way to handle migrations automatically
+    command: ["bundle", "exec", "rails", "server", "--environment", "production"]
     ports:
       - "3000:3000"
+    depends_on:
+      - db
   worker:
     build: .
     env_file: .env
     command: ["sh", "-c", "bundle exec whenever --update-crontab && cron -f -L15"]
+    depends_on:
+      - db
