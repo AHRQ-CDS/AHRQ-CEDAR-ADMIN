@@ -1,11 +1,11 @@
 FROM ruby:2.7.1
 
-RUN apt-get update && apt-get install -y nodejs npm && npm install -g yarn
+RUN apt-get update && apt-get install -y nodejs npm cron && npm install -g yarn
 
 WORKDIR /app
 
 # Copy dependency config first for better build caching
-COPY Gemfile Gemfile.lock .
+COPY Gemfile Gemfile.lock ./
 RUN gem install bundler
 RUN bundle install
 
@@ -25,5 +25,11 @@ COPY . .
 RUN yarn install
 
 ENV RAILS_LOG_TO_STDOUT true
+
 EXPOSE 3000
-CMD ["rails", "server", "--binding", "0.0.0.0"]
+
+# This image can be used both to run the server and background job;
+# the actual commands are specified in the docker-compose.yml file
+
+# CMD ["rails", "server", "--binding", "0.0.0.0"]
+# CMD bundle exec whenever --update-crontab && cron -f -L15
