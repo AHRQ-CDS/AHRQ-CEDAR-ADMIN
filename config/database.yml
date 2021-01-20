@@ -80,6 +80,7 @@ test:
 #
 production:
   <<: *default
+  host: db
   database: cedar_admin_production
   username: cedar_admin
   password: <%= ENV['CEDAR_ADMIN_DATABASE_PASSWORD'] %>
