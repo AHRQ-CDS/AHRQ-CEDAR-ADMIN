@@ -19,6 +19,11 @@ pipelines:
             - bundle install
             - yarn install
             - export CEDAR_USPSTF_API_KEY=DUMMY-KEY
+            - export CEDAR_CDS_CONNECT_BASIC_AUTH_USERNAME=DUMMY-KEY
+            - export CEDAR_CDS_CONNECT_BASIC_AUTH_PASSWORD=DUMMY-KEY
+            - export CEDAR_CDS_CONNECT_USERNAME=DUMMY-KEY
+            - export CEDAR_CDS_CONNECT_PASSWORD=DUMMY-KEY
+            - export CEDAR_CDS_CONNECT_BASE_URL=DUMMY-KEY
             - RAILS_ENV=test bundle exec rails db:create
             - bundle exec rake
             - bundle exec rubocop

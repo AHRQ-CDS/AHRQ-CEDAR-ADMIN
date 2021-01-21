@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'json'
-require 'net/http'
-
 # Functionality for importing data from the USPSTF repository
 class UspstfImporter
   def self.download_and_update!
@@ -22,6 +19,7 @@ class UspstfImporter
 
     # Extract general recommendations
     @json_data['generalRecommendations'].each_pair do |id, recommendation|
+      keywords = recommendation['keywords']&.split('|') || []
       # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
       artifact_url = "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/#{recommendation['uspstfAlias']}"
       Artifact.update_or_create!(
@@ -30,13 +28,16 @@ class UspstfImporter
         repository: uspstf,
         description: ActionView::Base.full_sanitizer.sanitize(recommendation['clinical']).squish,
         url: artifact_url,
-        published: Date.new(recommendation['topicYear'].to_i),
-        artifact_type: :general_recommendation
+        published_on: Date.new(recommendation['topicYear'].to_i),
+        artifact_type: 'General Recommendation',
+        keywords: keywords
       )
       general_rec_urls[id] = artifact_url
     end
 
     # Extract specific recommendations
+    # TODO: consider whether specific recommendations should be standalone entries; alternately, we may wish
+    # to only have entries for the specific recommendations because of the metadata
     @json_data['specificRecommendations'].each do |recommendation|
       # TODO: publish date and url are not explicit fields in the JSON
       Artifact.update_or_create!(
@@ -45,7 +46,7 @@ class UspstfImporter
         repository: uspstf,
         description: ActionView::Base.full_sanitizer.sanitize(recommendation['text']).squish,
         url: general_rec_urls[recommendation['general'].to_s],
-        artifact_type: :specific_recommendation
+        artifact_type: 'Specific Recommendation'
       )
     end
 
@@ -56,7 +57,7 @@ class UspstfImporter
         title: tool['title'],
         repository: uspstf,
         url: tool['url'],
-        artifact_type: :tool
+        artifact_type: 'Tool'
       )
     end
   end

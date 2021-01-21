@@ -30,6 +30,10 @@ gem 'whenever'
 # Read environment variables from the .env file
 gem 'dotenv-rails'
 
+# Use faraday for HTTP request sessions where cookies need to be managed
+gem 'faraday'
+gem 'faraday-cookie_jar'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

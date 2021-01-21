@@ -14,7 +14,7 @@ class UspstfImporterTest < ActiveSupport::TestCase
     artifact = artifacts.first
     assert_equal('Cervical Cancer: Screening --Women aged 21 to 65 years', artifact.title)
     assert_equal('USPSTF', artifact.repository.name)
-    assert(artifact.specific_recommendation?)
+    assert_equal('Specific Recommendation', artifact.artifact_type)
 
     # Check example general recommendation
     artifacts = Artifact.where(remote_identifier: 'USPSTF-GR-38')
@@ -22,7 +22,7 @@ class UspstfImporterTest < ActiveSupport::TestCase
     artifact = artifacts.first
     assert_equal('Rh (D) Incompatibility', artifact.title)
     assert_equal('USPSTF', artifact.repository.name)
-    assert(artifact.general_recommendation?)
+    assert_equal('General Recommendation', artifact.artifact_type)
 
     # Check example tool
     artifacts = Artifact.where(remote_identifier: 'USPSTF-TOOL-248')
@@ -30,7 +30,7 @@ class UspstfImporterTest < ActiveSupport::TestCase
     artifact = artifacts.first
     assert_equal('5 A\'s Behavioral Counseling Framework - Tobacco Cessation', artifact.title)
     assert_equal('USPSTF', artifact.repository.name)
-    assert(artifact.tool?)
+    assert_equal('Tool', artifact.artifact_type)
 
     # Import sample data a second time
     uspstf_importer.update_db!
