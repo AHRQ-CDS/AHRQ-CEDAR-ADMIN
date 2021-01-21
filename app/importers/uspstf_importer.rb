@@ -18,6 +18,23 @@ class UspstfImporter
 
   def update_db!
     uspstf = Repository.where(name: 'USPSTF').first_or_create!
+    general_rec_urls = {}
+
+    # Extract general recommendations
+    @json_data['generalRecommendations'].each_pair do |id, recommendation|
+      # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
+      artifact_url = "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/#{recommendation['uspstfAlias']}"
+      Artifact.update_or_create!(
+        "USPSTF-GR-#{id}",
+        title: recommendation['title'],
+        repository: uspstf,
+        description: ActionView::Base.full_sanitizer.sanitize(recommendation['clinical']).squish,
+        url: artifact_url,
+        published: Date.new(recommendation['topicYear'].to_i),
+        artifact_type: :general_recommendation
+      )
+      general_rec_urls[id] = artifact_url
+    end
 
     # Extract specific recommendations
     @json_data['specificRecommendations'].each do |recommendation|
@@ -27,21 +44,8 @@ class UspstfImporter
         title: recommendation['title'],
         repository: uspstf,
         description: ActionView::Base.full_sanitizer.sanitize(recommendation['text']).squish,
+        url: general_rec_urls[recommendation['general'].to_s],
         artifact_type: :specific_recommendation
-      )
-    end
-
-    # Extract general recommendations
-    @json_data['generalRecommendations'].each_pair do |id, recommendation|
-      # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
-      Artifact.update_or_create!(
-        "USPSTF-GR-#{id}",
-        title: recommendation['title'],
-        repository: uspstf,
-        description: ActionView::Base.full_sanitizer.sanitize(recommendation['clinical']).squish,
-        url: "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/#{recommendation['uspstfAlias']}",
-        published: Date.new(recommendation['topicYear'].to_i),
-        artifact_type: :general_recommendation
       )
     end
 
