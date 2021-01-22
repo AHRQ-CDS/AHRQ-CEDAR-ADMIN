@@ -22,9 +22,13 @@ ActiveRecord::Schema.define(version: 2020_12_18_182334) do
     t.string "url"
     t.string "remote_identifier"
     t.string "artifact_type"
-    t.date "published"
+    t.date "published_on"
+    t.jsonb "keywords", default: []
+    t.jsonb "mesh_keywords", default: []
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["keywords"], name: "index_artifacts_on_keywords", using: :gin
+    t.index ["mesh_keywords"], name: "index_artifacts_on_mesh_keywords", using: :gin
     t.index ["repository_id"], name: "index_artifacts_on_repository_id"
   end
 

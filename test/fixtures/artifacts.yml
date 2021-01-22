@@ -5,11 +5,11 @@ one:
   description: MyText
   repository: one
   url: MyString
-  published: 2020-12-18
+  published_on: 2020-12-18
 
 two:
   title: MyString
   description: MyText
   repository: two
   url: MyString
-  published: 2020-12-18
+  published_on: 2020-12-18

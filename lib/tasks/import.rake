@@ -3,6 +3,7 @@ require_relative '../../app/importers/uspstf_importer'
 namespace :import do
   desc "Download the USPSTF repository content and import it to the database"
   task uspstf: :environment do
+    puts 'Importing data from USPSTF'
     UspstfImporter.download_and_update!
   end
 
@@ -13,4 +14,12 @@ namespace :import do
     importer.update_db!
   end
 
+  desc "Download the CDS Connect repository content and import it to the database"
+  task cds_connect: :environment do
+    puts 'Importing data from CDS Connect'
+    CdsConnectImporter.download_and_update!
+  end
+
+  desc "Download all repository content and import it to the database"
+  task all: [:uspstf, :cds_connect]
 end

@@ -15,6 +15,15 @@ module CedarAdmin
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
+
+    # Settings for USPSTF importer
     config.uspstf_url = "https://data.uspreventiveservicestaskforce.org/api/json?key=#{ENV['CEDAR_USPSTF_API_KEY']}"
+
+    # Settings for CDS Connect importer
+    config.cds_connect_basic_auth_username = ENV['CEDAR_CDS_CONNECT_BASIC_AUTH_USERNAME']
+    config.cds_connect_basic_auth_password = ENV['CEDAR_CDS_CONNECT_BASIC_AUTH_PASSWORD']
+    config.cds_connect_username = ENV['CEDAR_CDS_CONNECT_USERNAME']
+    config.cds_connect_password = ENV['CEDAR_CDS_CONNECT_PASSWORD']
+    config.cds_connect_base_url = ENV['CEDAR_CDS_CONNECT_BASE_URL']
   end
 end
