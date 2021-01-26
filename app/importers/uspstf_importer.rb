@@ -31,7 +31,7 @@ class UspstfImporter
         url: artifact_url,
         published_on: Date.new(recommendation['topicYear'].to_i),
         artifact_type: 'General Recommendation',
-        artifact_status: 'Active',
+        artifact_status: 'active',
         keywords: keywords
       )
       general_rec_urls[id] = artifact_url
@@ -48,7 +48,8 @@ class UspstfImporter
         repository: uspstf,
         description: ActionView::Base.full_sanitizer.sanitize(recommendation['text']).squish,
         url: general_rec_urls[recommendation['general'].to_s],
-        artifact_type: 'Specific Recommendation'
+        artifact_type: 'Specific Recommendation',
+        artifact_status: 'active'
       )
     end
 
@@ -59,7 +60,8 @@ class UspstfImporter
         title: tool['title'],
         repository: uspstf,
         url: tool['url'],
-        artifact_type: 'Tool'
+        artifact_type: 'Tool',
+        artifact_status: 'active'
       )
     end
   end

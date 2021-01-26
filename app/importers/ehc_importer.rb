@@ -63,7 +63,7 @@ class EhcImporter
         url: artifact_url,
         published_on: artifact_date,
         artifact_type: artifact_type,
-        artifact_status: artifact_status,
+        artifact_status: to_cedar_status(artifact_status),
         keywords: [],
         mesh_keywords: []
       )
@@ -91,5 +91,14 @@ class EhcImporter
   # Remove any EHC entries that were not found in the completed index run
   def remove_obsolete_entries
     Artifact.where(repository: @ehc_repository).where.not(cedar_identifier: @found_ids).destroy_all
+  end
+
+  def to_cedar_status(ehc_status)
+    case ehc_status
+    when 'Archived'
+      'retired'
+    else
+      'active'
+    end
   end
 end
