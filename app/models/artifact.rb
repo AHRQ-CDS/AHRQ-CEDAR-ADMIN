@@ -5,7 +5,7 @@
 class Artifact < ApplicationRecord
   belongs_to :repository
 
-  def self.update_or_create!(remote_identifier, attributes)
-    find_or_initialize_by(remote_identifier: remote_identifier).update!(attributes)
+  def self.update_or_create!(cedar_identifier, attributes)
+    find_or_initialize_by(cedar_identifier: cedar_identifier).update!(attributes)
   end
 end

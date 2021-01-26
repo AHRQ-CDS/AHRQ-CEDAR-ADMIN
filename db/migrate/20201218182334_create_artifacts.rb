@@ -6,7 +6,9 @@ class CreateArtifacts < ActiveRecord::Migration[6.0]
       t.references :repository, null: false, foreign_key: true
       t.string :url
       t.string :remote_identifier
+      t.string :cedar_identifier
       t.string :artifact_type
+      t.string :artifact_status
       t.date :published_on
       t.jsonb :keywords, default: []
       t.jsonb :mesh_keywords, default: []

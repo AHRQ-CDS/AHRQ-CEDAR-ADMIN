@@ -3,7 +3,7 @@
 # Functionality for importing data from the USPSTF repository
 class UspstfImporter
   def self.download_and_update!
-    uri = URI(Rails.configuration.uspstf_url)
+    uri = URI(Rails.configuration.uspstf_base_url)
     json = Net::HTTP.get(uri)
     importer = UspstfImporter.new(json)
     importer.update_db!
@@ -14,22 +14,24 @@ class UspstfImporter
   end
 
   def update_db!
-    uspstf = Repository.where(name: 'USPSTF').first_or_create!
+    uspstf = Repository.where(name: 'USPSTF').first_or_create!(home_page: Rails.configuration.uspstf_home_page)
     general_rec_urls = {}
 
     # Extract general recommendations
     @json_data['generalRecommendations'].each_pair do |id, recommendation|
       keywords = recommendation['keywords']&.split('|') || []
       # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
-      artifact_url = "https://www.uspreventiveservicestaskforce.org/uspstf/recommendation/#{recommendation['uspstfAlias']}"
+      artifact_url = "#{Rails.configuration.uspstf_home_page}recommendation/#{recommendation['uspstfAlias']}"
       Artifact.update_or_create!(
         "USPSTF-GR-#{id}",
+        remote_identifier: id.to_s,
         title: recommendation['title'],
         repository: uspstf,
         description: ActionView::Base.full_sanitizer.sanitize(recommendation['clinical']).squish,
         url: artifact_url,
         published_on: Date.new(recommendation['topicYear'].to_i),
         artifact_type: 'General Recommendation',
+        artifact_status: 'Active',
         keywords: keywords
       )
       general_rec_urls[id] = artifact_url

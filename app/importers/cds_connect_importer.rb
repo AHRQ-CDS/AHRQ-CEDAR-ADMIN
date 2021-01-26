@@ -29,7 +29,7 @@ class CdsConnectImporter
     artifact_ids = artifact_list.map { |a| a['nid'] }
 
     # Retrieve and process each artifact based on the ID
-    cds_connect_repository = Repository.where(name: 'CDS Connect').first_or_create!
+    cds_connect_repository = Repository.where(name: 'CDS Connect').first_or_create!(home_page: Rails.configuration.cds_connect_home_page)
     artifact_ids.each do |artifact_id|
       response = connection.get("cds_api/#{artifact_id}")
       # TODO: More robustness against failure of a single artifact retrieval
@@ -40,12 +40,14 @@ class CdsConnectImporter
       description = ActionView::Base.full_sanitizer.sanitize(artifact['description'])&.squish
       Artifact.update_or_create!(
         "CDS-CONNECT-#{artifact_id}",
+        remote_identifier: artifact_id.to_s,
         repository: cds_connect_repository,
         title: artifact['title'],
         description: description,
         url: "#{Rails.configuration.cds_connect_base_url}node/#{artifact_id}",
         published_on: artifact['repository_information']['publication_date'],
         artifact_type: artifact['artifact_type'],
+        artifact_status: 'Active',
         keywords: artifact['creation_and_usage']['keywords'] || [],
         mesh_keywords: artifact['organization']['mesh_topics'] || []
       )

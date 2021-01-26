@@ -9,7 +9,7 @@ class UspstfImporterTest < ActiveSupport::TestCase
     uspstf_importer.update_db!
 
     # Check example specific recommendation
-    artifacts = Artifact.where(remote_identifier: 'USPSTF-SR-358')
+    artifacts = Artifact.where(cedar_identifier: 'USPSTF-SR-358')
     assert_equal(1, artifacts.count)
     artifact = artifacts.first
     assert_equal('Cervical Cancer: Screening --Women aged 21 to 65 years', artifact.title)
@@ -17,7 +17,7 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal('Specific Recommendation', artifact.artifact_type)
 
     # Check example general recommendation
-    artifacts = Artifact.where(remote_identifier: 'USPSTF-GR-38')
+    artifacts = Artifact.where(cedar_identifier: 'USPSTF-GR-38')
     assert_equal(1, artifacts.count)
     artifact = artifacts.first
     assert_equal('Rh (D) Incompatibility', artifact.title)
@@ -25,7 +25,7 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal('General Recommendation', artifact.artifact_type)
 
     # Check example tool
-    artifacts = Artifact.where(remote_identifier: 'USPSTF-TOOL-248')
+    artifacts = Artifact.where(cedar_identifier: 'USPSTF-TOOL-248')
     assert_equal(1, artifacts.count)
     artifact = artifacts.first
     assert_equal('5 A\'s Behavioral Counseling Framework - Tobacco Cessation', artifact.title)
@@ -36,11 +36,11 @@ class UspstfImporterTest < ActiveSupport::TestCase
     uspstf_importer.update_db!
 
     #  Check if any artifactsare duplicated by second import
-    artifacts = Artifact.where(remote_identifier: 'USPSTF-SR-358')
+    artifacts = Artifact.where(cedar_identifier: 'USPSTF-SR-358')
     assert_equal(1, artifacts.count)
-    artifacts = Artifact.where(remote_identifier: 'USPSTF-GR-38')
+    artifacts = Artifact.where(cedar_identifier: 'USPSTF-GR-38')
     assert_equal(1, artifacts.count)
-    artifacts = Artifact.where(remote_identifier: 'USPSTF-TOOL-248')
+    artifacts = Artifact.where(cedar_identifier: 'USPSTF-TOOL-248')
     assert_equal(1, artifacts.count)
   end
 end
