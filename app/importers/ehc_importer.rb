@@ -5,19 +5,19 @@ class EhcImporter
   def self.download_and_update!
     importer = EhcImporter.new
     page = '/products'
-    page = importer.import_page(page) until page.nil?
-
-    importer.remove_obsolete_entries
+    page = importer.process_index_page(page) until page.nil?
+    importer.remove_obsolete_entries!
+    importer.process_product_pages
   end
 
   def initialize
     @ehc_repository = Repository.where(name: 'EHC').first_or_create!(home_page: Rails.configuration.ehc_home_page)
-    @found_ids = []
+    @found_ids = {}
   end
 
   # Import a single page of search results and return the path to the next page or nil
   # if this is the final page.
-  def import_page(page)
+  def process_index_page(page)
     url = "#{Rails.configuration.ehc_base_url}#{page}"
     response = Faraday.get url
     raise "EHC page retrieval (#{url}) failed with status #{response.status}" unless response.status == 200
@@ -47,8 +47,8 @@ class EhcImporter
       artifact_title = artifact_link_node.content
       artifact_path = artifact_link_node['href']
       cedar_id = ['EHC', artifact_path.split('/').reject(&:empty?)].flatten.join('-')
-      @found_ids << cedar_id
       artifact_url = "#{Rails.configuration.ehc_base_url}#{artifact_path}"
+      @found_ids[cedar_id] = artifact_url
       artifact_type_nodes = artifact.css('div.item-meta div.item-type span.field-content').to_a
       artifact_type = artifact_type_nodes[0].content
       artifact_status = artifact_type_nodes[1].content
@@ -89,8 +89,27 @@ class EhcImporter
   end
 
   # Remove any EHC entries that were not found in the completed index run
-  def remove_obsolete_entries
-    Artifact.where(repository: @ehc_repository).where.not(cedar_identifier: @found_ids).destroy_all
+  def remove_obsolete_entries!
+    Artifact.where(repository: @ehc_repository).where.not(cedar_identifier: @found_ids.keys).destroy_all
+  end
+
+  def process_product_pages
+    @found_ids.each_pair do |cedar_id, page_url|
+      process_product_page(cedar_id, page_url)
+    end
+  end
+
+  # Process an individual product page
+  def process_product_page(cedar_identifier, page_url)
+    response = Faraday.get page_url
+    raise "EHC page retrieval (#{page_url}) failed with status #{response.status}" unless response.status == 200
+
+    html = Nokogiri::HTML(response.body)
+    meta_node = html.at_css('head meta[name="description"]')
+    Artifact.update_or_create!(cedar_identifier, description: meta_node['content']) unless meta_node.nil?
+  rescue Faraday::ConnectionFailed
+    # Some pages are unavailable
+    Rails.logger.warn "Failed to retrieve EHC product: #{page_url}"
   end
 
   def to_cedar_status(ehc_status)
