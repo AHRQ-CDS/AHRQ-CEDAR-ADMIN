@@ -1,5 +1,3 @@
-require_relative '../../app/importers/uspstf_importer'
-
 namespace :import do
   desc "Download the USPSTF repository content and import it to the database"
   task uspstf: :environment do
@@ -33,5 +31,5 @@ namespace :import do
   end
 
   desc "Download all repository content and import it to the database"
-  task all: [:uspstf, :cds_connect, :ehc]
+  task all: [:uspstf, :cds_connect, :ehc, :epc]
 end

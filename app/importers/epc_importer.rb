@@ -2,12 +2,14 @@
 
 # Functionality for importing data from the EPC repository
 class EpcImporter
+  include PageScraper
+
   def self.download_and_update!
     importer = EpcImporter.new
     page = '?search_api_fulltext=&page=0'
     page = importer.process_index_page(page) until page.nil?
     importer.remove_obsolete_entries!
-    importer.process_product_pages
+    importer.process_product_pages!
   end
 
   def initialize
@@ -84,27 +86,10 @@ class EpcImporter
     Artifact.where(repository: @epc_repository).where.not(cedar_identifier: @found_ids.keys).destroy_all
   end
 
-  def process_product_pages
+  def process_product_pages!
     @found_ids.each_pair do |cedar_id, page_url|
-      process_product_page(cedar_id, page_url)
+      extract_description(cedar_id, page_url)
     end
-  end
-
-  # Process an individual product page
-  def process_product_page(cedar_identifier, page_url)
-    response = Faraday.get page_url
-    if response.status != 200
-      Rails.logger.warn "EPC page retrieval (#{page_url}) failed with status #{response.status}"
-      return
-    end
-    return unless response.headers['content-type'].include?('text/html') # some links are PDFs
-
-    html = Nokogiri::HTML(response.body)
-    description_node = html.at_css('head meta[name="description"]')
-    Artifact.update_or_create!(cedar_identifier, description: description_node['content']) unless description_node.nil?
-  rescue Faraday::ConnectionFailed
-    # Some pages are unavailable
-    Rails.logger.warn "Failed to retrieve EPC product: #{page_url}"
   end
 
   def to_artifact_status(artifact_uri)

@@ -2,12 +2,14 @@
 
 # Functionality for importing data from the EHC repository
 class EhcImporter
+  include PageScraper
+
   def self.download_and_update!
     importer = EhcImporter.new
     page = '/products'
     page = importer.process_index_page(page) until page.nil?
     importer.remove_obsolete_entries!
-    importer.process_product_pages
+    importer.process_product_pages!
   end
 
   def initialize
@@ -93,23 +95,10 @@ class EhcImporter
     Artifact.where(repository: @ehc_repository).where.not(cedar_identifier: @found_ids.keys).destroy_all
   end
 
-  def process_product_pages
+  def process_product_pages!
     @found_ids.each_pair do |cedar_id, page_url|
-      process_product_page(cedar_id, page_url)
+      extract_description(cedar_id, page_url)
     end
-  end
-
-  # Process an individual product page
-  def process_product_page(cedar_identifier, page_url)
-    response = Faraday.get page_url
-    raise "EHC page retrieval (#{page_url}) failed with status #{response.status}" unless response.status == 200
-
-    html = Nokogiri::HTML(response.body)
-    meta_node = html.at_css('head meta[name="description"]')
-    Artifact.update_or_create!(cedar_identifier, description: meta_node['content']) unless meta_node.nil?
-  rescue Faraday::ConnectionFailed
-    # Some pages are unavailable
-    Rails.logger.warn "Failed to retrieve EHC product: #{page_url}"
   end
 
   def to_cedar_status(ehc_status)
