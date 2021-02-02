@@ -49,6 +49,6 @@ class CdsConnectImporterTest < ActiveSupport::TestCase
     assert_match(/node.1221/, artifact_1221.url)
     assert_nil(artifact_1221.published_on)
     assert_equal('Data Summary', artifact_1221.artifact_type)
-    assert_equal('draft', artifact_1186.artifact_status)
+    assert_equal('unknown', artifact_1221.artifact_status)
   end
 end

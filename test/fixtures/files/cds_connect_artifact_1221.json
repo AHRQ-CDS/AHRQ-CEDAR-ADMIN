@@ -7,7 +7,7 @@
   "description": "<p class=\"MsoNormal\">This artifact implements access to Prescription Drug Monitoring Program (PDMP) medication dispense records using&nbsp;HL7 FHIR standards. These data are used to&nbsp;inform decision-making when managing a patient’s chronic pain by:</p>\r\n\r\n<ul>\r\n\t<li>Enhancing&nbsp;the <a href=\"https://cds.ahrq.gov/cdsconnect/artifact/factors-consider-managing-chronic-pain-pain-management-summary\">AHRQ Pain Management Summary</a> SMART on FHIR application to include a dedicated section summarizing the PDMP dispense records for opioid-based medications.</li>\r\n\t<li>Building a foundation for expanding nationwide access to PDMP data and making those data available to clinicians for shared decision making with patients.</li>\r\n</ul>\r\n\r\n<p class=\"MsoNormal\">&nbsp;</p>\r\n",
   "identifier": null,
   "version": "0.5.0",
-  "status": "Draft",
+  "status": "Unexpected",
   "experimental": true,
   "artifact_type": "Data Summary",
   "creation_date": "2020-11-17",
