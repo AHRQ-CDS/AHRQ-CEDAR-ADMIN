@@ -61,6 +61,12 @@ class EpcImporter
       end
 
       artifact_uri = URI.parse(artifact_url)
+      if artifact_uri.host.nil?
+        page_uri = URI.parse(url)
+        artifact_uri.host = page_uri.host
+        artifact_uri.scheme = page_uri.scheme
+        artifact_url = artifact_uri.to_s
+      end
       artifact_path = artifact_uri.path
       cedar_id = ['EPC', artifact_path.split('/').reject(&:empty?)].flatten.join('-')
       artifact_type = artifact.at_css('div.views-field-field-epc-type span.field-content')&.content
