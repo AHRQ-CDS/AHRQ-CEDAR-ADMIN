@@ -21,7 +21,9 @@ ActiveRecord::Schema.define(version: 2020_12_18_182334) do
     t.bigint "repository_id", null: false
     t.string "url"
     t.string "remote_identifier"
+    t.string "cedar_identifier"
     t.string "artifact_type"
+    t.string "artifact_status"
     t.date "published_on"
     t.jsonb "keywords", default: []
     t.jsonb "mesh_keywords", default: []
@@ -34,7 +36,7 @@ ActiveRecord::Schema.define(version: 2020_12_18_182334) do
 
   create_table "repositories", force: :cascade do |t|
     t.string "name"
-    t.string "url"
+    t.string "home_page"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

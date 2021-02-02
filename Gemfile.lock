@@ -1,6 +1,7 @@
 GEM
   remote: https://rubygems.org/
   specs:
+    Ascii85 (1.1.0)
     actioncable (6.0.3.4)
       actionpack (= 6.0.3.4)
       nio4r (~> 2.0)
@@ -58,6 +59,7 @@ GEM
       zeitwerk (~> 2.2, >= 2.2.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
+    afm (0.2.2)
     ast (2.4.1)
     bindex (0.8.1)
     bootsnap (1.5.1)
@@ -95,6 +97,7 @@ GEM
     ffi (1.13.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    hashery (2.1.2)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (1.8.5)
@@ -124,6 +127,12 @@ GEM
     parallel (1.20.1)
     parser (2.7.2.0)
       ast (~> 2.4.1)
+    pdf-reader (2.4.2)
+      Ascii85 (~> 1.0)
+      afm (~> 0.2.1)
+      hashery (~> 2.0)
+      ruby-rc4
+      ttfunk
     pg (1.2.3)
     public_suffix (4.0.6)
     puma (4.3.7)
@@ -182,6 +191,7 @@ GEM
       rack (>= 1.1)
       rubocop (>= 0.87.0)
     ruby-progressbar (1.10.1)
+    ruby-rc4 (0.1.5)
     ruby2_keywords (0.0.4)
     rubyzip (2.3.0)
     sass-rails (6.0.0)
@@ -211,6 +221,7 @@ GEM
     thor (1.0.1)
     thread_safe (0.3.6)
     tilt (2.0.10)
+    ttfunk (1.7.0)
     turbolinks (5.2.1)
       turbolinks-source (~> 5.2)
     turbolinks-source (5.2.0)
@@ -255,6 +266,7 @@ DEPENDENCIES
   faraday-cookie_jar
   jbuilder (~> 2.7)
   listen (~> 3.2)
+  pdf-reader
   pg (>= 0.18, < 2.0)
   puma (~> 4.1)
   rails (~> 6.0.3, >= 6.0.3.4)

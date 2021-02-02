@@ -17,13 +17,23 @@ module CedarAdmin
     # the framework and any gems in your application.
 
     # Settings for USPSTF importer
-    config.uspstf_url = "https://data.uspreventiveservicestaskforce.org/api/json?key=#{ENV['CEDAR_USPSTF_API_KEY']}"
+    config.uspstf_home_page = 'https://www.uspreventiveservicestaskforce.org/uspstf/'
+    config.uspstf_base_url = "https://data.uspreventiveservicestaskforce.org/api/json?key=#{ENV['CEDAR_USPSTF_API_KEY']}"
 
     # Settings for CDS Connect importer
+    config.cds_connect_home_page = 'https://cds.ahrq.gov/cdsconnect'
     config.cds_connect_basic_auth_username = ENV['CEDAR_CDS_CONNECT_BASIC_AUTH_USERNAME']
     config.cds_connect_basic_auth_password = ENV['CEDAR_CDS_CONNECT_BASIC_AUTH_PASSWORD']
     config.cds_connect_username = ENV['CEDAR_CDS_CONNECT_USERNAME']
     config.cds_connect_password = ENV['CEDAR_CDS_CONNECT_PASSWORD']
     config.cds_connect_base_url = ENV['CEDAR_CDS_CONNECT_BASE_URL']
+
+    # Settings for the EHC importer
+    config.ehc_home_page = 'https://effectivehealthcare.ahrq.gov'
+    config.ehc_base_url = 'https://effectivehealthcare.ahrq.gov'
+
+    # Settings for the EPC importer
+    config.epc_home_page = 'https://www.ahrq.gov/research/findings/evidence-based-reports/index.html'
+    config.epc_base_url = 'https://www.ahrq.gov/research/findings/evidence-based-reports/search.html'
   end
 end

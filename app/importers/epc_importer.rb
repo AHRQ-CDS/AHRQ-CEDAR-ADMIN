@@ -1,0 +1,101 @@
+# frozen_string_literal: true
+
+# Functionality for importing data from the EPC repository
+class EpcImporter
+  include PageScraper
+
+  def self.download_and_update!
+    importer = EpcImporter.new
+    page = '?search_api_fulltext=&page=0'
+    page = importer.process_index_page(page) until page.nil?
+  end
+
+  def initialize
+    @epc_repository = Repository.where(name: 'EPC').first_or_create!(home_page: Rails.configuration.epc_home_page)
+  end
+
+  # Import a single page of search results and return the path to the next page or nil
+  # if this is the final page.
+  def process_index_page(page)
+    url = "#{Rails.configuration.epc_base_url}#{page}"
+    response = Faraday.get url
+    raise "EPC page retrieval (#{url}) failed with status #{response.status}" unless response.status == 200
+
+    # Search results are structured as a set of HTML divs as follows:
+    # <div class="view-content row">
+    #   <div class="col-12">
+    #     <div class="views-row">
+    #       <div class="views-field views-field-nid"></div>
+    #       <div class="views-field views-field-title">
+    #         <span class="field-content">
+    #           <a href="https://effectivehealthcare.ahrq.gov/products/pediatric-cancer-survivorship/protocol">
+    #             Disparities and Barriers for Pediatric Cancer Survivorship Care
+    #           </a>
+    #       </span>
+    #       </div>
+    #       <div class="views-field views-field-field-timestamp">
+    #         <span class="field-content">Date: October 2020</span>
+    #       </div>
+    #       <div class="views-field views-field-field-epc-type">
+    #         <span class="views-label views-label-field-epc-type">EPC Type:</span> <span class="field-content">In Progress</span>
+    #       </div>
+    #       <div class="views-field views-field-field-epc-name">
+    #         <span class="views-label views-label-field-epc-name">EPC Name:</span> <span class="field-content">AHRQ</span>
+    #       </div>
+    #     </div>
+    #   </div>
+    # </div>
+    html = Nokogiri::HTML(response.body)
+    html.css('div.view-content div.views-row').each do |artifact|
+      artifact_link_node = artifact.at_css('div.views-field-title span.field-content a')
+      if artifact_link_node.nil?
+        Rails.logger.warn 'Encountered EPC search entry with missing title and link'
+        next
+      end
+
+      artifact_title = artifact_link_node.content
+      artifact_url = artifact_link_node['href']
+      if artifact_url.nil?
+        Rails.logger.warn "Encountered EPC search entry '#{artifact_title}' with missing link"
+        next
+      end
+
+      artifact_uri = URI.parse(artifact_url)
+      artifact_path = artifact_uri.path
+      cedar_id = ['EPC', artifact_path.split('/').reject(&:empty?)].flatten.join('-')
+      artifact_type = artifact.at_css('div.views-field-field-epc-type span.field-content')&.content
+      artifact_status = to_artifact_status(artifact_uri)
+      artifact_date_str = artifact.at_css('div.views-field-field-timestamp  span.field-content')&.content
+      begin
+        artifact_date = Date.parse(artifact_date_str) unless artifact_date_str.nil? # Date.parse ignores the 'Date: ' prefix in the field
+      rescue Date::Error
+        Rails.logger.warn "Encountered EPC search entry '#{artifact_title}' with invalid date '#{artifact_date_str}'"
+      end
+
+      metadata = {
+        remote_identifier: artifact_path,
+        repository: @epc_repository,
+        title: artifact_title,
+        url: artifact_url,
+        published_on: artifact_date,
+        artifact_type: artifact_type,
+        artifact_status: artifact_status,
+        keywords: [],
+        mesh_keywords: []
+      }
+      metadata.merge!(extract_metadata(artifact_url))
+      Artifact.update_or_create!(cedar_id, metadata)
+      Rails.logger.info "Processed EPC artifact #{artifact_url}"
+    end
+
+    # Search results are paged, extract the path of the next page
+    next_page_node = html.at_css('li.pager__item--next a')
+    next_page_node ? next_page_node['href'] : nil
+  end
+
+  def to_artifact_status(artifact_uri)
+    return 'unknown' if artifact_uri.host.nil?
+
+    artifact_uri.host.start_with?('archive') ? 'retired' : 'active'
+  end
+end
