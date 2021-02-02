@@ -1,0 +1,102 @@
+{
+  "meta": {
+    "node_id": "1186",
+    "self": "/cds_api/1186"
+  },
+  "title": "Facilitating Shared Decision Making For People Who Drink Alcohol: A Patient Decision Aid",
+  "description": "<p>This CDS artifact identifies patients screened for alcohol use using the U.S. or World Health Organization (WHO) version of the Alcohol Use Disorders Identification Test (AUDIT), and the results of the screening indicate they are drinking above recommended guidelines. The resulting CDS actions provide patient-specific information to the patient and/or their healthcare provider to 1) help them understand their level of drinking compared to high-risk alcohol consumption, and 2) provide information and tools to support the patient's consideration of reducing their alcohol consumption.&nbsp;</p>\r\n",
+  "identifier": null,
+  "version": "1.0",
+  "status": "Draft",
+  "experimental": true,
+  "artifact_type": "Data Summary",
+  "creation_date": "2020-06-04",
+  "creation_and_usage": {
+    "license": "Apache 2.0",
+    "copyrights": "<p>© 2020 The MITRE Corporation. All Rights Reserved. Approved for Public Release: 20-1507. Distribution and Use of Artifacts and Associated Documentation Unlimited.</p>\r\n",
+    "keywords": [
+      "alcohol",
+      "brief intervention",
+      "decision aid",
+      "excessive alcohol use"
+    ],
+    "steward": [
+      "Centers for Disease Control and Prevention"
+    ],
+    "publisher": [
+      "The MITRE Corporation"
+    ],
+    "contributors": "<p>This artifact was developed by MITRE software engineers and clinical informaticists&nbsp;in collaboration with clinical subject matter experts and leaders from the Centers for Disease Control and Prevention (CDC) National Center on Birth Defects and Developmental Disabilities (NCBDDD).</p>\r\n\r\n<ul>\r\n\t<li>Additional information about MITRE's health expertise is available at&nbsp;<a href=\"https://health.mitre.org/\">https://health.mitre.org/</a>.</li>\r\n\t<li>Additional information about the CDC's alcohol and public health work is available at&nbsp;<a href=\"https://www.cdc.gov/alcohol/index.htm\">https://www.cdc.gov/alcohol/index.htm</a>.</li>\r\n\t<li>Additional information about the CDC NCBDDD is available at&nbsp;<a href=\"https://www.cdc.gov/ncbddd/index.html\">https://www.cdc.gov/ncbddd/index.html</a>.</li>\r\n</ul>\r\n",
+    "ip_attestation": true
+  },
+  "organization": {
+    "mesh_topics": [
+      "Preventive Health Services",
+      "Alcohol Drinking",
+      "Risk Assessment",
+      "Substance Abuse Detection"
+    ],
+    "knowledge_level": "3. Structured",
+    "related_artifacts": [
+      "Alcohol Screening Using the USAUDIT (Alcohol Use Disorders Identification Test, Adapted for Use in the United States)",
+      "Alcohol Screening Using the World Health Organization (WHO) Alcohol Use Disorders Identification Test (AUDIT)",
+      "Alcohol and Other Substance Use Screening Using the National Institute on Drug Abuse Quick Screen (NIDA QS) and USAUDIT (Alcohol Use Disorders Identification Test, Adapted for Use in the United States)",
+      "Brief Behavioral Counseling Interventions for Excessive Alcohol Consumption with Optional Referral to Treatment"
+    ]
+  },
+  "artifact_representation": {
+    "triggers": null,
+    "inclusions": null,
+    "exclusions": null,
+    "interventions_and_actions": null,
+    "logic_files": [
+      "/sites/default/files/cds/artifact/logic/2020-07/DecisionAidLogicFiles.zip"
+    ]
+  },
+  "implementation_details": {
+    "engineering_details": "<p>The CDS flow diagram pictured <a href=\"https://cds.ahrq.gov/sites/default/files/cds/artifact/1186/Logic_Flow_Decision_Aid_for_Your_Drinking.pdf\"><strong><em>here</em></strong></a> provides a high level overview of the logic flow and some of the decision points specified in the CDS logic.<br />\r\n<br />\r\nThe semi-structured (i.e., human readable, Level 2) representation of the artifact is available in Appendix A of the implementation guide for this artifact. The structured (i.e., coded) CDS logic is attached to this artifact in the Logic File field. The code is expressed using Clinical Quality Language (CQL) and the Fast Healthcare Interoperability Resources (FHIR) Release 4 (R4) data model. All value sets referenced in the logic are published on the Value Set Authority Center (VSAC). Additional details about these resources can be accessed via the following URLs:</p>\r\n\r\n<ul>\r\n\t<li><strong>CQL:</strong>&nbsp;<a href=\"https://ecqi.healthit.gov/cql-clinical-quality-language\">https://ecqi.healthit.gov/cql-clinical-quality-language</a></li>\r\n\t<li><strong>FHIR&nbsp;R4:&nbsp;</strong><a href=\"https://hl7.org/fhir/R4/resourcelist.html\">https://hl7.org/fhir/R4/resourcelist.html</a></li>\r\n\t<li><strong>VSAC:&nbsp;</strong><a href=\"https://vsac.nlm.nih.gov/\">https://vsac.nlm.nih.gov/</a></li>\r\n</ul>\r\n\r\n<p>Open source resources associated with this CDS are available on GitHub <em><strong><a href=\"https://github.com/asbi-cds-tools\">here</a></strong></em>. The resources include:</p>\r\n\r\n<ul>\r\n\t<li><strong><a href=\"https://github.com/asbi-cds-tools/asbi-intervention-app\">asbi-intervention-app</a>:</strong>&nbsp;a&nbsp;SMART on FHIR application that provides CDS interventions based on alcohol screening scores and patient information to assist clinicians with caring for patients based on their alcohol use</li>\r\n\t<li><strong><a href=\"https://github.com/asbi-cds-tools/asbi-screening-app\">asbi-screening-app</a>:</strong> a SMART on FHIR application that provides multiple alcohol screening instruments for assessing a patient's alcohol use</li>\r\n\t<li><strong><a href=\"https://github.com/asbi-cds-tools/questionnaire-to-survey\">questionnaire-to-survey</a></strong>: a library for incorporating FHIR Questionnaires into SurveyJS</li>\r\n\t<li><strong><a href=\"https://github.com/asbi-cds-tools/asbi-testing-server\">asbi-testing-server</a></strong>: a node-based FHIR server to be used for testing alcohol screening and brief intervention CDS&nbsp;</li>\r\n</ul>\r\n",
+    "technical_files": [
+      "/sites/default/files/cds/artifact/1186/Decision_Aid_for_Your_Drinking_IG_v2.pdf",
+      "/sites/default/files/cds/artifact/1186/Logic_Flow_Decision_Aid_for_Your_Drinking.pdf"
+    ],
+    "miscellaneous_files": null
+  },
+  "purpose_and_usage": {
+    "purpose": "<p>This CDS is targeted to adults who are not pregnant and have completed alcohol screening using either the U.S. or WHO version of the AUDIT screening questionnaire within the past 12 months&nbsp;and their results indicate they are drinking above recommended guidelines. The CDS actions are based on the patient's AUDIT screening score and availability of individual responses to the first three AUDIT questions. They provide information to help increase a patient's knowledge about their level of drinking and risk level and options for reducing alcohol consumption.</p>\r\n",
+    "intended_population": "<p>This CDS is intended for adults (i.e., individuals 18 years old and older).</p>\r\n",
+    "usage": "<p>The artifact could be used as a patient-facing tool, provided directly to the patient through health information technology (IT) capabilities such as a patient portal or mobile app; or used by a clinician to share with the patient during brief intervention and counseling&nbsp;to promote a dialog between the patient and their clinician on their current alcohol use and resources to help them consider cutting back.</p>\r\n",
+    "cautions": "<table>\r\n\t<tbody>\r\n\t\t<tr>\r\n\t\t\t<td><strong>This artifact requires the availability of alcohol screening results using a version of the AUDIT questionnaire. It does not include alcohol screening:</strong> The CDS Development Team and CDC sponsors of this work took a modular approach to developing alcohol screening and brief intervention (ASBI) CDS artifacts to 1) lessen the complexity of each artifact and 2) enable organizations to only integrate portions of logic that they really need (e.g., are not already present in their health IT system). A modular approach allows for personalized implementation choices without the need to edit CDS code. The companion alcohol screening artifacts<em>&nbsp; Alcohol Screening Using the USAUDIT (Alcohol Use Disorders Identification Test, Adapted for Use in the United States), Alcohol Screening Using the World Health Organization (WHO) Alcohol Use Disorders Identification Test (AUDIT), and Alcohol Screening Using the National Institute on Drug Abuse Quick Screen (NIDA QS) and USAUDIT (Alcohol Use Disorders Identification Test, Adapted for Use in the United States)</em> artifacts are also available on the CDS Connect Repository.</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong>This artifact is not intended for women who are pregnant or trying to become pregnant:</strong> The CDS logic excludes women that are pregnant or trying to become pregnant. The CDS Development Team and CDC sponsors of this project elected to exclude pregnant women from receiving this intervention, as pregnant women who are drinking any amount of alcohol should receive a brief behavioral counseling intervention from their primary care provider, and even if they are not drinking, receive a brief intervention reinforcing the importance of abstinence. The importance of not drinking and the risks of drinking during pregnancy or when trying to become pregnant are stressed in the CDS artifact, <em>Brief Behavioral Counseling Interventions for Excessive Alcohol Consumption with Optional Referral to Treatment</em>, as part of the brief intervention care recommendations. Those organizations that wish to ensure the appropriate brief interventions are provided to pregnant women should consider implementing this CDS artifact.</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong>All care provided to the patient should be subject to clinical judgement: </strong>Clinicians are encouraged to consider the patient's medical condition, family history of alcohol problems and perceived honesty in responding to the AUDIT questions prior to making care decisions related to the patient's alcohol use (Babor et al. 2001).</td>\r\n\t\t</tr>\r\n\t\t<tr>\r\n\t\t\t<td><strong>Implementation Note:</strong> This artifact is not “standalone”. It is not intended to be completely plug-and-play (i.e., healthcare systems will need to integrate the artifact with components of their health information technology [IT] system for the artifact to work).&nbsp;Implementers should conduct extensive testing, including clinical testing in real-life workflows. It is expected that artifacts will be customized and adapted to local clinical and IT environments.</td>\r\n\t\t</tr>\r\n\t</tbody>\r\n</table>\r\n",
+    "test_patients": [
+      "/sites/default/files/cds/artifact/1186/DecisionAidTestFiles.zip"
+    ]
+  },
+  "supporting_evidence": {
+    "source_description": null,
+    "source": null,
+    "references": "<p>Babor, T. F., &amp; Higgins-Biddle, J. C. (2001). Brief Intervention for Hazardous and Harmful Drinking: A Manual for Use in Primary Care. Retrieved from <a href=\"https://apps.who.int/iris/bitstream/handle/10665/67210/WHO_MSD_MSB_01.6b.pdf?sequence=1\">https://apps.who.int/iris/bitstream/handle/10665/67210/WHO_MSD_MSB_01.6b.pdf?sequence=1</a></p>\r\n\r\n<p>Babor, T. F., Higgins-Biddle, J. C., &amp; Robaina, K. (2017). The Alcohol Use Disorders Identification Test, Adapted for Use in the United States: A Guide for Primary Care Practitioners, 24. Retrieved from <a href=\"https://sbirt.webs.com/USAUDIT-Guide_2016_final-1.pdf\">https://www.ct.gov/dmhas/lib/dmhas/publications/USAUDIT-2017.pdf</a></p>\r\n\r\n<p>Babor, T. F., Higgins-Biddle, J. C., Saunders, J. B., &amp; Monteiro, M. G. (2001). The Alcohol Use Disorders Identification Test: Guidelines for Use in Primary Care. Retrieved from <a href=\"https://www.who.int/substance_abuse/publications/audit/en/\">https://www.who.int/substance_abuse/publications/audit/en/</a></p>\r\n\r\n<p>Bradley, K. A., &amp; Kivlahan, D. R. (2014). Bringing patient-centered care to patients with alcohol use disorders. JAMA - Journal of the American Medical Association, 311(18), 1861–1862. <a href=\"https://doi.org/10.1001/jama.2014.3629\">https://doi.org/10.1001/jama.2014.3629</a></p>\r\n\r\n<p>Centers for Disease Control and Prevention. (2014). Planning and Implementing Screening and Brief Intervention for Risky Alcohol Use A Step-by-Step Guide for Primary Care Practices. Centers for Disease Control and Prevention, National Center on Birth Defects and Developmental Disabilities. Retrieved from&nbsp;<a href=\"https://www.cdc.gov/ncbddd/fasd/documents/AlcoholSBIImplementationGuide.pdf\">https://www.cdc.gov/ncbddd/fasd/documents/AlcoholSBIImplementationGuide.pdf</a></p>\r\n\r\n<p>Curry, S. J., Krist, A. H., Owens, D. K., Barry, M. J., Caughey, A. B., Davidson, K. W., … Wong, J. B. (2018). Screening and Behavioral Counseling Interventions to Reduce Unhealthy Alcohol Use in Adolescents and Adults: US Preventive Services Task Force Recommendation Statement. JAMA - Journal of the American Medical Association, 320(18), 1899–1909. <a href=\"https://doi.org/10.1001/jama.2018.16789\">https://doi.org/10.1001/jama.2018.16789</a></p>\r\n\r\n<p>National Institute on Alcohol Abuse and Alcoholism. (2019). Helping Patients Who Drink Too Much: A Clinician’s Guide. Retrieved from <a href=\"https://pubs.niaaa.nih.gov/publications/Practitioner/CliniciansGuide2005/guide.pdf\">https://pubs.niaaa.nih.gov/publications/Practitioner/CliniciansGuide2005/guide.pdf</a></p>\r\n",
+    "artifact_decision_notes": "<p>Decisions made while developing this CDS are outlined in Appendix A of the accompanying implementation guide for this artifact.</p>\r\n",
+    "recommendation_statement": [
+      {
+        "recommendation": null,
+        "strength_of_recommendation": null,
+        "quality_of_evidence": null,
+        "decision_notes": null
+      }
+    ]
+  },
+  "repository_information": {
+    "approval_date": "2020-07-16",
+    "expiration_date": null,
+    "last_review_date": "2020-07-16",
+    "publication_date": "2020-07-16",
+    "preview_image": null
+  },
+  "testing_experience": {
+    "pilot_experience": "<p>As of June 4, 2020, this CDS is in draft status and has not been tested in a clinical setting.&nbsp;</p>\r\n"
+  },
+  "coverage_requirements_discovery": {
+    "payer": null,
+    "code_system": null,
+    "electronic_prescribing_code": null
+  }
+}

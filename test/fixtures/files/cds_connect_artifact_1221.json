@@ -1,0 +1,93 @@
+{
+  "meta": {
+    "node_id": "1221",
+    "self": "/cds_api/1221"
+  },
+  "title": "Managing chronic pain with Prescription Drug Monitoring Program (PDMP) medication dispense data",
+  "description": "<p class=\"MsoNormal\">This artifact implements access to Prescription Drug Monitoring Program (PDMP) medication dispense records using&nbsp;HL7 FHIR standards. These data are used to&nbsp;inform decision-making when managing a patient’s chronic pain by:</p>\r\n\r\n<ul>\r\n\t<li>Enhancing&nbsp;the <a href=\"https://cds.ahrq.gov/cdsconnect/artifact/factors-consider-managing-chronic-pain-pain-management-summary\">AHRQ Pain Management Summary</a> SMART on FHIR application to include a dedicated section summarizing the PDMP dispense records for opioid-based medications.</li>\r\n\t<li>Building a foundation for expanding nationwide access to PDMP data and making those data available to clinicians for shared decision making with patients.</li>\r\n</ul>\r\n\r\n<p class=\"MsoNormal\">&nbsp;</p>\r\n",
+  "identifier": null,
+  "version": "0.5.0",
+  "status": "Unexpected",
+  "experimental": true,
+  "artifact_type": "Data Summary",
+  "creation_date": "2020-11-17",
+  "creation_and_usage": {
+    "license": "Federal Government Unlimited Rights License",
+    "copyrights": null,
+    "keywords": [
+      "Chronic Pain",
+      "Analgesics, Opioid",
+      "Prescription Drug Misuse",
+      "risk assessment",
+      "Pain Assessment"
+    ],
+    "steward": [
+      "Agency for Healthcare Research and Quality"
+    ],
+    "publisher": [
+      "TISTA Science and Technology Corporation"
+    ],
+    "contributors": null,
+    "ip_attestation": true
+  },
+  "organization": {
+    "mesh_topics": [
+      "Analgesics, Opioid",
+      "Opioid-Related Disorders",
+      "Pain Management"
+    ],
+    "knowledge_level": "3. Structured",
+    "related_artifacts": [
+      "Factors to Consider in Managing Chronic Pain: A Pain Management Summary",
+      "Recommendation #7 - Opioid Therapy Risk Assessment"
+    ]
+  },
+  "artifact_representation": {
+    "triggers": null,
+    "inclusions": null,
+    "exclusions": null,
+    "interventions_and_actions": null,
+    "logic_files": null
+  },
+  "implementation_details": {
+    "engineering_details": "<p>This artifact supports Prescription Drug Monitoring Program (PDMP) data integration to address the technical challenges of PDMP national scalability, and to more effectively address clinical and social challenges associated with opioid overuse. When a patient’s prescriptions are ordered by multiple care providers, possibly spanning more than one state, there is no single provider EHR system that holds the complete summary for a patient.</p>\r\n\r\n<p>This CDS logic is expressed using <a href=\"https://ecqi.healthit.gov/cql\">Clinical Quality Language (CQL)</a> and&nbsp;the <a href=\"https://hl7.org/fhir/R4/resourcelist.html\">HL7 FHIR Release&nbsp;4 (R4)</a> data model. All value sets referenced in the logic are published on the <a href=\"https://vsac.nlm.nih.gov/\">Value Set Authority Center (VSAC)</a>.&nbsp;This CDS artifact adds enhancements to the <a href=\"https://cds.ahrq.gov/cdsconnect/artifact/factors-consider-managing-chronic-pain-pain-management-summary\">AHRQ&nbsp;Pain Management Summary artifact</a> that presents relevant information to consider when managing a patient’s pain, implemented as a web-based SMART on FHIR application. The application serves as a CQL integration engine to enable integration of the CQL logic and results with an electronic health record (EHR)&nbsp;via the SMART on FHIR API. Implementers should work with their EHR vendor to determine the steps necessary to register and integrate a SMART on FHIR application within their EHR. Technical details regarding the SMART on FHIR API can be found on the&nbsp;<a href=\"https://smarthealthit.org/\">SMART Health IT</a>&nbsp;Web site.</p>\r\n\r\n<p><strong>Open source code for the SMART on FHIR app,&nbsp;CQL logic and PDMP data section is located on GitHub </strong>(currently in the 'pdmp-section' branch): <a href=\"https://github.com/chronic-care/AHRQ-CDS-Connect-PAIN-MANAGEMENT-SUMMARY/tree/pdmp-section\">https://github.com/chronic-care/AHRQ-CDS-Connect-PAIN-MANAGEMENT-SUMMARY</a></p>\r\n\r\n<p><strong>An implementation guide and CQL code&nbsp;for the&nbsp;Milligram Morphine Equivalent (MME) calculation logic</strong> is available here:&nbsp;<a href=\"http://build.fhir.org/ig/cqframework/opioid-mme-r4/ \">http://build.fhir.org/ig/cqframework/opioid-mme-r4/&nbsp;</a></p>\r\n\r\n<p>This CDS artifact implements&nbsp;the <a href=\"http://build.fhir.org/ig/HL7/FHIR-ONC-Meds/pdmp.html\">HL7 FHIR Implementation Guide (IG) for PDMP integration</a> using FHIR Release 4 (R4), which is now required by both the Centers for Medicare &amp; Medicaid Services (CMS) and the Office of the National Coordinator for Health Information Technology (ONC) as part of the 21st Century Cures Act. The&nbsp;HL7 FHIR IG for PDMP integration&nbsp;describes interoperability standards and security protocols&nbsp;as summarized in the following diagram. This CDS artifact focuses on the left-hand side of the data flows within these two options, accessing PDMP data using FHIR APIs and integrating those data into provider workflows. The second option illustrates use of the Pain Management Summary SMART on FHIR app with integrated PDMP data, although an implementer could choose Option 1 and&nbsp;retrieve those PDMP medication dispense&nbsp;data via FHIR APIs directly into an EHR system for display in its user interface.</p>\r\n\r\n<p><strong>Figure 1</strong>:&nbsp;Options to leverage FHIR APIs with intermediaries and PMIX/NIEM to access PDMP data</p>\r\n\r\n<p><img alt=\"Options to leverage FHIR APIs\" data-entity-type=\"file\" data-entity-uuid=\"2cc39e08-91ae-47ae-8634-050e25540944\" src=\"/sites/default/files/inline-images/pdmp-data-access-fhir-1_6.png\" /></p>\r\n\r\n<p>FHIR APIs are used to retrieve PDMP medication dispense records from an intermediary&nbsp;gateway that collects and aggregates data from multiple states using NCPDP and/or PMIX/NIEM formats, then makes those data available using HL7 FHIR R4 standards and OAuth2 security protocols. These medication dispense records are presented to clinical users in a SMART on FHIR app, as shown in Figure 2.</p>\r\n\r\n<p><strong>Figure 2</strong>:&nbsp;Pain Management Summary, PDMP medication dispense summary</p>\r\n\r\n<p><img width=\"800\" alt=\"PDMP section in Pain Management Summary SMART on FHIR app\" data-entity-type=\"file\" data-entity-uuid=\"063573ad-eb69-4ebe-9160-b2d971dbc67f\" src=\"/sites/default/files/inline-images/PDMP-section_0.png\" /></p>\r\n\r\n<p>&nbsp;</p>\r\n\r\n<ul>\r\n</ul>\r\n",
+    "technical_files": null,
+    "miscellaneous_files": null
+  },
+  "purpose_and_usage": {
+    "purpose": "<p>Enables&nbsp;a provider to access a patient’s PDMP data during care delivery. To help reduce the potential for opioid misuse, some states have implemented policies mandating providers to check the state PDMP for the patient’s controlled substance history before prescribing any controlled substances. This CDS artifact implements standards-based access to state PDMP data which is integrated into a Pain Management Summary for shared decision-making between providers and patients.</p>\r\n\r\n<p>Benefits of Prescription Drug Monitoring Programs (PDMPs) include:</p>\r\n\r\n<ul>\r\n\t<li>PDMPs are statewide electronic data systems that collect, analyze, and make available prescription data on controlled substances dispensed by non-hospital pharmacies and practitioners.</li>\r\n\t<li>PDMPs collect information on the type and quantity of drug, dispense date, and prescriber and pharmacy identifiers.</li>\r\n\t<li>PDMP data can help providers identify patterns of possible nonmedical or dangerous use of prescription drugs.</li>\r\n\t<li>Access to PDMP information is determined by state law. All states with a PDMP allow prescribers, and most allow pharmacists, to obtain controlled substance prescription history information on patients under their care.</li>\r\n</ul>\r\n\r\n<p>There are several alternative formats and standards used when exchanging data about controlled substances dispensed to patients, including NCPDP, PMIX/NIEM and proprietary mechanisms such as the web portals. The PDMP eco-system can benefit from the usage of standardized HL7 FHIR APIs for accessing PDMP data in the following ways:</p>\r\n\r\n<ul>\r\n\t<li>Ability to easily integrate PDMP data access in EHR workflows using SMART on FHIR Apps</li>\r\n\t<li>Ability to enhance security mechanisms standardized by SMART on FHIR protocols used between the PDMP actors</li>\r\n\t<li>Ability to leverage the PDMP FHIR APIs to build decision support services, including CDS Hooks used to present alerts within EHR workflows</li>\r\n</ul>\r\n",
+    "intended_population": "<p>For use in adults aged 18 years and older prescribed opioid medications for chronic pain (i.e., pain conditions that typically last &gt;3 months or past the time of normal tissue healing) outside of active cancer treatment, palliative care and end-of-life care.</p>\r\n",
+    "usage": null,
+    "cautions": "<p>This artifact has not undergone clinical testing.</p>\r\n",
+    "test_patients": null
+  },
+  "supporting_evidence": {
+    "source_description": "<p>Although inspired by the Centers for Disease Control and Prevention (CDC) Guideline for Prescribing Opioids for Chronic Pain, this artifact is not directly derived from any one recommendation statement. This artifact complements another AHRQ CDS artifact,&nbsp;<a href=\"/cdsconnect/artifact/factors-consider-managing-chronic-pain-pain-management-summary\" hreflang=\"en\">Factors to Consider in Managing Chronic Pain: A Pain Management Summary</a>, by&nbsp;implementing&nbsp;support for CDC guidance on using&nbsp;state PDMPs;&nbsp;see the Centers for Disease Control and Prevention&nbsp;<a href=\"https://www.cdc.gov/drugoverdose/pdmp/states.html\">what states need to know about PDMPs</a>.</p>\r\n",
+    "source": "CDC Guideline for Prescribing Opioids for Chronic Pain — United States, 2016",
+    "references": "<ul>\r\n\t<li>Dowell D, Haegerich TM, Chou R. CDC Guideline for Prescribing Opioids for Chronic Pain - United States, 2016. MMWR Recomm Rep 2016;65(1):1-49.</li>\r\n\t<li>CDC, State Information on Prescription Drug Monitoring Programs (PDMPs), <a href=\"https://www.cdc.gov/drugoverdose/pdmp/states.html\">https://www.cdc.gov/drugoverdose/pdmp/states.html</a></li>\r\n\t<li>HL7 US Meds Prescription Drug Monitoring Program (PDMP) FHIR Implementation Guide, <a href=\"http://build.fhir.org/ig/HL7/FHIR-ONC-Meds/pdmp.html\">http://build.fhir.org/ig/HL7/FHIR-ONC-Meds/pdmp.html</a></li>\r\n\t<li>Milligram Morphine Equivalent (MME) calculation logic and implementation guide,&nbsp;<a href=\"http://build.fhir.org/ig/cqframework/opioid-mme-r4/\">http://build.fhir.org/ig/cqframework/opioid-mme-r4/</a></li>\r\n</ul>\r\n",
+    "artifact_decision_notes": null,
+    "recommendation_statement": [
+      {
+        "recommendation": null,
+        "strength_of_recommendation": null,
+        "quality_of_evidence": null,
+        "decision_notes": null
+      }
+    ]
+  },
+  "repository_information": {
+    "approval_date": "2020-11-30",
+    "expiration_date": null,
+    "last_review_date": null,
+    "publication_date": null,
+    "preview_image": null
+  },
+  "testing_experience": {
+    "pilot_experience": "<p>This CDS Connect artifact for PDMP data integration has not yet been tested in a clinical pilot setting. Pilot site selection is underway for testing with clinical users in&nbsp;mid-2021, including integration with the site EHR system and/or their state HIE.</p>\r\n\r\n<p>Successful development testing was completed in March 2020 while preparing for demonstration at&nbsp;the HIMSS 2020&nbsp;Interoperability Showcase, which was cancelled shortly before the event due to COVID-19 precautions. The planned demonstration featured the AHRQ Pain Management Summary SMART on FHIR app,&nbsp;integrated with PDMP data from CRISP, a non-profit Regional Health Information Exchange&nbsp;(HIE) serving Maryland, West Virginia, and the District of Columbia. The CRISP&nbsp;API Gateway implements the HL7 FHIR IG for PDMP medication dispense data, which provides a programmatic FHIR API to search for&nbsp;a matching patient and&nbsp;retrieve the patient's FHIR MedicationDispense resources. These&nbsp;PDMP data from CRISP were&nbsp;then displayed&nbsp;in&nbsp;a dedicated PDMP section of the Pain Management Summary SMART on FHIR app. A screenshot with this display is shown in Figure 2 of the Engineering Details section of this artifact description.</p>\r\n"
+  },
+  "coverage_requirements_discovery": {
+    "payer": null,
+    "code_system": null,
+    "electronic_prescribing_code": null
+  }
+}
