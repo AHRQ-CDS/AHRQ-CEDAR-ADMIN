@@ -10,13 +10,12 @@ class UspstfImporter
     importer = UspstfImporter.new(json, online: true)
     importer.update_db!
     importer.remove_obsolete_entries!
-    importer.extract_tool_descriptions!
   end
 
   def initialize(uspstf_json, online: false)
     @json_data = JSON.parse(uspstf_json)
     @found_ids = {}
-    @online = online
+    @online = online # false for unit tests
   end
 
   def update_db!
@@ -68,27 +67,21 @@ class UspstfImporter
       cedar_id = "USPSTF-TOOL-#{id}"
       url = tool['url']
       @found_ids[cedar_id] = url
-      Artifact.update_or_create!(
-        cedar_id,
+      metadata = {
         title: tool['title'],
         repository: uspstf,
         url: url,
         artifact_type: 'Tool',
         artifact_status: 'active'
-      )
-    end
-  end
-
-  def extract_tool_descriptions!
-    return unless @online
-
-    tools = @found_ids.select { |cedar_id, _| cedar_id.start_with? 'USPSTF-TOOL' }
-    tools.each_pair do |cedar_id, page_url|
-      extract_description(cedar_id, page_url)
+      }
+      metadata.merge!(extract_metadata(url)) if @online
+      Artifact.update_or_create!(cedar_id, metadata)
     end
   end
 
   # Remove any USPSTF entries that were not found in the completed index run
+  # USPSTF JSON identifiers are not persistent so this step is needed to clean up the
+  # database
   def remove_obsolete_entries!
     Artifact.where(repository: @ehc_repository).where.not(cedar_identifier: @found_ids.keys).destroy_all
   end

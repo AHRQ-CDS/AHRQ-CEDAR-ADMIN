@@ -34,6 +34,9 @@ gem 'dotenv-rails'
 gem 'faraday'
 gem 'faraday-cookie_jar'
 
+# Use PDF Reader gem for processing PDF artifacts during indexing
+gem 'pdf-reader'
+
 # Use Active Storage variant
 # gem 'image_processing', '~> 1.2'
 

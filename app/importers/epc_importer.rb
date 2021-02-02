@@ -8,13 +8,10 @@ class EpcImporter
     importer = EpcImporter.new
     page = '?search_api_fulltext=&page=0'
     page = importer.process_index_page(page) until page.nil?
-    importer.remove_obsolete_entries!
-    importer.process_product_pages!
   end
 
   def initialize
     @epc_repository = Repository.where(name: 'EPC').first_or_create!(home_page: Rails.configuration.epc_home_page)
-    @found_ids = {}
   end
 
   # Import a single page of search results and return the path to the next page or nil
@@ -51,18 +48,31 @@ class EpcImporter
     html = Nokogiri::HTML(response.body)
     html.css('div.view-content div.views-row').each do |artifact|
       artifact_link_node = artifact.at_css('div.views-field-title span.field-content a')
+      if artifact_link_node.nil?
+        Rails.logger.warn 'Encountered EPC search entry with missing title and link'
+        next
+      end
+
       artifact_title = artifact_link_node.content
       artifact_url = artifact_link_node['href']
+      if artifact_url.nil?
+        Rails.logger.warn "Encountered EPC search entry '#{artifact_title}' with missing link"
+        next
+      end
+
       artifact_uri = URI.parse(artifact_url)
       artifact_path = artifact_uri.path
       cedar_id = ['EPC', artifact_path.split('/').reject(&:empty?)].flatten.join('-')
-      @found_ids[cedar_id] = artifact_url
       artifact_type = artifact.at_css('div.views-field-field-epc-type span.field-content')&.content
       artifact_status = to_artifact_status(artifact_uri)
       artifact_date_str = artifact.at_css('div.views-field-field-timestamp  span.field-content')&.content
-      artifact_date = artifact_date_str.nil? ? nil : Date.parse(artifact_date_str) # Date.parse ignores the 'Date: ' prefix in the field
-      Artifact.update_or_create!(
-        cedar_id,
+      begin
+        artifact_date = Date.parse(artifact_date_str) unless artifact_date_str.nil? # Date.parse ignores the 'Date: ' prefix in the field
+      rescue Date::Error
+        Rails.logger.warn "Encountered EPC search entry '#{artifact_title}' with invalid date '#{artifact_date_str}'"
+      end
+
+      metadata = {
         remote_identifier: artifact_path,
         repository: @epc_repository,
         title: artifact_title,
@@ -72,24 +82,15 @@ class EpcImporter
         artifact_status: artifact_status,
         keywords: [],
         mesh_keywords: []
-      )
-      Rails.logger.info "Processed EPC page #{url}"
+      }
+      metadata.merge!(extract_metadata(artifact_url))
+      Artifact.update_or_create!(cedar_id, metadata)
+      Rails.logger.info "Processed EPC artifact #{artifact_url}"
     end
 
     # Search results are paged, extract the path of the next page
     next_page_node = html.at_css('li.pager__item--next a')
     next_page_node ? next_page_node['href'] : nil
-  end
-
-  # Remove any EPC entries that were not found in the completed index run
-  def remove_obsolete_entries!
-    Artifact.where(repository: @epc_repository).where.not(cedar_identifier: @found_ids.keys).destroy_all
-  end
-
-  def process_product_pages!
-    @found_ids.each_pair do |cedar_id, page_url|
-      extract_description(cedar_id, page_url)
-    end
   end
 
   def to_artifact_status(artifact_uri)

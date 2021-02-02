@@ -8,13 +8,10 @@ class EhcImporter
     importer = EhcImporter.new
     page = '/products'
     page = importer.process_index_page(page) until page.nil?
-    importer.remove_obsolete_entries!
-    importer.process_product_pages!
   end
 
   def initialize
     @ehc_repository = Repository.where(name: 'EHC').first_or_create!(home_page: Rails.configuration.ehc_home_page)
-    @found_ids = {}
   end
 
   # Import a single page of search results and return the path to the next page or nil
@@ -46,19 +43,37 @@ class EhcImporter
     html = Nokogiri::HTML(response.body)
     html.css('div.item-content').each do |artifact|
       artifact_link_node = artifact.at_css('div.item-header a')
+      if artifact_link_node.nil?
+        Rails.logger.warn 'Encountered EHC search entry with missing title and link'
+        next
+      end
+
       artifact_title = artifact_link_node.content
       artifact_path = artifact_link_node['href']
+      if artifact_path.nil?
+        Rails.logger.warn "Encountered EHC search entry '#{artifact_title}' with missing link"
+        next
+      end
+
       cedar_id = ['EHC', artifact_path.split('/').reject(&:empty?)].flatten.join('-')
       artifact_url = "#{Rails.configuration.ehc_base_url}#{artifact_path}"
-      @found_ids[cedar_id] = artifact_url
       artifact_type_nodes = artifact.css('div.item-meta div.item-type span.field-content').to_a
-      artifact_type = artifact_type_nodes[0].content
-      artifact_status = artifact_type_nodes[1].content
-      artifact_status = 'Active' if artifact_status.empty?
-      artifact_date_str = artifact.at_css('div.item-meta div.item-date span.field-content').content
-      artifact_date = Date.parse(artifact_date_str)
-      Artifact.update_or_create!(
-        cedar_id,
+      if artifact_type_nodes.size >= 2
+        artifact_type = artifact_type_nodes[0].content
+        artifact_status = artifact_type_nodes[1].content
+        artifact_status = 'Active' if artifact_status.empty?
+      else
+        Rails.logger.warn "Encountered EHC search entry '#{artifact_title}' with missing type or status"
+      end
+
+      artifact_date_str = artifact.at_css('div.item-meta div.item-date span.field-content')&.content
+      begin
+        artifact_date = Date.parse(artifact_date_str) unless artifact_date_str.nil?
+      rescue Date::Error
+        Rails.logger.warn "Encountered EHC search entry '#{artifact_title}' with invalid date '#{artifact_date_str}'"
+      end
+
+      metadata = {
         remote_identifier: artifact_path,
         repository: @ehc_repository,
         title: artifact_title,
@@ -68,8 +83,10 @@ class EhcImporter
         artifact_status: to_cedar_status(artifact_status),
         keywords: [],
         mesh_keywords: []
-      )
-      Rails.logger.info "Processed EHC page #{url}"
+      }
+      metadata.merge!(extract_metadata(artifact_url))
+      Artifact.update_or_create!(cedar_id, metadata)
+      Rails.logger.info "Processed EHC artifact #{artifact_url}"
     end
 
     # Search results are paged, extract the path of the next page from the following
@@ -88,17 +105,6 @@ class EhcImporter
     next_page_node = html.css('div.pagination li.page-item').last
     next_page_link = next_page_node.at_css('a.page-link')
     next_page_link ? next_page_link['href'] : nil
-  end
-
-  # Remove any EHC entries that were not found in the completed index run
-  def remove_obsolete_entries!
-    Artifact.where(repository: @ehc_repository).where.not(cedar_identifier: @found_ids.keys).destroy_all
-  end
-
-  def process_product_pages!
-    @found_ids.each_pair do |cedar_id, page_url|
-      extract_description(cedar_id, page_url)
-    end
   end
 
   def to_cedar_status(ehc_status)
