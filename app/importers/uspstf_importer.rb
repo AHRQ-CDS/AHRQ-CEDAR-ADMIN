@@ -7,15 +7,14 @@ class UspstfImporter
   def self.download_and_update!
     uri = URI(Rails.configuration.uspstf_base_url)
     json = Net::HTTP.get(uri)
-    importer = UspstfImporter.new(json, online: true)
+    importer = UspstfImporter.new(json)
     importer.update_db!
     importer.remove_obsolete_entries!
   end
 
-  def initialize(uspstf_json, online: false)
+  def initialize(uspstf_json)
     @json_data = JSON.parse(uspstf_json)
     @found_ids = {}
-    @online = online # false for unit tests
   end
 
   def update_db!
@@ -74,7 +73,7 @@ class UspstfImporter
         artifact_type: 'Tool',
         artifact_status: 'active'
       }
-      metadata.merge!(extract_metadata(url)) if @online
+      metadata.merge!(extract_metadata(url))
       Artifact.update_or_create!(cedar_id, metadata)
     end
   end
