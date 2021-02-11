@@ -15,45 +15,37 @@ class UspstfImporterTest < ActiveSupport::TestCase
     stub_request(:get, /jamanetwork.com/).to_return(status: 200, headers: { 'Content-Type' => 'text/html' }, body: html_tool_mock)
 
     # Ensure that none are loaded before the test runs
-    artifacts = Artifact.where(cedar_identifier: 'USPSTF-GR-199')
-    assert_equal(0, artifacts.count)
-    artifacts = Artifact.where(cedar_identifier: 'USPSTF-GR-199')
-    assert_equal(0, artifacts.count)
-    artifacts = Artifact.where(cedar_identifier: 'USPSTF-TOOL-323')
-    assert_equal(0, artifacts.count)
+    assert_equal(0, Repository.where(name: 'USPSTF').count)
 
     # Import sample data
     UspstfImporter.download_and_update!
 
+    # Check that all of the expected data was imported
+    repository = Repository.where(name: 'USPSTF').first
+    artifacts = repository.artifacts
+    assert_equal(7, artifacts.count)
+
     # Check example specific recommendation
-    artifacts = Artifact.where(cedar_identifier: 'USPSTF-SR-358')
-    assert_equal(1, artifacts.count)
-    artifact = artifacts.first
+    artifact = artifacts.where(cedar_identifier: 'USPSTF-SR-358').first
     assert_equal('Cervical Cancer: Screening --Women aged 21 to 65 years', artifact.title)
     assert_equal('USPSTF', artifact.repository.name)
     assert_equal('Specific Recommendation', artifact.artifact_type)
 
     # Check example general recommendation
-    artifacts = Artifact.where(cedar_identifier: 'USPSTF-GR-199')
-    assert_equal(1, artifacts.count)
-    artifact = artifacts.first
+    artifact = artifacts.where(cedar_identifier: 'USPSTF-GR-199').first
     assert_equal('Screening for Cervical Cancer', artifact.title)
     assert_equal('USPSTF', artifact.repository.name)
     assert_equal('General Recommendation', artifact.artifact_type)
 
     # Check example PDF tool
-    artifacts = Artifact.where(cedar_identifier: 'USPSTF-TOOL-323')
-    assert_equal(1, artifacts.count)
-    artifact = artifacts.first
+    artifact = artifacts.where(cedar_identifier: 'USPSTF-TOOL-323').first
     assert_equal('Cervical Cancer Screening - Clinical Summary (PDF)', artifact.title)
     assert_equal('USPSTF', artifact.repository.name)
     assert_equal('Tool', artifact.artifact_type)
     assert_equal('This is a sample tool for the USPSTF importer.', artifact.description)
 
     # Check example HTML tool
-    artifacts = Artifact.where(cedar_identifier: 'USPSTF-TOOL-324')
-    assert_equal(1, artifacts.count)
-    artifact = artifacts.first
+    artifact = artifacts.where(cedar_identifier: 'USPSTF-TOOL-324').first
     assert_equal('Cervical Cancer Screening - Patient Page', artifact.title)
     assert_equal('USPSTF', artifact.repository.name)
     assert_equal('Tool', artifact.artifact_type)
@@ -64,12 +56,14 @@ class UspstfImporterTest < ActiveSupport::TestCase
     # Import sample data a second time
     UspstfImporter.download_and_update!
 
-    #  Check if any artifactsare duplicated by second import
+    #  Check if any artifacts were duplicated by second import
     artifacts = Artifact.where(cedar_identifier: 'USPSTF-SR-358')
     assert_equal(1, artifacts.count)
     artifacts = Artifact.where(cedar_identifier: 'USPSTF-GR-199')
     assert_equal(1, artifacts.count)
     artifacts = Artifact.where(cedar_identifier: 'USPSTF-TOOL-323')
+    assert_equal(1, artifacts.count)
+    artifacts = Artifact.where(cedar_identifier: 'USPSTF-TOOL-324')
     assert_equal(1, artifacts.count)
   end
 end

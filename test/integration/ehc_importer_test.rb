@@ -29,14 +29,17 @@ class EhcImporterTest < ActiveSupport::TestCase
 
     artifact = artifacts.where(title: 'Management of Infantile Epilepsy').first
     assert(artifact.present?)
+    assert_equal('A sample HTML EHC product', artifact.description)
     assert(artifact.keywords.include?('ehc'))
 
     artifact = artifacts.where(title: 'Improving Rural Health Through Telehealth-Guided Provider-to-Provider Communication').first
     assert(artifact.present?)
+    assert_equal('A sample HTML EHC product', artifact.description)
     assert(artifact.keywords.include?('ehc'))
 
     artifact = artifacts.where(title: 'Immunity After COVID-19').first
     assert(artifact.present?)
+    assert_equal('A sample HTML EHC product', artifact.description)
     assert(artifact.keywords.include?('ehc'))
   end
 end
