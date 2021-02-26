@@ -32,7 +32,7 @@ class UspstfImporter
         remote_identifier: id.to_s,
         title: recommendation['title'],
         repository: uspstf,
-        description: ActionView::Base.full_sanitizer.sanitize(recommendation['clinical']).squish,
+        description: ActionView::Base.safe_list_sanitizer.sanitize(recommendation['clinical']).squish,
         url: url,
         published_on: Date.new(recommendation['topicYear'].to_i),
         artifact_type: 'General Recommendation',
