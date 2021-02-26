@@ -15,10 +15,10 @@ class UspstfImporter
   def initialize(uspstf_json)
     @json_data = JSON.parse(uspstf_json)
     @found_ids = {}
+    @uspstf = Repository.where(name: 'USPSTF').first_or_create!(home_page: Rails.configuration.uspstf_home_page)
   end
 
   def update_db!
-    uspstf = Repository.where(name: 'USPSTF').first_or_create!(home_page: Rails.configuration.uspstf_home_page)
     general_rec_urls = {}
     # Extract general recommendations
     @json_data['generalRecommendations'].each_pair do |id, recommendation|
@@ -32,7 +32,7 @@ class UspstfImporter
         cedar_id,
         remote_identifier: id.to_s,
         title: recommendation['title'],
-        repository: uspstf,
+        repository: @uspstf,
         description: ActionView::Base.full_sanitizer.sanitize(description_html).squish,
         description_html: description_html,
         description_markdown: ReverseMarkdown.convert(description_html),
@@ -58,7 +58,7 @@ class UspstfImporter
         cedar_id,
         remote_identifier: recommendation['id'].to_s,
         title: recommendation['title'],
-        repository: uspstf,
+        repository: @uspstf,
         description: ActionView::Base.full_sanitizer.sanitize(description_html).squish,
         description_html: description_html,
         description_markdown: ReverseMarkdown.convert(description_html),
@@ -75,7 +75,7 @@ class UspstfImporter
       @found_ids[cedar_id] = url
       metadata = {
         title: tool['title'],
-        repository: uspstf,
+        repository: @uspstf,
         url: url,
         artifact_type: 'Tool',
         artifact_status: 'active'
@@ -89,6 +89,6 @@ class UspstfImporter
   # USPSTF JSON identifiers are not persistent so this step is needed to clean up the
   # database
   def remove_obsolete_entries!
-    Artifact.where(repository: @ehc_repository).where.not(cedar_identifier: @found_ids.keys).destroy_all
+    Artifact.where(repository: @uspstf).where.not(cedar_identifier: @found_ids.keys).destroy_all
   end
 end

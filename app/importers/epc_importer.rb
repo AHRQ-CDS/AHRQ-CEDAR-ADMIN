@@ -58,6 +58,8 @@ class EpcImporter
       if artifact_url.nil?
         Rails.logger.warn "Encountered EPC search entry '#{artifact_title}' with missing link"
         next
+      elsif artifact_url.include?('uspreventiveservicestaskforce.org') || artifact_url.include?('effectivehealthcare.ahrq.gov')
+        next # skip products that are hosted on other indexed repositories
       end
 
       artifact_uri = URI.parse(artifact_url)
