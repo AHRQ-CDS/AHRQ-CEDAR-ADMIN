@@ -7,3 +7,6 @@ Dotenv.require_keys("CEDAR_CDS_CONNECT_BASIC_AUTH_PASSWORD")
 Dotenv.require_keys("CEDAR_CDS_CONNECT_USERNAME")
 Dotenv.require_keys("CEDAR_CDS_CONNECT_PASSWORD")
 Dotenv.require_keys("CEDAR_CDS_CONNECT_BASE_URL")
+
+Dotenv.require_keys("CEDAR_SRDR_BASE_URL")
+Dotenv.require_keys("CEDAR_SRDR_API_KEY")

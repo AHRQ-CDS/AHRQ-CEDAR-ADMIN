@@ -30,6 +30,12 @@ namespace :import do
     EpcImporter.download_and_update!
   end
 
+  desc "Download the SRDR repository content and import it to the database"
+  task srdr: :environment do
+    puts 'Importing data from SRDR'
+    SrdrImporter.download_and_update!
+  end
+
   desc "Download all repository content and import it to the database"
-  task all: [:uspstf, :cds_connect, :ehc, :epc]
+  task all: [:uspstf, :cds_connect, :ehc, :epc, :srdr]
 end

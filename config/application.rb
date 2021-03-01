@@ -35,5 +35,9 @@ module CedarAdmin
     # Settings for the EPC importer
     config.epc_home_page = 'https://www.ahrq.gov/research/findings/evidence-based-reports/index.html'
     config.epc_base_url = 'https://www.ahrq.gov/research/findings/evidence-based-reports/search.html'
+
+    # Settings for the SRDR importer
+    config.srdr_base_url = ENV['CEDAR_SRDR_BASE_URL']
+    config.srdr_api_key = ENV['CEDAR_SRDR_API_KEY']
   end
 end
