@@ -177,6 +177,8 @@ GEM
     rb-inotify (0.10.1)
       ffi (~> 1.0)
     regexp_parser (1.8.2)
+    reverse_markdown (2.0.0)
+      nokogiri
     rexml (3.2.4)
     rubocop (1.5.2)
       parallel (~> 1.10)
@@ -277,6 +279,7 @@ DEPENDENCIES
   pg (>= 0.18, < 2.0)
   puma (~> 4.1)
   rails (~> 6.0.3, >= 6.0.3.4)
+  reverse_markdown
   rubocop
   rubocop-rails
   sass-rails (>= 6)

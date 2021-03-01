@@ -18,6 +18,8 @@ ActiveRecord::Schema.define(version: 2020_12_18_182334) do
   create_table "artifacts", force: :cascade do |t|
     t.string "title"
     t.text "description"
+    t.text "description_html"
+    t.text "description_markdown"
     t.bigint "repository_id", null: false
     t.string "url"
     t.string "remote_identifier"

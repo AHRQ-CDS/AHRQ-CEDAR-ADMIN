@@ -3,6 +3,8 @@ class CreateArtifacts < ActiveRecord::Migration[6.0]
     create_table :artifacts do |t|
       t.string :title
       t.text :description
+      t.text :description_html
+      t.text :description_markdown
       t.references :repository, null: false, foreign_key: true
       t.string :url
       t.string :remote_identifier

@@ -37,14 +37,15 @@ class CdsConnectImporter
 
       # Store artifact metadata
       artifact = JSON.parse(response.body)
-      description = ActionView::Base.full_sanitizer.sanitize(artifact['description'])&.squish
       cds_connect_status = artifact['status'].downcase
       Artifact.update_or_create!(
         "CDS-CONNECT-#{artifact_id}",
         remote_identifier: artifact_id.to_s,
         repository: cds_connect_repository,
         title: artifact['title'],
-        description: description,
+        description: ActionView::Base.safe_list_sanitizer.sanitize(artifact['description'])&.squish,
+        description_html: ActionView::Base.full_sanitizer.sanitize(artifact['description'])&.squish,
+        description_markdown: ReverseMarkdown.convert(artifact['description']),
         url: "#{Rails.configuration.cds_connect_base_url}node/#{artifact_id}",
         published_on: artifact['repository_information']['publication_date'],
         artifact_type: artifact['artifact_type'],
