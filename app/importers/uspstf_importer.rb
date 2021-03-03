@@ -56,6 +56,7 @@ class UspstfImporter
       # TODO: publish date and url are not explicit fields in the JSON
       Artifact.update_or_create!(
         cedar_id,
+        remote_identifier: recommendation['id'].to_s,
         title: recommendation['title'],
         repository: uspstf,
         description: ActionView::Base.full_sanitizer.sanitize(description_html).squish,
