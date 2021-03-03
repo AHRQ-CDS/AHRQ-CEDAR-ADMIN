@@ -22,6 +22,7 @@ ActiveRecord::Schema.define(version: 2020_12_18_182334) do
     t.text "description_markdown"
     t.bigint "repository_id", null: false
     t.string "url"
+    t.string "doi"
     t.string "remote_identifier"
     t.string "cedar_identifier"
     t.string "artifact_type"

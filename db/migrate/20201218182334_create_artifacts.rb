@@ -7,6 +7,7 @@ class CreateArtifacts < ActiveRecord::Migration[6.0]
       t.text :description_markdown
       t.references :repository, null: false, foreign_key: true
       t.string :url
+      t.string :doi
       t.string :remote_identifier
       t.string :cedar_identifier
       t.string :artifact_type

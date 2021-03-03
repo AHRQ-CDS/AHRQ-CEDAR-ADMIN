@@ -19,13 +19,18 @@ class SrdrImporter
       # TODO: Artifact contains the URL for the API entry point for the artifact; look into 1) whether this
       # has additional data and, if so, 2) updating SRDR to allow read access to anyone with an API key
       description = ActionView::Base.full_sanitizer.sanitize(artifact['description'])&.squish
+      description_html = ActionView::Base.safe_list_sanitizer.sanitize(artifact['description'])&.squish
+      description_markdown = ReverseMarkdown.convert(description_html)
       Artifact.update_or_create!(
         "SRDR-PLUS-#{artifact['id']}",
         remote_identifier: artifact['id'].to_s,
         repository: srdr_repository,
         title: artifact['name'],
         description: description,
+        description_html: description_html,
+        description_markdown: description_markdown,
         url: "#{Rails.configuration.srdr_base_url}projects/#{artifact['id']}",
+        doi: artifact['doi'],
         published_on: artifact['published_at'],
         artifact_status: 'unknown' # TODO: see if this can be determined in some way
         # TODO: see if there's a reasonable value for artifact_type

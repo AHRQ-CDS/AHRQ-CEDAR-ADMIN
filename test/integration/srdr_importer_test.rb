@@ -26,7 +26,10 @@ class SrdrImporterTest < ActiveSupport::TestCase
     assert_equal('1343', artifact_1343.remote_identifier)
     assert_match(/The lack of evidence for PET/, artifact_1343.title)
     assert_match(/Systematic review of diagnostic accuracy and clinical impact of PET and PET-CT/, artifact_1343.description)
+    assert_match(/Systematic review of diagnostic accuracy and clinical impact of PET and PET-CT/, artifact_1343.description_html)
+    assert_match(/Systematic review of diagnostic accuracy and clinical impact of PET and PET-CT/, artifact_1343.description_markdown)
     assert_match(/projects.1343/, artifact_1343.url)
+    assert_equal('10.7301/Z08G8HMP', artifact_1343.doi)
     assert_equal(Date.parse('23 Jul 2015'), artifact_1343.published_on)
     assert_equal('unknown', artifact_1343.artifact_status)
   end
