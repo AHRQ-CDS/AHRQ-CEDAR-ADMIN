@@ -89,6 +89,6 @@ class UspstfImporter
   # USPSTF JSON identifiers are not persistent so this step is needed to clean up the
   # database
   def remove_obsolete_entries!
-    Artifact.where(repository: @uspstf).where.not(cedar_identifier: @found_ids.keys).destroy_all
+    @uspstf.artifacts.where.not(cedar_identifier: @found_ids.keys).destroy_all
   end
 end
