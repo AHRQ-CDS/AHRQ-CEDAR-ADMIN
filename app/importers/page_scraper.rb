@@ -29,7 +29,18 @@ module PageScraper
     description_node = html.at_css('head meta[name="description"]')
     metadata[:description] = description_node['content'] unless description_node.nil?
     keywords_node = html.at_css('head meta[name="keywords"]')
-    metadata[:keywords] = keywords_node['content'].split(',').collect(&:strip) unless keywords_node.nil?
+    metadata[:keywords] =
+      if keywords_node.present?
+        keywords_node['content'].split(',').collect(&:strip)
+      else
+        html.css('head meta[name="citation_keyword"]').collect { |keyword_node| keyword_node['content'] }
+      end
+    date_node =
+      html.at_css('head meta[name="citation_publication_date"]') ||
+      html.at_css('head meta[name="citation_date"]') ||
+      html.at_css('head meta[name="DC.Date"]') ||
+      html.at_css('head meta[name="DC.date"]')
+    metadata[:published_on] = Date.parse(date_node['content']) unless date_node.nil?
     metadata
   end
 
@@ -38,6 +49,9 @@ module PageScraper
     reader = PDF::Reader.new(StringIO.new(pdf))
     metadata[:description] = reader.info[:Subject] unless reader.info[:Subject].nil?
     metadata[:keywords] = reader.info[:Keywords].split(',').collect(&:strip) unless reader.info[:Keywords].nil?
+    pdf_date_str = reader.info[:ModDate] || reader.info[:CreationDate]
+    # PDF date format is "D:20150630104759-04'00'"
+    metadata[:published_on] = Date.parse(pdf_date_str[2..9]) unless pdf_date_str.nil?
     metadata
   end
 end
