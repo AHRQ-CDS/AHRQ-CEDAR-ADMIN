@@ -1,0 +1,15 @@
+<div class="row mt-5">
+  <div class="col-sm">
+    <h3><%= title %></h3>
+    <table class="table">
+      <tbody>
+        <% data.each do |repository, count| %>
+          <tr><td style="width: 50%"><%= repository %></td><td><%= count %> artifacts</td></tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-sm">
+    <%= pie_chart data %>
+  </div>
+</div>
