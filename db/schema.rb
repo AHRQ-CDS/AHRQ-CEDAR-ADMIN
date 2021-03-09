@@ -33,7 +33,6 @@ ActiveRecord::Schema.define(version: 2020_12_18_182334) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index "to_tsvector('english'::regconfig, (((title)::text || ' '::text) || description))", name: "index_artifacts_on_title_description", using: :gin
-    t.index "to_tsvector('english'::regconfig, (title)::text)", name: "index_artifacts_on_title", using: :gin
     t.index ["keywords"], name: "index_artifacts_on_keywords", using: :gin
     t.index ["mesh_keywords"], name: "index_artifacts_on_mesh_keywords", using: :gin
     t.index ["repository_id"], name: "index_artifacts_on_repository_id"
