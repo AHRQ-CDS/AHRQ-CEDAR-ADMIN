@@ -26,16 +26,13 @@ class UspstfImporter
       cedar_id = "USPSTF-GR-#{id}"
       # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
       url = "#{Rails.configuration.uspstf_home_page}recommendation/#{recommendation['uspstfAlias']}"
-      description_html = ActionView::Base.safe_list_sanitizer.sanitize(recommendation['clinical']).squish
       @found_ids[cedar_id] = url
       Artifact.update_or_create!(
         cedar_id,
         remote_identifier: id.to_s,
         title: recommendation['title'],
         repository: @uspstf,
-        description: ActionView::Base.full_sanitizer.sanitize(description_html).squish,
-        description_html: description_html,
-        description_markdown: ReverseMarkdown.convert(description_html),
+        description_html: recommendation['clinical'],
         url: url,
         published_on: Date.new(recommendation['topicYear'].to_i),
         artifact_type: 'General Recommendation',
@@ -51,7 +48,6 @@ class UspstfImporter
     @json_data['specificRecommendations'].each do |recommendation|
       cedar_id = "USPSTF-SR-#{recommendation['id']}"
       url = general_rec_urls[recommendation['general'].to_s]
-      description_html = ActionView::Base.safe_list_sanitizer.sanitize(recommendation['text']).squish
       @found_ids[cedar_id] = url
       # TODO: publish date and url are not explicit fields in the JSON
       Artifact.update_or_create!(
@@ -59,9 +55,7 @@ class UspstfImporter
         remote_identifier: recommendation['id'].to_s,
         title: recommendation['title'],
         repository: @uspstf,
-        description: ActionView::Base.full_sanitizer.sanitize(description_html).squish,
-        description_html: description_html,
-        description_markdown: ReverseMarkdown.convert(description_html),
+        description_html: recommendation['text'],
         url: url,
         artifact_type: 'Specific Recommendation',
         artifact_status: 'active'

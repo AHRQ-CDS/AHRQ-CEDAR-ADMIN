@@ -43,6 +43,9 @@ gem 'pdf-reader'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 
+# Convert Markdown to HTML
+gem 'commonmarker'
+
 # Convert HTML to Markdown
 gem 'reverse_markdown'
 
