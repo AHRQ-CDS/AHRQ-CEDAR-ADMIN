@@ -12,7 +12,8 @@ class ActiveSupport::TestCase
   parallelize(workers: :number_of_processors)
 
   # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-  fixtures :all
+  # We don't load them by default, we only load them specifically for test cases where we want them
+  # fixtures :all
 
   # Add more helper methods to be used by all tests here...
 end

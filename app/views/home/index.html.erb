@@ -16,11 +16,21 @@
           </tr>
           <tr>
             <td>Artifacts Missing Description</td>
-            <td><%= @artifact_count_missing_description %> (<%= number_to_percentage(@artifact_count_missing_description * 100 / @artifact_count, precision: 0) %>)</td>
+            <td>
+              <%= @artifact_count_missing_description %>
+              <% if @artifact_count > 0 %>
+                (<%= number_to_percentage(@artifact_count_missing_description * 100 / @artifact_count, precision: 0) %>)
+              <% end %>
+            </td>
           </tr>
           <tr>
             <td>Artifacts Missing Keywords</td>
-            <td><%= @artifact_count_missing_keywords %> (<%= number_to_percentage(@artifact_count_missing_keywords * 100 / @artifact_count, precision: 0) %>)</td>
+            <td>
+              <%= @artifact_count_missing_keywords %>
+              <% if @artifact_count > 0 %>
+                (<%= number_to_percentage(@artifact_count_missing_keywords * 100 / @artifact_count, precision: 0) %>)
+              <% end %>
+            </td>
           </tr>
         </tbody>
       </table>

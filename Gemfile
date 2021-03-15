@@ -73,6 +73,8 @@ group :test do
   gem 'rubocop-rails', require: false
   gem 'brakeman', require: false
   gem 'webmock'
+  # Allow testing of controller assignments
+  gem 'rails-controller-testing'
 end
 
 # Windows does not include zoneinfo files; this will bundle the tzinfo-data gem if running on Windows is required
