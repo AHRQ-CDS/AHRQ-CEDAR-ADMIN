@@ -15,6 +15,8 @@ class CreateArtifacts < ActiveRecord::Migration[6.0]
       t.date :published_on
       t.jsonb :keywords, default: []
       t.jsonb :mesh_keywords, default: []
+      t.text :keyword_text
+      t.text :mesh_keyword_text
 
       t.timestamps
     end
@@ -22,5 +24,7 @@ class CreateArtifacts < ActiveRecord::Migration[6.0]
     add_index :artifacts, :keywords, :using => :gin, :name => 'index_artifacts_on_keywords'
     add_index :artifacts, :mesh_keywords, :using => :gin, :name => 'index_artifacts_on_mesh_keywords'
     add_index :artifacts, "to_tsvector('english', coalesce(title,'') || ' ' || coalesce(description,''))", :using => :gin, :name => 'index_artifacts_on_title_description'
+    add_index :artifacts, "to_tsvector('english', coalesce(keyword_text, ''))", :using => :gin, :name => 'index_artifacts_on_keyword_text'
+    add_index :artifacts, "to_tsvector('english', coalesce(mesh_keyword_text, ''))", :using => :gin, :name => 'index_artifacts_on_mesh_keyword_text'
   end
 end

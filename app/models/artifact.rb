@@ -66,6 +66,16 @@ class Artifact < ApplicationRecord
     end
   end
 
+  def keywords=(keywords)
+    super(keywords)
+    self.keyword_text = keywords.join(', ')
+  end
+
+  def mesh_keywords=(mesh_keywords)
+    super(mesh_keywords)
+    self.mesh_keyword_text = mesh_keywords.join(', ')
+  end
+
   def self.update_or_create!(cedar_identifier, attributes)
     find_or_initialize_by(cedar_identifier: cedar_identifier).update!(attributes)
   end

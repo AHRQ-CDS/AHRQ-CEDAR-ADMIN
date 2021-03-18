@@ -27,6 +27,12 @@ class UspstfImporter
       # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
       url = "#{Rails.configuration.uspstf_home_page}recommendation/#{recommendation['uspstfAlias']}"
       @found_ids[cedar_id] = url
+      mesh_keywords = []
+
+      recommendation['categories'].each do |cat|
+        mesh_keywords << @json_data['categories'][cat.to_s]['name']
+      end
+
       Artifact.update_or_create!(
         cedar_id,
         remote_identifier: id.to_s,
@@ -37,7 +43,8 @@ class UspstfImporter
         published_on: Date.new(recommendation['topicYear'].to_i),
         artifact_type: 'General Recommendation',
         artifact_status: 'active',
-        keywords: keywords
+        keywords: keywords,
+        mesh_keywords: mesh_keywords
       )
       general_rec_urls[id] = url
     end
@@ -49,6 +56,24 @@ class UspstfImporter
       cedar_id = "USPSTF-SR-#{recommendation['id']}"
       url = general_rec_urls[recommendation['general'].to_s]
       @found_ids[cedar_id] = url
+      mesh_keywords = []
+
+      case recommendation['gender']
+      when 'female'
+        mesh_keywords << 'Female'
+      when 'male'
+        mesh_keywords << 'Male'
+      end
+
+      unless recommendation['ageRange'].empty?
+        age_start = recommendation['ageRange'][0]
+        age_end = recommendation['ageRange'][1]
+        mesh_keywords << 'Infant' if age_start < 2 || age_end < 2
+        mesh_keywords << 'Child' if (age_start >= 2 && age_start <= 12) || (age_end >= 2 && age_end <= 12)
+        mesh_keywords << 'Adolescent' if (age_start >= 13 && age_start <= 18) || (age_end >= 13 && age_end <= 18)
+        mesh_keywords << 'Adult' if age_start > 18 || age_end > 18
+      end
+
       # TODO: publish date and url are not explicit fields in the JSON
       Artifact.update_or_create!(
         cedar_id,
@@ -58,7 +83,8 @@ class UspstfImporter
         description_html: recommendation['text'],
         url: url,
         artifact_type: 'Specific Recommendation',
-        artifact_status: 'active'
+        artifact_status: 'active',
+        mesh_keywords: mesh_keywords
       )
     end
 
