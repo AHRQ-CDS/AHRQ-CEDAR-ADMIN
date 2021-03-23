@@ -80,8 +80,10 @@ class Artifact < ApplicationRecord
     find_or_initialize_by(cedar_identifier: cedar_identifier).update!(attributes)
     connection.execute(<<-EOQ)
         UPDATE artifacts SET content_search = 
-        setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
-        setweight(to_tsvector('english', coalesce(description, '')), 'D')
+          setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
+          setweight(to_tsvector('english', coalesce(keyword_text, '')), 'B') ||
+          setweight(to_tsvector('english', coalesce(mesh_keyword_text, '')), 'B') ||
+          setweight(to_tsvector('english', coalesce(description, '')), 'D')
         WHERE cedar_identifier=#{connection.quote(cedar_identifier)}
       EOQ
   end
