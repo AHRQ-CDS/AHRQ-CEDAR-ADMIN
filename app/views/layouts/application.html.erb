@@ -9,9 +9,16 @@
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= stylesheet_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <%# TODO: Tag cloud use will likely be refactored %>
+    <%= javascript_pack_tag 'tag-cloud', 'data-turbolinks-track': 'reload' %>
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="navbar navbar-dark bg-dark">
+      <%= link_to 'CEDAR', root_path, class: 'navbar-brand' %>
+    </nav>
+    <div class="container mt-4">
+      <%= yield %>
+    </div>
   </body>
 </html>

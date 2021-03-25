@@ -3,8 +3,12 @@
     <h3><%= title %></h3>
     <table class="table">
       <tbody>
-        <% data.each do |repository, count| %>
-          <tr><td style="width: 50%"><%= repository %></td><td><%= count %> artifacts</td></tr>
+        <% data.each do |concept, count| %>
+          <% if defined?(path_method) %>
+            <% concept = link_to concept, send(path_method, concept) %>
+          <% end %>
+          <% count_term ||= 'artifact' %>
+          <tr><td style="width: 50%"><%= concept %></td><td><%= pluralize(count, count_term) %></td></tr>
         <% end %>
       </tbody>
     </table>
