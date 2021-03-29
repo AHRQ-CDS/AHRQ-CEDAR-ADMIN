@@ -25,7 +25,6 @@ class CreateArtifacts < ActiveRecord::Migration[6.0]
     add_index :artifacts, :keywords, :using => :gin, :name => 'index_artifacts_on_keywords'
     add_index :artifacts, :mesh_keywords, :using => :gin, :name => 'index_artifacts_on_mesh_keywords'
     add_index :artifacts, :content_search, :using => :gin, :name => 'index_artifacts_on_content_search'
-    add_index :artifacts, "to_tsvector('english', coalesce(keyword_text, ''))", :using => :gin, :name => 'index_artifacts_on_keyword_text'
-    add_index :artifacts, "to_tsvector('english', coalesce(mesh_keyword_text, ''))", :using => :gin, :name => 'index_artifacts_on_mesh_keyword_text'
+    add_index :artifacts, "to_tsvector('english', coalesce(keyword_text, '') || '' || coalesce(mesh_keyword_text, ''))", :using => :gin, :name => 'index_artifacts_on_keyword_text'
   end
 end
