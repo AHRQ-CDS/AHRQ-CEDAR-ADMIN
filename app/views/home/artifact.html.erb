@@ -9,12 +9,12 @@
         <% link_to keyword, keyword_path(keyword) %>
       <% end.join(', ').html_safe %>
     </p>
-    <p><strong>Repository:</strong> <%= @artifact.repository.name%></p>
-    <p><strong>URL:</strong> <%= @artifact.url ? link_to(@artifact.url, @artifact.url) : '<not specified>'%></p>
-    <p><strong>Type:</strong> <%= @artifact.artifact_type || '<not specified>'%></p>
-    <p><strong>Status:</strong> <%= @artifact.artifact_status || '<not specified>'%></p>
+    <p><strong>Repository:</strong> <%= link_to @artifact.repository.name, @artifact.repository %></p>
+    <p><strong>URL:</strong> <%= @artifact.url ? link_to(@artifact.url, @artifact.url) : '<not specified>' %></p>
+    <p><strong>Type:</strong> <%= @artifact.artifact_type || '<not specified>' %></p>
+    <p><strong>Status:</strong> <%= @artifact.artifact_status || '<not specified>' %></p>
     <p><strong>Doi:</strong> <%= @artifact.doi || '<not specified>'%></p>
-    <p><strong>Published On:</strong> <%= @artifact.published_on&.to_s(:long) || '<not specified>'%></p>
-    <p><strong>Indexed At:</strong> <%= @artifact.created_at&.to_s(:long) || '<not specified>'%></p>
+    <p><strong>Published On:</strong> <%= @artifact.published_on&.to_s(:long) || '<not specified>' %></p>
+    <p><strong>Indexed At:</strong> <%= @artifact.created_at&.to_s(:long) || '<not specified>' %></p>
   </div>
 </div>

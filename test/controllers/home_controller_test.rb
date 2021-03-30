@@ -11,8 +11,8 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_equal 3, assigns(:artifact_count)
     assert_equal 1, assigns(:artifact_count_missing_description)
     assert_equal 1, assigns(:artifact_count_missing_keywords)
-    assert_equal 1, assigns(:artifacts_per_repository)&.[]('CDS Connect')
-    assert_equal 2, assigns(:artifacts_per_repository)&.[]('USPSTF')
+    assert_equal 1, assigns(:artifacts_per_repository)&.[](Repository.where(name: 'CDS Connect').first)
+    assert_equal 2, assigns(:artifacts_per_repository)&.[](Repository.where(name: 'USPSTF').first)
     assert_equal 2, assigns(:artifacts_by_status)&.[]('active')
     assert_equal 1, assigns(:artifacts_by_status)&.[]('draft')
     assert assigns(:top_artifacts_per_keyword)&.detect { |k, _v| k == 'Autism' }, 'Expected keyword "Autism" is not present'

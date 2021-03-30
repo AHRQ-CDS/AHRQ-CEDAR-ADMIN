@@ -57,4 +57,9 @@ class Artifact < ApplicationRecord
   def self.update_or_create!(cedar_identifier, attributes)
     find_or_initialize_by(cedar_identifier: cedar_identifier).update!(attributes)
   end
+
+  # When being displayed to a user, show the title
+  def to_s
+    title
+  end
 end

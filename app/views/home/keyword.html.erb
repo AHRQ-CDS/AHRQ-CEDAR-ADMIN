@@ -9,7 +9,7 @@
       <% end %>
     </ul>
 
-    <%= render 'data_with_pie_chart', title: 'Artifacts By Repository', data: @artifacts_per_repository %>
+    <%= render 'data_with_pie_chart', title: 'Artifacts By Repository', data: @artifacts_per_repository, path_method: :repository_path %>
 
     <%= render 'data_with_pie_chart', title: 'Top Related Keywords', data: @top_artifacts_per_keyword, path_method: :keyword_path, count_term: 'occurrence' %>
 

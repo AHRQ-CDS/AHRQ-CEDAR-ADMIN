@@ -1,0 +1,5 @@
+<%= render 'general_statistics', title: "#{@repository.name} Repository Statistics" %>
+
+<%= render 'data_with_pie_chart', title: 'Artifacts By Status', data: @artifacts_by_status %>
+
+<%= render 'data_with_pie_chart', title: 'Top 10 Keywords', data: @top_artifacts_per_keyword, path_method: :keyword_path %>

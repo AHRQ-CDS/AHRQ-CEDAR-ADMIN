@@ -3,4 +3,9 @@
 # Represents a repository indexed by CEDAR.
 class Repository < ApplicationRecord
   has_many :artifacts, dependent: :destroy
+
+  # When being displayed to a user, show the name
+  def to_s
+    name
+  end
 end

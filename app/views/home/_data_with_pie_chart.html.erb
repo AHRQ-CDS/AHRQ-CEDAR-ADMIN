@@ -14,6 +14,6 @@
     </table>
   </div>
   <div class="col-sm">
-    <%= pie_chart data %>
+    <%= pie_chart data.map { |k, v| [k.to_s, v] } %>
   </div>
 </div>
