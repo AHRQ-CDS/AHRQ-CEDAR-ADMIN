@@ -13,9 +13,6 @@ class HomeController < ApplicationController
 
     keywords = Artifact.where.not('keywords <@ ? AND mesh_keywords <@ ?', '[]', '[]').flat_map(&:all_keywords)
     @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
-
-    # TODO: Refactor tag cloud to use REST, consider others above as well using built in chart-kick approach
-    @keyword_counts = keywords.tally.map { |k, v| { text: k, size: v * 5 } }
   end
 
   def repository
@@ -42,5 +39,14 @@ class HomeController < ApplicationController
     @artifacts_per_repository = @artifacts.joins(:repository).group('repository').count
     related_keywords = @artifacts.flat_map(&:all_keywords) - [@keyword] # Don't include the keyword itself
     @top_artifacts_per_keyword = related_keywords.tally.sort_by { |_, v| -v }[0, 10]
+  end
+
+  # We use a RESTful call from the JavaScript tag cloud code to get the appropriate data
+  def keyword_counts
+    keyword_counts = Artifact.where.not('keywords <@ ? AND mesh_keywords <@ ?', '[]', '[]').flat_map(&:all_keywords).tally
+    max_count = keyword_counts.values.max
+    # Scale size from 1 to 100 based on the max_count
+    scale_factor = 120.0 / max_count
+    render json: keyword_counts.sort_by { |_, v| -v }.map { |k, v| { text: k, size: (v * scale_factor).ceil } }[0, 250]
   end
 end

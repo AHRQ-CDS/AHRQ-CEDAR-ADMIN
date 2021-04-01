@@ -11,7 +11,7 @@
 <div class="row mt-5">
   <div class="col-sm">
     <h3>Tag Cloud</h3>
+    <%# The code for the tag cloud is in app/javascript/packs/tag-cloud.js %>
     <div id='tag-cloud' />
-    <script>tagCloud('#tag-cloud', [1200, 800], <%= raw @keyword_counts.to_json %>)</script>
   </div>
 </div>

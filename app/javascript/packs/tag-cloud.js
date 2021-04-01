@@ -5,8 +5,21 @@ require("d3-cloud")
 import * as d3 from 'd3';
 import * as cloud from 'd3-cloud';
 
-// TODO: Temporary hack to see if having a tag cloud even makes sense
-window.tagCloud = function(domId, size, words) {
+$(document).on('turbolinks:load', function() {
+
+  const id = '#tag-cloud';
+  const size = [1200, 1200];
+
+  // Only load data on pages where we have a place to put it
+  if($(id).length > 0) {
+    fetch('/keyword_counts.json')
+      .then(response => response.json())
+      .then(data => tagCloud(id, size, data));
+  }
+
+});
+
+function tagCloud(id, size, words) {
 
   const fill = d3.scaleOrdinal(d3.schemeCategory10);
 
@@ -22,7 +35,7 @@ window.tagCloud = function(domId, size, words) {
 
   function draw(words) {
     var svg = d3
-      .select(domId)
+      .select(id)
       .append("svg")
       .attr("width", layout.size()[0])
       .attr("height", layout.size()[1])
@@ -43,5 +56,5 @@ window.tagCloud = function(domId, size, words) {
         location.href = `/keyword/${this.textContent}`;
       })
       .text(function(d) { return d.text; });
-    }
+  }
 }

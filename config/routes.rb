@@ -4,4 +4,5 @@ Rails.application.routes.draw do
   get '/repository/:id', to: 'home#repository', as: 'repository'
   get '/artifact/:id', to: 'home#artifact', as: 'artifact'
   get '/keyword/:keyword', to: 'home#keyword', as: 'keyword'
+  get '/keyword_counts', to: 'home#keyword_counts', as: 'keyword_counts'
 end
