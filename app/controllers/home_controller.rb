@@ -11,13 +11,11 @@ class HomeController < ApplicationController
     @artifacts_by_status = Artifact.group(:artifact_status).count
     @top_10_artifacts_by_type = Artifact.group(:artifact_type).count.sort_by { |_, v| -v }[0, 10]
 
-    artifacts_with_keywords = Artifact.where.not('keywords <@ ? AND mesh_keywords <@ ?', '[]', '[]')
-    artifacts_per_keyword = artifacts_with_keywords.each_with_object(Hash.new(0)) do |artifact, hash|
-      artifact.all_keywords.each { |keyword| hash[keyword] += 1 }
-    end
-    @top_artifacts_per_keyword = artifacts_per_keyword.sort_by { |_, v| -v }[0, 10]
+    keywords = Artifact.where.not('keywords <@ ? AND mesh_keywords <@ ?', '[]', '[]').flat_map(&:all_keywords)
+    @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
+
     # TODO: Refactor tag cloud to use REST, consider others above as well using built in chart-kick approach
-    @keyword_counts = artifacts_per_keyword.map { |k, v| { text: k, size: v * 5 } }
+    @keyword_counts = keywords.tally.map { |k, v| { text: k, size: v * 5 } }
   end
 
   def repository
@@ -30,11 +28,8 @@ class HomeController < ApplicationController
     @artifacts_by_status = artifacts.group(:artifact_status).count
     @artifacts_by_type = artifacts.group(:artifact_type).count
 
-    artifacts_with_keywords = artifacts.where.not('keywords <@ ? AND mesh_keywords <@ ?', '[]', '[]')
-    artifacts_per_keyword = artifacts_with_keywords.each_with_object(Hash.new(0)) do |artifact, hash|
-      artifact.all_keywords.each { |keyword| hash[keyword] += 1 }
-    end
-    @top_artifacts_per_keyword = artifacts_per_keyword.sort_by { |_, v| -v }[0, 10]
+    keywords = artifacts.where.not('keywords <@ ? AND mesh_keywords <@ ?', '[]', '[]').flat_map(&:all_keywords)
+    @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
   end
 
   def artifact
@@ -45,7 +40,7 @@ class HomeController < ApplicationController
     @keyword = params[:keyword]
     @artifacts = Artifact.where('keywords @> ? OR mesh_keywords @> ?', "[\"#{@keyword}\"]", "[\"#{@keyword}\"]")
     @artifacts_per_repository = @artifacts.joins(:repository).group('repository').count
-    related_keywords = @artifacts.each_with_object([]) { |artifact, array| array.concat(artifact.all_keywords) } - [@keyword]
+    related_keywords = @artifacts.flat_map(&:all_keywords) - [@keyword] # Don't include the keyword itself
     @top_artifacts_per_keyword = related_keywords.tally.sort_by { |_, v| -v }[0, 10]
   end
 end
