@@ -9,6 +9,5 @@ end
 job_type :rake_log, "cd :path && :environment_variable=:environment :bundle_command rake :task > /proc/1/fd/1 2> /proc/1/fd/2"
 
 every 1.day, at: '4:30 am' do
-  # TODO: set up one task that runs all importers
-  rake_log "import:uspstf"
+  rake_log "import:all"
 end
