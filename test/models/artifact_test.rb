@@ -101,4 +101,9 @@ class ArtifactTest < ActiveSupport::TestCase
     assert_equal 'TEXT', artifact.description
     assert_equal "MARKDOWN AND HTML\n\n", artifact.description_markdown
   end
+
+  test 'getting all keywords from an artifact' do
+    artifact = Artifact.new(keywords: ['one', 'two'], mesh_keywords: ['two', 'three'])
+    assert_equal ['one', 'two', 'three'], artifact.all_keywords
+  end
 end

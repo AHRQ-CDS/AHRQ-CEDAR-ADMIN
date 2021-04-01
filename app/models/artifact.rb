@@ -58,6 +58,11 @@ class Artifact < ApplicationRecord
     find_or_initialize_by(cedar_identifier: cedar_identifier).update!(attributes)
   end
 
+  # Return a list of all keywords, regardless of type, with any duplicates pruned
+  def all_keywords
+    keywords | mesh_keywords
+  end
+
   # When being displayed to a user, show the title
   def to_s
     title

@@ -117,3 +117,6 @@ Style/ExplicitBlockArgument:
   Enabled: true
 Style/SoleNestedConditional:
   Enabled: true
+# Local changes
+Style/WordArray:
+  Enabled: false

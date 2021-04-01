@@ -5,7 +5,7 @@
     <p><%= @artifact.description_html.html_safe %></p>
     <p>
       <strong>Keywords:</strong>
-      <%= (@artifact.keywords + @artifact.mesh_keywords).map do |keyword| %>
+      <%= @artifact.all_keywords.map do |keyword| %>
         <% link_to keyword, keyword_path(keyword) %>
       <% end.join(', ').html_safe %>
     </p>
