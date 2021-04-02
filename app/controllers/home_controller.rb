@@ -9,7 +9,7 @@ class HomeController < ApplicationController
 
     @artifacts_per_repository = Artifact.joins(:repository).group('repository').count
     @artifacts_by_status = Artifact.group(:artifact_status).count
-    @top_10_artifacts_by_type = Artifact.group(:artifact_type).count.sort_by { |_, v| -v }[0, 10]
+    @top_artifacts_by_type = Artifact.group(:artifact_type).count.sort_by { |_, v| -v }[0, 10]
 
     keywords = Artifact.where.not('keywords <@ ? AND mesh_keywords <@ ?', '[]', '[]').flat_map(&:all_keywords)
     @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
