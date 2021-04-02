@@ -27,31 +27,39 @@ class Artifact < ApplicationRecord
     # Set all three fields based on the text version, adding paragraphs for
     # linefeeds by interpreting as Markdown
     super(text)
-    return if text.nil?
-
-    html = CommonMarker.render_html(text, :DEFAULT)
-    self.description_html ||= html
-    self.description_markdown ||= text
+    if text
+      html = CommonMarker.render_html(text, :DEFAULT)
+      self.description_html ||= html
+      self.description_markdown ||= text
+    end
   end
 
   def description_html=(html)
     # Set all three fields based on a white list filtered version of the HTML
     # TODO: This sanitizer changes <p>test</p><p>test</p> to "testtest" instead of "test test"
-    html = ActionView::Base.safe_list_sanitizer.sanitize(html)&.squish
-    super(html)
-    self.description_markdown ||= ReverseMarkdown.convert(html)
-    self.description ||= ActionView::Base.full_sanitizer.sanitize(html)
+    if html
+      html = ActionView::Base.safe_list_sanitizer.sanitize(html)&.squish
+      super(html)
+      self.description_markdown ||= ReverseMarkdown.convert(html)
+      self.description ||= ActionView::Base.full_sanitizer.sanitize(html)
+    else
+      super(html)
+    end
   end
 
   def description_markdown=(markdown)
     # Set all three fields based on a white list filtered version of the Markdown
     # (since Markdown can technically embed HTML)
-    html = CommonMarker.render_html(markdown, :DEFAULT)
-    html = ActionView::Base.safe_list_sanitizer.sanitize(html)&.squish
-    markdown = ReverseMarkdown.convert(html)
-    super(markdown)
-    self.description_html ||= html
-    self.description ||= ActionView::Base.full_sanitizer.sanitize(html)
+    if markdown
+      html = CommonMarker.render_html(markdown, :DEFAULT)
+      html = ActionView::Base.safe_list_sanitizer.sanitize(html)&.squish
+      markdown = ReverseMarkdown.convert(html)
+      super(markdown)
+      self.description_html ||= html
+      self.description ||= ActionView::Base.full_sanitizer.sanitize(html)
+    else
+      super(markdown)
+    end
   end
 
   def self.update_or_create!(cedar_identifier, attributes)
