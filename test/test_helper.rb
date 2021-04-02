@@ -11,9 +11,8 @@ class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors)
 
-  # Setup all fixtures in test/fixtures/*.yml for all tests in alphabetical order.
-  # We don't load them by default, we only load them specifically for test cases where we want them
-  # fixtures :all
+  # Note: we use factories instead of fixtures
+  include FactoryBot::Syntax::Methods
 
   # Add more helper methods to be used by all tests here...
 end
