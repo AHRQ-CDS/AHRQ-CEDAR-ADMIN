@@ -27,6 +27,8 @@ class Artifact < ApplicationRecord
     # Set all three fields based on the text version, adding paragraphs for
     # linefeeds by interpreting as Markdown
     super(text)
+    return if text.nil?
+
     html = CommonMarker.render_html(text, :DEFAULT)
     self.description_html ||= html
     self.description_markdown ||= text

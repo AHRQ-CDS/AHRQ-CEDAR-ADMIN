@@ -30,7 +30,7 @@ module CedarAdmin
 
     # Settings for the EHC importer
     config.ehc_home_page = 'https://effectivehealthcare.ahrq.gov'
-    config.ehc_base_url = 'https://effectivehealthcare.ahrq.gov'
+    config.ehc_feed_url = ENV['CEDAR_EHC_FEED_URL']
 
     # Settings for the EPC importer
     config.epc_home_page = 'https://www.ahrq.gov/research/findings/evidence-based-reports/index.html'
