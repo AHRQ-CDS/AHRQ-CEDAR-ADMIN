@@ -106,4 +106,18 @@ class ArtifactTest < ActiveSupport::TestCase
     artifact = Artifact.new(keywords: ['one', 'two'], mesh_keywords: ['two', 'three'])
     assert_equal ['one', 'two', 'three'], artifact.all_keywords
   end
+
+  test 'setting a valid URL' do
+    repository = create(:repository)
+    artifact = Artifact.new(url: 'http://example.com/', repository: repository)
+    assert artifact.valid?, 'Valid URL should result in a valid artifact'
+    artifact = Artifact.new(url: 'https://example.com/', repository: repository)
+    assert artifact.valid?, 'Valid URL should result in a valid artifact'
+  end
+
+  test 'setting an invalid URL' do
+    repository = create(:repository)
+    artifact = Artifact.new(url: 'javascript:alert("XSS")', repository: repository)
+    assert_not artifact.valid?, 'Invalid URL should result in an invalid artifact'
+  end
 end

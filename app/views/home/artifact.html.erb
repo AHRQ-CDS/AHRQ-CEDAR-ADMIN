@@ -2,14 +2,17 @@
   <div class="col-sm">
 
     <h1>Artifact: <%= @artifact.title %></h1>
+    <%# The following line displays HTML stored in our database that has been previously white-list sanitized %>
     <p><%= @artifact.description_html.html_safe %></p>
     <p>
       <strong>Keywords:</strong>
+      <%# The use of html_safe here is needed because we join strings that are already appropriately HTML entity encoded %>
       <%= @artifact.all_keywords.map do |keyword| %>
         <% link_to keyword, keyword_path(keyword) %>
       <% end.join(', ').html_safe %>
     </p>
     <p><strong>Repository:</strong> <%= link_to @artifact.repository.name, @artifact.repository %></p>
+    <%# The URL is validated on import to ensure that it starts with http %>
     <p><strong>URL:</strong> <%= @artifact.url ? link_to(@artifact.url, @artifact.url) : '<not specified>' %></p>
     <p><strong>Type:</strong> <%= @artifact.artifact_type || '<not specified>' %></p>
     <p><strong>Status:</strong> <%= @artifact.artifact_status || '<not specified>' %></p>

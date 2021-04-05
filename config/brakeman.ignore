@@ -1,0 +1,99 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 4,
+      "fingerprint": "6f6066a10ab15fb236bcf2f0be10716b23968da7aeae66385b32e7b24c903596",
+      "check_name": "LinkToHref",
+      "message": "Potentially unsafe model attribute in `link_to` href",
+      "file": "app/views/home/artifact.html.erb",
+      "line": 16,
+      "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
+      "code": "link_to(Artifact.find(params[:id]).url, Artifact.find(params[:id]).url)",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "HomeController",
+          "method": "artifact",
+          "line": 34,
+          "file": "app/controllers/home_controller.rb",
+          "rendered": {
+            "name": "home/artifact",
+            "file": "app/views/home/artifact.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "home/artifact"
+      },
+      "user_input": "Artifact.find(params[:id]).url",
+      "confidence": "Weak",
+      "note": "The URL is validated when artifacts are imported"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "a8e74f27986b80b393200925e9288004084f45757b1ddcb14ee0f89349c21486",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/home/artifact.html.erb",
+      "line": 10,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Artifact.find(params[:id]).all_keywords.map do\n link_to(keyword, keyword_path(keyword))\n end.join(\", \")",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "HomeController",
+          "method": "artifact",
+          "line": 34,
+          "file": "app/controllers/home_controller.rb",
+          "rendered": {
+            "name": "home/artifact",
+            "file": "app/views/home/artifact.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "home/artifact"
+      },
+      "user_input": "Artifact.find(params[:id]).all_keywords",
+      "confidence": "Weak",
+      "note": "The links are HTML entity encoded prior to being joined into a string, which is safe"
+    },
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 2,
+      "fingerprint": "ccc8b915e68a7a8dfcdb557c3b96cd3022c0891f08acf62e2c1ebed3b390e6c0",
+      "check_name": "CrossSiteScripting",
+      "message": "Unescaped model attribute",
+      "file": "app/views/home/artifact.html.erb",
+      "line": 6,
+      "link": "https://brakemanscanner.org/docs/warning_types/cross_site_scripting",
+      "code": "Artifact.find(params[:id]).description_html",
+      "render_path": [
+        {
+          "type": "controller",
+          "class": "HomeController",
+          "method": "artifact",
+          "line": 34,
+          "file": "app/controllers/home_controller.rb",
+          "rendered": {
+            "name": "home/artifact",
+            "file": "app/views/home/artifact.html.erb"
+          }
+        }
+      ],
+      "location": {
+        "type": "template",
+        "template": "home/artifact"
+      },
+      "user_input": null,
+      "confidence": "High",
+      "note": "The description HTML is white list validated when artifacts are imported"
+    }
+  ],
+  "updated": "2021-04-05 16:59:39 -0400",
+  "brakeman_version": "4.10.0"
+}

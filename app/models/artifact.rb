@@ -12,6 +12,10 @@ class Artifact < ApplicationRecord
     unknown: 'unknown'
   }
 
+  # Validate URLs to ensure that they begin with "http"; this allows "http://" and "https://" but prevents
+  # "javascript:" and "data:", which are both security issues
+  validates :url, format: { with: /\Ahttp(s)?:.*\z/i, message: 'only valid URLs' }, allow_nil: true
+
   # Handle setting of description fields; there are 3 different fields:
   #
   #   description - plain text description
