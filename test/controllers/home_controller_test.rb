@@ -4,17 +4,17 @@ require 'test_helper'
 
 class HomeControllerTest < ActionDispatch::IntegrationTest
   test 'should get index' do
-    repository1 = create_repository_with_artifacts(count: 2)
-    repository2 = create(:repository)
-    create(:artifact, repository: repository2, description: nil, keywords: [], mesh_keywords: [], artifact_status: 'draft')
+    repository_1 = create_repository_with_artifacts(count: 2)
+    repository_2 = create(:repository)
+    create(:artifact, repository: repository_2, description: nil, keywords: [], mesh_keywords: [], artifact_status: 'draft')
     get root_url
     assert_response :success
     assert_match 'CEDAR Statistics', @response.body
     assert_equal 3, assigns(:artifact_count)
     assert_equal 1, assigns(:artifact_count_missing_description)
     assert_equal 1, assigns(:artifact_count_missing_keywords)
-    assert_equal 2, assigns(:artifacts_per_repository)&.[](repository1)
-    assert_equal 1, assigns(:artifacts_per_repository)&.[](repository2)
+    assert_equal 2, assigns(:artifacts_per_repository)&.[](repository_1)
+    assert_equal 1, assigns(:artifacts_per_repository)&.[](repository_2)
     assert_equal 2, assigns(:artifacts_by_status)&.[]('active')
     assert_equal 1, assigns(:artifacts_by_status)&.[]('draft')
     assert_equal 1, assigns(:top_artifacts_by_type).length
@@ -58,7 +58,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get keyword_counts' do
-    repository = create_repository_with_artifacts(count: 3)
+    create_repository_with_artifacts(count: 3)
     get keyword_counts_url
     assert_response :success
     response = JSON.parse(@response.body)
