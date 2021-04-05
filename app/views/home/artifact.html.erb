@@ -3,7 +3,7 @@
 
     <h1>Artifact: <%= @artifact.title %></h1>
     <%# The following line displays HTML stored in our database that has been previously white-list sanitized %>
-    <p><%= @artifact.description_html.html_safe %></p>
+    <p><%= @artifact.description_html&.html_safe %></p>
     <p>
       <strong>Keywords:</strong>
       <%# The use of html_safe here is needed because we join strings that are already appropriately HTML entity encoded %>
