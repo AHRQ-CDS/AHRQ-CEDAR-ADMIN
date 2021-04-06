@@ -4,6 +4,7 @@
 # indexed by CEDAR.
 class Artifact < ApplicationRecord
   belongs_to :repository
+  after_save :udpate_index
 
   enum artifact_status: {
     draft: 'draft',
@@ -66,6 +67,16 @@ class Artifact < ApplicationRecord
     end
   end
 
+  def keywords=(keywords)
+    super(keywords)
+    self.keyword_text = keywords.join(', ')
+  end
+
+  def mesh_keywords=(mesh_keywords)
+    super(mesh_keywords)
+    self.mesh_keyword_text = mesh_keywords.join(', ')
+  end
+
   def self.update_or_create!(cedar_identifier, attributes)
     find_or_initialize_by(cedar_identifier: cedar_identifier).update!(attributes)
   end
@@ -78,5 +89,17 @@ class Artifact < ApplicationRecord
   # When being displayed to a user, show the title
   def to_s
     title
+  end
+
+  def udpate_index
+    query = <<-SQL.squish
+      UPDATE artifacts SET content_search = (
+        setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
+        setweight(to_tsvector('english', coalesce(keyword_text, '')), 'B') ||
+        setweight(to_tsvector('english', coalesce(mesh_keyword_text, '')), 'B') ||
+        setweight(to_tsvector('english', coalesce(description, '')), 'D'))
+      WHERE id=#{ActiveRecord::Base.connection.quote(id)}
+    SQL
+    ActiveRecord::Base.connection.execute(query)
   end
 end

@@ -27,6 +27,12 @@ class UspstfImporter
       # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
       url = "#{Rails.configuration.uspstf_home_page}recommendation/#{recommendation['uspstfAlias']}"
       @found_ids[cedar_id] = url
+      mesh_keywords = []
+
+      recommendation['categories'].each do |cat|
+        mesh_keywords << @json_data['categories'][cat.to_s]['name']
+      end
+
       Artifact.update_or_create!(
         cedar_id,
         remote_identifier: id.to_s,
@@ -37,7 +43,8 @@ class UspstfImporter
         published_on: Date.new(recommendation['topicYear'].to_i),
         artifact_type: 'General Recommendation',
         artifact_status: 'active',
-        keywords: keywords
+        keywords: keywords,
+        mesh_keywords: mesh_keywords
       )
       general_rec_urls[id] = url
     end
@@ -49,6 +56,7 @@ class UspstfImporter
       cedar_id = "USPSTF-SR-#{recommendation['id']}"
       url = general_rec_urls[recommendation['general'].to_s]
       @found_ids[cedar_id] = url
+
       # TODO: publish date and url are not explicit fields in the JSON
       Artifact.update_or_create!(
         cedar_id,
