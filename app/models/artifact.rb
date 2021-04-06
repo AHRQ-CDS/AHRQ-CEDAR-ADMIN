@@ -4,7 +4,7 @@
 # indexed by CEDAR.
 class Artifact < ApplicationRecord
   belongs_to :repository
-  after_save :udpate_index 
+  after_save :udpate_index
 
   enum artifact_status: {
     draft: 'draft',
@@ -81,18 +81,6 @@ class Artifact < ApplicationRecord
     find_or_initialize_by(cedar_identifier: cedar_identifier).update!(attributes)
   end
 
-  def udpate_index
-    query = <<-SQL.squish
-      UPDATE artifacts SET content_search = (
-        setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
-        setweight(to_tsvector('english', coalesce(keyword_text, '')), 'B') ||
-        setweight(to_tsvector('english', coalesce(mesh_keyword_text, '')), 'B') ||
-        setweight(to_tsvector('english', coalesce(description, '')), 'D'))
-      WHERE id=#{id}
-    SQL
-    ActiveRecord::Base.connection.execute(query)
-  end
-
   # Return a list of all keywords, regardless of type, with any duplicates pruned
   def all_keywords
     keywords | mesh_keywords
@@ -101,5 +89,17 @@ class Artifact < ApplicationRecord
   # When being displayed to a user, show the title
   def to_s
     title
+  end
+
+  def udpate_index
+    query = <<-SQL.squish
+      UPDATE artifacts SET content_search = (
+        setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
+        setweight(to_tsvector('english', coalesce(keyword_text, '')), 'B') ||
+        setweight(to_tsvector('english', coalesce(mesh_keyword_text, '')), 'B') ||
+        setweight(to_tsvector('english', coalesce(description, '')), 'D'))
+      WHERE id=#{ActiveRecord::Base.connection.quote(id)}
+    SQL
+    ActiveRecord::Base.connection.execute(query)
   end
 end
