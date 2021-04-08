@@ -2,16 +2,17 @@
   <div class="col-sm">
 
     <h1>Keyword: <%= @keyword %></h1>
+
+    <%= render 'data_with_pie_chart', title: 'Artifacts By Repository', data: @artifacts_per_repository, path_method: :repository_path %>
+
+    <%= render 'data_with_pie_chart', title: 'Top Related Keywords', data: @top_artifacts_per_keyword, path_method: :keyword_path, count_term: 'occurrence' %>
+
     <h3><%= @artifacts.count %> Artifacts</h3>
     <ul>
       <% @artifacts.each do |artifact| %>
         <li><%= link_to artifact.title, artifact %></li>
       <% end %>
     </ul>
-
-    <%= render 'data_with_pie_chart', title: 'Artifacts By Repository', data: @artifacts_per_repository, path_method: :repository_path %>
-
-    <%= render 'data_with_pie_chart', title: 'Top Related Keywords', data: @top_artifacts_per_keyword, path_method: :keyword_path, count_term: 'occurrence' %>
 
   </div>
 </div>

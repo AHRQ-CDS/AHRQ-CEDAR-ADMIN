@@ -14,6 +14,9 @@ FactoryBot.define do
     artifact_status { 'active' }
     artifact_type { 'test' }
   end
+
+  factory :index_activity do
+  end
 end
 
 def create_repository_with_artifacts(count: 1)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_18_182334) do
+ActiveRecord::Schema.define(version: 2021_04_07_224403) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,19 @@ ActiveRecord::Schema.define(version: 2020_12_18_182334) do
     t.index ["repository_id"], name: "index_artifacts_on_repository_id"
   end
 
+  create_table "index_activities", force: :cascade do |t|
+    t.bigint "repository_id", null: false
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.string "status"
+    t.integer "index_count"
+    t.integer "new_count"
+    t.integer "update_count"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["repository_id"], name: "index_index_activities_on_repository_id"
+  end
+
   create_table "repositories", force: :cascade do |t|
     t.string "name"
     t.string "home_page"
@@ -50,4 +63,5 @@ ActiveRecord::Schema.define(version: 2020_12_18_182334) do
   end
 
   add_foreign_key "artifacts", "repositories"
+  add_foreign_key "index_activities", "repositories"
 end
