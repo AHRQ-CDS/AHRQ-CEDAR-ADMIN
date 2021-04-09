@@ -4,10 +4,14 @@
 class EpcImporter
   include PageScraper
 
+  attr_accessor :epc_repository
+
   def self.download_and_update!
     importer = EpcImporter.new
-    page = '?search_api_fulltext=&page=0'
-    page = importer.process_index_page(page) until page.nil?
+    ImporterRun.track(importer.epc_repository) do
+      page = '?search_api_fulltext=&page=0'
+      page = importer.process_index_page(page) until page.nil?
+    end
   end
 
   def initialize

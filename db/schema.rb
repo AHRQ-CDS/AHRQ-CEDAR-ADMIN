@@ -42,17 +42,18 @@ ActiveRecord::Schema.define(version: 2021_04_07_224403) do
     t.index ["repository_id"], name: "index_artifacts_on_repository_id"
   end
 
-  create_table "index_activities", force: :cascade do |t|
+  create_table "import_runs", force: :cascade do |t|
     t.bigint "repository_id", null: false
     t.datetime "start_time"
     t.datetime "end_time"
     t.string "status"
-    t.integer "index_count"
+    t.string "error_message"
+    t.integer "total_count"
     t.integer "new_count"
     t.integer "update_count"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["repository_id"], name: "index_index_activities_on_repository_id"
+    t.index ["repository_id"], name: "index_import_runs_on_repository_id"
   end
 
   create_table "repositories", force: :cascade do |t|
@@ -63,5 +64,5 @@ ActiveRecord::Schema.define(version: 2021_04_07_224403) do
   end
 
   add_foreign_key "artifacts", "repositories"
-  add_foreign_key "index_activities", "repositories"
+  add_foreign_key "import_runs", "repositories"
 end

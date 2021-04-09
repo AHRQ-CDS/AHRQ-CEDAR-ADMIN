@@ -4,7 +4,7 @@
 class CdsConnectImporter
   def self.download_and_update!
     cds_connect_repository = Repository.where(name: 'CDS Connect').first_or_create!(home_page: Rails.configuration.cds_connect_home_page)
-    IndexActivity.track(cds_connect_repository) do
+    ImportRun.track(cds_connect_repository) do
       # Set up our connection object to manage cookies and basic auth if needed
       connection = Faraday.new(url: Rails.configuration.cds_connect_base_url) do |builder|
         builder.use :cookie_jar
@@ -56,9 +56,6 @@ class CdsConnectImporter
 
       # Logout
       connection.post('user/logout')
-
-      # Pass result counts to the tracker as the result of this block
-      artifact_ids.length
     end
   end
 end

@@ -15,7 +15,7 @@ FactoryBot.define do
     artifact_type { 'test' }
   end
 
-  factory :index_activity do
+  factory :import_run do
   end
 end
 

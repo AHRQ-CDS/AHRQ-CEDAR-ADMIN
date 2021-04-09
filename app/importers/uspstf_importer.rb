@@ -90,6 +90,7 @@ class UspstfImporter
   # Remove any USPSTF entries that were not found in the completed index run
   # USPSTF JSON identifiers are not persistent so this step is needed to clean up the
   # database
+  # TODO: Just mark these as deleted? By adding an artifact status?
   def remove_obsolete_entries!
     @uspstf.artifacts.where.not(cedar_identifier: @found_ids.keys).destroy_all
   end
