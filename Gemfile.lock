@@ -104,6 +104,8 @@ GEM
       faraday (>= 0.8.0)
       http-cookie (~> 1.0.0)
     faraday-net_http (1.0.1)
+    faraday_middleware (1.0.0)
+      faraday (~> 1.0)
     ffi (1.13.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
@@ -292,6 +294,7 @@ DEPENDENCIES
   factory_bot_rails
   faraday
   faraday-cookie_jar
+  faraday_middleware
   jbuilder (~> 2.7)
   listen (~> 3.2)
   pdf-reader

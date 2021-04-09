@@ -36,6 +36,12 @@ namespace :import do
     SrdrImporter.run
   end
 
+  desc "Download the NGC repository content locally"
+  task ngc: :environment do
+    puts 'Caching data from NGC'
+    NgcImporter.update_cache!
+  end
+
   desc "Download all repository content and import it to the database"
   task all: [:uspstf, :cds_connect, :ehc, :epc, :srdr]
 end

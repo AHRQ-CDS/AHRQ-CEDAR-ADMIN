@@ -4,7 +4,11 @@
 module PageScraper
   # Process an individual HTML page or PDF to extract metadata
   def extract_metadata(page_url)
-    response = Faraday.get page_url.strip
+    connection = Faraday.new page_url.strip do |con|
+      con.use FaradayMiddleware::FollowRedirects, limit: 5
+      con.adapter Faraday.default_adapter
+    end
+    response = connection.get
     if response.status != 200
       Rails.logger.warn "Page retrieval (#{page_url}) failed with status #{response.status}"
       return {}
@@ -26,9 +30,13 @@ module PageScraper
   def extract_html_metadata(html)
     metadata = {}
     html = Nokogiri::HTML(html)
-    description_node = html.at_css('head meta[name="description"]')
+    description_node =
+      html.at_css('head meta[name="description"]') ||
+      html.at_css('head meta[name="DCTERMS.description"]')
     metadata[:description] = description_node['content'] unless description_node.nil?
-    keywords_node = html.at_css('head meta[name="keywords"]')
+    keywords_node =
+      html.at_css('head meta[name="keywords"]') ||
+      html.at_css('head meta[name="Keywords"]')
     metadata[:keywords] =
       if keywords_node.present?
         keywords_node['content'].split(',').collect(&:strip)
@@ -38,6 +46,8 @@ module PageScraper
     date_node =
       html.at_css('head meta[name="citation_publication_date"]') ||
       html.at_css('head meta[name="citation_date"]') ||
+      html.at_css('head meta[name="DCTERMS.issued"]') ||
+      html.at_css('head meta[name="DCTERMS.created"]') ||
       html.at_css('head meta[name="DC.Date"]') ||
       html.at_css('head meta[name="DC.date"]')
     metadata[:published_on] = Date.parse(date_node['content']) unless date_node.nil?
