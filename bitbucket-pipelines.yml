@@ -27,6 +27,7 @@ pipelines:
             - export CEDAR_SRDR_BASE_URL=http://DUMMY-URL/
             - export CEDAR_SRDR_API_KEY=DUMMY-KEY
             - export CEDAR_EHC_FEED_URL=http://DUMMY-URL/product-feed
+            - export CEDAR_NGC_BASE_URL=http://DUMMY-URL/
             - RAILS_ENV=test bundle exec rails db:create
             - bundle exec rake
             - bundle exec rubocop
