@@ -15,7 +15,7 @@ namespace :import do
   desc "Download the CDS Connect repository content and import it to the database"
   task cds_connect: :environment do
     puts 'Importing data from CDS Connect'
-    CdsConnectImporter.download_and_update!
+    CdsConnectImporter.run
   end
 
   desc "Download the EHC repository content and import it to the database"

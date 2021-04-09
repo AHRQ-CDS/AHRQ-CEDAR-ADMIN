@@ -77,25 +77,6 @@ class Artifact < ApplicationRecord
     self.mesh_keyword_text = mesh_keywords.join(', ')
   end
 
-  # TODO: Should this be renamed? Prefix with "tracked_"?
-  def self.tracked_update_or_create!(cedar_identifier, attributes)
-    # Find existing or initialize new entry; this is roughly equivalent to find_or_initialize_by but broken
-    # out so we can keep statistics on whether there are existing entries we're updating
-    if artifact = find_by(cedar_identifier: cedar_identifier)
-      artifact.assign_attributes(attributes)
-      changed = artifact.changed?
-      artifact.save!
-      if changed
-        ImportRun.track_updated
-      else
-        ImportRun.track_unchanged
-      end
-    else
-      artifact = create!(attributes.merge(cedar_identifier: cedar_identifier))
-      ImportRun.track_new
-    end
-  end
-
   # Return a list of all keywords, regardless of type, with any duplicates pruned
   def all_keywords
     keywords | mesh_keywords
