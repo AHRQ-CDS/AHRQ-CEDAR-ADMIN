@@ -18,7 +18,7 @@ class CdsConnectImporterTest < ActiveSupport::TestCase
     assert_equal(0, Repository.where(name: 'CDS Connect').count)
 
     # Load the mock records
-    CdsConnectImporter.download_and_update!
+    CdsConnectImporter.run
 
     # Ensure that all the expected data is loaded
     assert_equal(1, Repository.where(name: 'CDS Connect').count)
@@ -50,5 +50,13 @@ class CdsConnectImporterTest < ActiveSupport::TestCase
     assert_nil(artifact_1221.published_on)
     assert_equal('Data Summary', artifact_1221.artifact_type)
     assert_equal('unknown', artifact_1221.artifact_status)
+
+    # Check tracking
+    assert_equal(1, repository.import_runs.count)
+    import_run = repository.import_runs.last
+    assert_equal('success', import_run.status)
+    assert_equal(2, import_run.total_count)
+    assert_equal(2, import_run.new_count)
+    assert_equal(0, import_run.update_count)
   end
 end

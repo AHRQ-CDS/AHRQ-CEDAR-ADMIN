@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
 # Functionality for importing data from the USPSTF repository
-class UspstfImporter
+class UspstfImporter < CedarImporter
+  repository_name 'USPSTF'
+  repository_home_page Rails.configuration.uspstf_home_page
+
   include PageScraper
 
   def self.download_and_update!
@@ -13,9 +16,9 @@ class UspstfImporter
   end
 
   def initialize(uspstf_json)
+    super()
     @json_data = JSON.parse(uspstf_json)
     @found_ids = {}
-    @uspstf = Repository.where(name: 'USPSTF').first_or_create!(home_page: Rails.configuration.uspstf_home_page)
   end
 
   def update_db!
@@ -33,11 +36,10 @@ class UspstfImporter
         mesh_keywords << @json_data['categories'][cat.to_s]['name']
       end
 
-      Artifact.update_or_create!(
+      update_or_create_artifact!(
         cedar_id,
         remote_identifier: id.to_s,
         title: recommendation['title'],
-        repository: @uspstf,
         description_html: recommendation['clinical'],
         url: url,
         published_on: Date.new(recommendation['topicYear'].to_i),
@@ -58,11 +60,10 @@ class UspstfImporter
       @found_ids[cedar_id] = url
 
       # TODO: publish date and url are not explicit fields in the JSON
-      Artifact.update_or_create!(
+      update_or_create_artifact!(
         cedar_id,
         remote_identifier: recommendation['id'].to_s,
         title: recommendation['title'],
-        repository: @uspstf,
         description_html: recommendation['text'],
         url: url,
         artifact_type: 'Specific Recommendation',
@@ -77,13 +78,12 @@ class UspstfImporter
       @found_ids[cedar_id] = url
       metadata = {
         title: tool['title'],
-        repository: @uspstf,
         url: url,
         artifact_type: 'Tool',
         artifact_status: 'active'
       }
       metadata.merge!(extract_metadata(url))
-      Artifact.update_or_create!(cedar_id, metadata)
+      update_or_create_artifact!(cedar_id, metadata)
     end
   end
 
@@ -91,7 +91,8 @@ class UspstfImporter
   # USPSTF JSON identifiers are not persistent so this step is needed to clean up the
   # database
   # TODO: Just mark these as deleted? By adding an artifact status?
+  # TODO: Move this to the base class and do it automatically for all importers (with stats kept)
   def remove_obsolete_entries!
-    @uspstf.artifacts.where.not(cedar_identifier: @found_ids.keys).destroy_all
+    repository.artifacts.where.not(cedar_identifier: @found_ids.keys).destroy_all
   end
 end

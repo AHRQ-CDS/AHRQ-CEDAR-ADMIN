@@ -18,7 +18,7 @@ class EpcImporterTest < ActiveSupport::TestCase
     assert_equal(0, Repository.where(name: 'EHC').count)
 
     # Load the mock records
-    EpcImporter.download_and_update!
+    EpcImporter.run
 
     # Ensure that all the expected data is loaded
     assert_equal(1, Repository.where(name: 'EPC').count)
@@ -41,5 +41,13 @@ class EpcImporterTest < ActiveSupport::TestCase
     assert(artifact.present?)
     assert_equal('A sample HTML EPC product', artifact.description)
     assert(artifact.keywords.include?('epc'))
+
+    # Check tracking
+    assert_equal(1, repository.import_runs.count)
+    import_run = repository.import_runs.last
+    assert_equal('success', import_run.status)
+    assert_equal(3, import_run.total_count)
+    assert_equal(3, import_run.new_count)
+    assert_equal(0, import_run.update_count)
   end
 end

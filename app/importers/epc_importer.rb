@@ -1,21 +1,16 @@
 # frozen_string_literal: true
 
 # Functionality for importing data from the EPC repository
-class EpcImporter
-  include PageScraper
+class EpcImporter < CedarImporter
+  repository_name 'EPC'
+  repository_home_page Rails.configuration.epc_home_page
 
-  attr_accessor :epc_repository
+  include PageScraper
 
   def self.download_and_update!
     importer = EpcImporter.new
-    ImporterRun.track(importer.epc_repository) do
-      page = '?search_api_fulltext=&page=0'
-      page = importer.process_index_page(page) until page.nil?
-    end
-  end
-
-  def initialize
-    @epc_repository = Repository.where(name: 'EPC').first_or_create!(home_page: Rails.configuration.epc_home_page)
+    page = '?search_api_fulltext=&page=0'
+    page = importer.process_index_page(page) until page.nil?
   end
 
   # Import a single page of search results and return the path to the next page or nil
@@ -86,7 +81,6 @@ class EpcImporter
 
       metadata = {
         remote_identifier: artifact_path,
-        repository: @epc_repository,
         title: artifact_title,
         url: artifact_url,
         published_on: artifact_date,
@@ -96,7 +90,7 @@ class EpcImporter
         mesh_keywords: []
       }
       metadata.merge!(extract_metadata(artifact_url))
-      Artifact.update_or_create!(cedar_id, metadata)
+      update_or_create_artifact!(cedar_id, metadata)
       Rails.logger.info "Processed EPC artifact #{artifact_url}"
     end
 

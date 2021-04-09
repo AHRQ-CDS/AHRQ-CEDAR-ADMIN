@@ -11,6 +11,8 @@ AllCops:
     - 'lib/tasks/**/*'
     - 'tmp/**/*'
     - 'vendor/**/*'
+Style/TrivialAccessors:
+  Enabled: false
 Bundler/OrderedGems:
   Enabled: false
 Layout/LineLength:

@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 # Functionality for importing data from the EHC repository
-class EhcImporter
+class EhcImporter < CedarImporter
+  repository_name 'EHC'
+  repository_home_page Rails.configuration.ehc_home_page
+
   def self.download_and_update!
     # Retrieve all the artifacts
     response = Faraday.get(Rails.configuration.ehc_feed_url)
     raise "EHC retrieval failed with status #{response.status}" unless response.status == 200
-
-    ehc_repository = Repository.where(name: 'EHC').first_or_create!(home_page: Rails.configuration.ehc_home_page)
 
     # Process each artifact
     response_xml = Nokogiri::XML(response.body)
@@ -18,10 +19,9 @@ class EhcImporter
       doi = Regexp.last_match(1) if artifact.at_xpath('Citation').content =~ %r{(10.\d{4,9}/[-._;()/:A-Z0-9]+)}
 
       # Store artifact metadata
-      Artifact.update_or_create!(
+      update_or_create_artifact!(
         cedar_id,
         remote_identifier: artifact_path.to_s,
-        repository: ehc_repository,
         title: artifact.at_xpath('Title').content.presence,
         description: artifact.at_xpath('Description').content.presence,
         url: artifact_uri.to_s,

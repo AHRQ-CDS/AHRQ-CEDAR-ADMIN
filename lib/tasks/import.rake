@@ -2,7 +2,7 @@ namespace :import do
   desc "Download the USPSTF repository content and import it to the database"
   task uspstf: :environment do
     puts 'Importing data from USPSTF'
-    UspstfImporter.download_and_update!
+    UspstfImporter.run
   end
 
   desc "Load test fixure USPSTF repository content into the database"
@@ -21,19 +21,19 @@ namespace :import do
   desc "Download the EHC repository content and import it to the database"
   task ehc: :environment do
     puts 'Importing data from EHC'
-    EhcImporter.download_and_update!
+    EhcImporter.run
   end
 
   desc "Download the EPC repository content and import it to the database"
   task epc: :environment do
     puts 'Importing data from EPC'
-    EpcImporter.download_and_update!
+    EpcImporter.run
   end
 
   desc "Download the SRDR repository content and import it to the database"
   task srdr: :environment do
     puts 'Importing data from SRDR'
-    SrdrImporter.download_and_update!
+    SrdrImporter.run
   end
 
   desc "Download all repository content and import it to the database"

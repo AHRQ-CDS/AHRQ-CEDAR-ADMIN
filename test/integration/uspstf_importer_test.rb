@@ -18,7 +18,7 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal(0, Repository.where(name: 'USPSTF').count)
 
     # Import sample data
-    UspstfImporter.download_and_update!
+    UspstfImporter.run
 
     # Check that all of the expected data was imported
     repository = Repository.where(name: 'USPSTF').first
@@ -53,8 +53,16 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert(artifact.keywords.include?('uspstf'))
     assert(artifact.keywords.include?('tool'))
 
+    # Check tracking
+    assert_equal(1, repository.import_runs.count)
+    import_run = repository.import_runs.last
+    assert_equal('success', import_run.status)
+    assert_equal(7, import_run.total_count)
+    assert_equal(7, import_run.new_count)
+    assert_equal(0, import_run.update_count)
+
     # Import sample data a second time
-    UspstfImporter.download_and_update!
+    UspstfImporter.run
 
     #  Check if any artifacts were duplicated by second import
     artifacts = Artifact.where(cedar_identifier: 'USPSTF-SR-358')
@@ -65,5 +73,13 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal(1, artifacts.count)
     artifacts = Artifact.where(cedar_identifier: 'USPSTF-TOOL-324')
     assert_equal(1, artifacts.count)
+
+    # Check tracking
+    assert_equal(2, repository.import_runs.count)
+    import_run = repository.import_runs.last
+    assert_equal('success', import_run.status)
+    assert_equal(7, import_run.total_count)
+    assert_equal(0, import_run.new_count)
+    assert_equal(0, import_run.update_count)
   end
 end

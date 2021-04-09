@@ -12,7 +12,7 @@ class SrdrImporterTest < ActiveSupport::TestCase
     assert_equal(0, Repository.where(name: 'SRDR').count)
 
     # Load the mock records
-    SrdrImporter.download_and_update!
+    SrdrImporter.run
 
     # Ensure that all the expected data is loaded
     assert_equal(1, Repository.where(name: 'SRDR').count)
@@ -32,5 +32,13 @@ class SrdrImporterTest < ActiveSupport::TestCase
     assert_equal('10.7301/Z08G8HMP', artifact_1343.doi)
     assert_equal(Date.parse('23 Jul 2015'), artifact_1343.published_on)
     assert_equal('unknown', artifact_1343.artifact_status)
+
+    # Check tracking
+    assert_equal(1, repository.import_runs.count)
+    import_run = repository.import_runs.last
+    assert_equal('success', import_run.status)
+    assert_equal(6, import_run.total_count)
+    assert_equal(6, import_run.new_count)
+    assert_equal(0, import_run.update_count)
   end
 end

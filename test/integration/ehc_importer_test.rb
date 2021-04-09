@@ -12,7 +12,7 @@ class EhcImporterTest < ActiveSupport::TestCase
     assert_equal(0, Repository.where(name: 'EHC').count)
 
     # Load the mock records
-    EhcImporter.download_and_update!
+    EhcImporter.run
 
     # Ensure that all the expected data is loaded
     assert_equal(1, Repository.where(name: 'EHC').count)
@@ -29,5 +29,13 @@ class EhcImporterTest < ActiveSupport::TestCase
     artifact = artifacts.where(title: 'Treatments for Seasonal Allergic Rhinitis').first
     assert(artifact.present?)
     assert(artifact.mesh_keywords.include?('Hay Fever'))
+
+    # Check tracking
+    assert_equal(1, repository.import_runs.count)
+    import_run = repository.import_runs.last
+    assert_equal('success', import_run.status)
+    assert_equal(2, import_run.total_count)
+    assert_equal(2, import_run.new_count)
+    assert_equal(0, import_run.update_count)
   end
 end

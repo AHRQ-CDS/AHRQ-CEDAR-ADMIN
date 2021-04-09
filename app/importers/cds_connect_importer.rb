@@ -6,7 +6,6 @@ class CdsConnectImporter < CedarImporter
   repository_home_page Rails.configuration.cds_connect_home_page
 
   def self.download_and_update!
-
     # Set up our connection object to manage cookies and basic auth if needed
     connection = Faraday.new(url: Rails.configuration.cds_connect_base_url) do |builder|
       builder.use :cookie_jar
