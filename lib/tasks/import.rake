@@ -38,8 +38,9 @@ namespace :import do
 
   desc "Download the NGC repository content locally"
   task ngc: :environment do
-    puts 'Caching data from NGC'
+    puts 'Importing data from NGC'
     NgcImporter.update_cache!
+    NgcImporter.index_cached_files!
   end
 
   desc "Download all repository content and import it to the database"
