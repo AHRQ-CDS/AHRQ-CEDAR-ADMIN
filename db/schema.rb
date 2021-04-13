@@ -48,9 +48,9 @@ ActiveRecord::Schema.define(version: 2021_04_07_224403) do
     t.datetime "end_time"
     t.string "status"
     t.string "error_message"
-    t.integer "total_count"
-    t.integer "new_count"
-    t.integer "update_count"
+    t.integer "total_count", default: 0, null: false
+    t.integer "new_count", default: 0, null: false
+    t.integer "update_count", default: 0, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["repository_id"], name: "index_import_runs_on_repository_id"

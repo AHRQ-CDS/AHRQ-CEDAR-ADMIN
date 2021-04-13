@@ -12,3 +12,5 @@ Dotenv.require_keys("CEDAR_SRDR_BASE_URL")
 Dotenv.require_keys("CEDAR_SRDR_API_KEY")
 
 Dotenv.require_keys("CEDAR_EHC_FEED_URL")
+
+Dotenv.require_keys("CEDAR_NGC_BASE_URL")

@@ -33,6 +33,7 @@ gem 'dotenv-rails'
 # Use faraday for HTTP request sessions where cookies need to be managed
 gem 'faraday'
 gem 'faraday-cookie_jar'
+gem 'faraday_middleware'
 
 # Use PDF Reader gem for processing PDF artifacts during indexing
 gem 'pdf-reader'
