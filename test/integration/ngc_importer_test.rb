@@ -10,8 +10,7 @@ class NgcImporterTest < ActiveSupport::TestCase
     # Ensure that none are loaded before the test runs
     assert_equal(0, Repository.where(name: 'NGC').count)
 
-    NgcImporter.update_cache!
-    NgcImporter.index_cached_files!
+    NgcImporter.run
 
     assert_equal(1, Repository.where(name: 'NGC').count)
     repository = Repository.where(name: 'NGC').first

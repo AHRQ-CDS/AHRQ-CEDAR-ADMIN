@@ -1,9 +1,18 @@
 # frozen_string_literal: true
 
 # Functionality for importing data from the NGC repository
-class NgcImporter
+class NgcImporter < CedarImporter
+  repository_name 'NGC'
+  repository_home_page Rails.configuration.ngc_base_url
+
   extend PageScraper
+
   CACHE_DIR = File.join('tmp', 'cache', 'ngc')
+
+  def self.download_and_update!
+    update_cache!
+    index_cached_files!
+  end
 
   def self.update_cache!
     Dir.mkdir(CACHE_DIR) unless Dir.exist?(CACHE_DIR)
@@ -19,7 +28,6 @@ class NgcImporter
   end
 
   def self.index_cached_files!
-    ngc_repository = Repository.where(name: 'NGC').first_or_create!(home_page: Rails.configuration.ngc_base_url)
     index_file = File.join(CACHE_DIR, 'index.json')
     raise "NGC cache not found: #{index_file}" unless File.exist?(index_file)
 
@@ -39,7 +47,6 @@ class NgcImporter
       artifact_url = "#{Rails.configuration.ngc_base_url}#{cached_data['html_path']}"
       metadata = {
         remote_identifier: artifact_id,
-        repository: ngc_repository,
         title: cached_data['title'],
         description_html: artifact_description_html,
         url: artifact_url,
@@ -56,7 +63,7 @@ class NgcImporter
         metadata.merge!(extract_keywords(html))
       end
       cedar_id = "NGC-#{URI.parse(artifact_url).select(:host, :path, :fragment, :query).join('-').scan(/\w+/).join('-')}"
-      Artifact.update_or_create!(cedar_id, metadata)
+      update_or_create_artifact!(cedar_id, metadata)
       Rails.logger.info "Processed NGC artifact #{artifact_url}"
     end
   end
