@@ -3,3 +3,38 @@
 <%= render 'data_with_pie_chart', title: 'Artifacts By Status', data: @artifacts_by_status %>
 
 <%= render 'data_with_pie_chart', title: 'Top 10 Keywords', data: @top_artifacts_per_keyword, path_method: :keyword_path %>
+
+<div class="row mt-5">
+  <div class="col-sm">
+    <h3>Import Statistics</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Start</th>
+          <th>Duration</th>
+          <th>Status</th>
+          <th>Artifacts</th>
+          <th>New</th>
+          <th>Updated</th>
+        </tr>
+      <tbody>
+        <% @repository.import_runs.order(:id).each do |import| %>
+          <tr>
+            <td><%= import.start_time.to_formatted_s(:long) %></td>
+            <td>
+              <% if import.start_time && import.end_time %>
+                <%= distance_of_time_in_words(import.end_time, import.start_time) %>
+              <% else %>
+                Incomplete
+              <% end %>
+            </td>
+            <td><%= import.status %></td>
+            <td><%= import.total_count %></td>
+            <td><%= import.new_count %></td>
+            <td><%= import.update_count %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
