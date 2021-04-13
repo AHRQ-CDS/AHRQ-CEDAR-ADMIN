@@ -4,10 +4,13 @@ class NgcImporterTest < ActiveSupport::TestCase
   test 'import sample NGC content into the database' do
     NgcImporter.send(:remove_const, :CACHE_DIR)
     NgcImporter.const_set(:CACHE_DIR, 'test/fixtures/files/ngc')
+    index_mock = file_fixture('ngc_index.html').read
+    stub_request(:get, /search/).to_return(status: 200, headers: { 'Content-Type' => 'text/html' }, body: index_mock)
 
     # Ensure that none are loaded before the test runs
     assert_equal(0, Repository.where(name: 'NGC').count)
 
+    NgcImporter.update_cache!
     NgcImporter.index_cached_files!
 
     assert_equal(1, Repository.where(name: 'NGC').count)

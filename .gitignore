@@ -38,4 +38,5 @@ yarn-debug.log*
 .DS_Store
 .env
 .nova
+test/fixtures/files/ngc/index.json
 
