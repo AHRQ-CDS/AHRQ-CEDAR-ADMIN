@@ -67,12 +67,16 @@ class Artifact < ApplicationRecord
     end
   end
 
+  # Preprocess keywords (both regular and MeSH) to normalize, remove duplicates, and store for searching
+
   def keywords=(keywords)
+    keywords = keywords.map { |k| I18n.transliterate(k).downcase }.uniq
     super(keywords)
     self.keyword_text = keywords.join(', ')
   end
 
   def mesh_keywords=(mesh_keywords)
+    mesh_keywords = mesh_keywords.map { |k| I18n.transliterate(k).downcase }.uniq
     super(mesh_keywords)
     self.mesh_keyword_text = mesh_keywords.join(', ')
   end

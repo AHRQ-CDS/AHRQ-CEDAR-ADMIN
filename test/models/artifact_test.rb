@@ -120,4 +120,17 @@ class ArtifactTest < ActiveSupport::TestCase
     artifact = Artifact.new(url: 'javascript:alert("XSS")', repository: repository)
     assert_not artifact.valid?, 'Invalid URL should result in an invalid artifact'
   end
+
+  test 'normalizing keywords' do
+    artifact = Artifact.new(keywords: ['Duplicate', 'duplicate'], mesh_keywords: ['MeSH_Duplicate', 'mesh_duplicate'])
+    assert_equal(1, artifact.keywords.size)
+    assert_equal('duplicate', artifact.keywords.first)
+    assert_equal(1, artifact.mesh_keywords.size)
+    assert_equal('mesh_duplicate', artifact.mesh_keywords.first)
+    artifact = Artifact.new(keywords: ['cáncer', 'cancer'], mesh_keywords: ['cáncer', 'cancer'])
+    assert_equal(1, artifact.keywords.size)
+    assert_equal('cancer', artifact.keywords.first)
+    assert_equal(1, artifact.mesh_keywords.size)
+    assert_equal('cancer', artifact.mesh_keywords.first)
+  end
 end

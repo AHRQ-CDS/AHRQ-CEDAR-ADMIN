@@ -20,7 +20,7 @@ class NgcImporterTest < ActiveSupport::TestCase
     artifact = artifacts.where(title: 'Environmental management of pediatric asthma. Guidelines for health care providers.').first
     assert(artifact.present?)
     assert_equal('Guideline', artifact.artifact_type)
-    assert(artifact.keywords.include?('Asthma'))
-    assert(artifact.keywords.include?('Counseling'))
+    assert(artifact.keywords.include?('asthma'))
+    assert(artifact.keywords.include?('counseling'))
   end
 end
