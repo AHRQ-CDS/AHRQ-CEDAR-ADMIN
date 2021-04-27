@@ -11,6 +11,15 @@ class HomeController < ApplicationController
     @artifacts_by_status = Artifact.group(:artifact_status).count
     @top_artifacts_by_type = Artifact.group(:artifact_type).count.sort_by { |_, v| -v }[0, 10]
 
+    # Set up import run data for display; first find the last (up to) 5 distinct calendar days when imports happened
+    start_dates = ImportRun.select('DISTINCT DATE(start_time) AS start_date').order(:start_date).reverse_order.limit(5).map(&:start_date)
+    # Find all the import runs that happened over those days and group them by day
+    @import_runs = ImportRun.where('DATE(start_time) >= ?', start_dates.last).order(:start_time).group_by { |ir| ir.start_time.to_date }
+    # Create summaries for each date
+    @import_run_summaries = @import_runs.transform_values do |irs|
+      ImportRun.new(total_count: irs.sum(&:total_count), new_count: irs.sum(&:total_count), update_count: irs.sum(&:total_count))
+    end
+
     keywords = Artifact.where.not('keywords <@ ? AND mesh_keywords <@ ?', '[]', '[]').flat_map(&:all_keywords)
     @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
   end

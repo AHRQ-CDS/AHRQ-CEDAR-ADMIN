@@ -17,6 +17,7 @@
           <th>New</th>
           <th>Updated</th>
         </tr>
+      </thead>
       <tbody>
         <% @repository.import_runs.order(:id).each do |import| %>
           <tr>
