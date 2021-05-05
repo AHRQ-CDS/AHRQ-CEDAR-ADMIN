@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_07_224403) do
+ActiveRecord::Schema.define(version: 2021_05_05_170405) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,13 @@ ActiveRecord::Schema.define(version: 2021_04_07_224403) do
   create_table "repositories", force: :cascade do |t|
     t.string "name"
     t.string "home_page"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "synonyms", force: :cascade do |t|
+    t.string "word"
+    t.jsonb "synonyms", default: []
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
