@@ -42,6 +42,14 @@ ActiveRecord::Schema.define(version: 2021_05_05_170405) do
     t.index ["repository_id"], name: "index_artifacts_on_repository_id"
   end
 
+  create_table "concepts", force: :cascade do |t|
+    t.string "canonical"
+    t.jsonb "synonyms", default: []
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["synonyms"], name: "index_concepts_on_synonyms", using: :gin
+  end
+
   create_table "import_runs", force: :cascade do |t|
     t.bigint "repository_id", null: false
     t.datetime "start_time"
@@ -59,13 +67,6 @@ ActiveRecord::Schema.define(version: 2021_05_05_170405) do
   create_table "repositories", force: :cascade do |t|
     t.string "name"
     t.string "home_page"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "synonyms", force: :cascade do |t|
-    t.string "word"
-    t.jsonb "synonyms", default: []
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

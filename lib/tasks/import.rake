@@ -42,6 +42,13 @@ namespace :import do
     NgcImporter.run
   end
 
+  desc "Import synonyms from MeSH ASCII descriptor file"
+  task synonyms: :environment do
+    puts 'Importing synonyms'
+    SynonymImporter.import_mesh('d2021.bin', 'MH', 'ENTRY')
+    SynonymImporter.import_mesh('c2021_disease.bin', 'NM', 'SY')
+  end
+
   desc "Download all repository content and import it to the database"
   task all: [:uspstf, :cds_connect, :ehc, :epc, :srdr]
 end
