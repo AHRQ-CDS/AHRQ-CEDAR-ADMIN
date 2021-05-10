@@ -17,7 +17,7 @@ class HomeController < ApplicationController
     @import_runs = ImportRun.where('DATE(start_time) >= ?', start_dates.last).order(:start_time).group_by { |ir| ir.start_time.to_date }
     # Create summaries for each date
     @import_run_summaries = @import_runs.transform_values do |irs|
-      ImportRun.new(total_count: irs.sum(&:total_count), new_count: irs.sum(&:total_count), update_count: irs.sum(&:total_count))
+      ImportRun.new(total_count: irs.sum(&:total_count), new_count: irs.sum(&:total_count), update_count: irs.sum(&:total_count), delete_count: irs.sum(&:delete_count))
     end
 
     keywords = Artifact.where.not('keywords <@ ? AND mesh_keywords <@ ?', '[]', '[]').flat_map(&:all_keywords)
@@ -38,8 +38,17 @@ class HomeController < ApplicationController
     @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
   end
 
+  def import_run
+    @import_run = ImportRun.find(params[:id])
+    @versions = @import_run.versions.includes(:item)
+  end
+
   def artifact
     @artifact = Artifact.find(params[:id])
+  end
+
+  def version
+    @version = PaperTrail::Version.find(params[:id])
   end
 
   def keyword

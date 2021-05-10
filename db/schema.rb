@@ -80,7 +80,8 @@ ActiveRecord::Schema.define(version: 2021_05_10_211210) do
     t.bigint "item_id", null: false
     t.string "event", null: false
     t.string "whodunnit"
-    t.text "object"
+    t.jsonb "object"
+    t.jsonb "object_changes"
     t.bigint "import_run_id", null: false
     t.datetime "created_at"
     t.index ["import_run_id"], name: "index_versions_on_import_run_id"

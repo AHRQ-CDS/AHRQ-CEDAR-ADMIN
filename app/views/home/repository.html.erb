@@ -16,12 +16,13 @@
           <th>Artifacts</th>
           <th>New</th>
           <th>Updated</th>
+          <th>Deleted</th>
         </tr>
       </thead>
       <tbody>
         <% @repository.import_runs.order(:id).each do |import| %>
           <tr>
-            <td><%= import.start_time.to_formatted_s(:long) %></td>
+            <td><%= link_to import.start_time.to_formatted_s(:long), import %></td>
             <td>
               <% if import.start_time && import.end_time %>
                 <%= distance_of_time_in_words(import.end_time, import.start_time) %>
@@ -33,6 +34,7 @@
             <td><%= import.total_count %></td>
             <td><%= import.new_count %></td>
             <td><%= import.update_count %></td>
+            <td><%= import.delete_count %></td>
           </tr>
         <% end %>
       </tbody>

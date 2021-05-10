@@ -1,0 +1,23 @@
+<div class="row">
+  <div class="col-sm">
+    <h1>Import Run: <%= @import_run.repository.name %> [<%= @import_run.start_time.to_formatted_s(:long) %>]</h1>
+    <h4>Updated</h4>
+    <ul>
+      <% @versions.select { |v| v.event == 'update' }.each do |v| %>
+        <li><%= link_to v.item.title, v %></li>
+      <% end %>
+    </ul>
+    <h4>Added</h4>
+    <ul>
+      <% @versions.select { |v| v.event == 'create' }.each do |v| %>
+        <li><%= v.item.title %></li>
+      <% end %>
+    </ul>
+    <h4>Deleted</h4>
+    <ul>
+      <% @versions.select { |v| v.event == 'destroy' }.each do |v| %>
+        <li><%= v.object['title'] %></li>
+      <% end %>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+<div class="row">
+  <div class="col-sm">
+    <h1><%= @version.object['title'] %> [<%= @version.created_at.to_formatted_s(:long) %>]</h1>
+    <% @version.object_changes.each do |field, change| %>
+      <h4><%= field %></h4>
+      <p><b>Before:</b> <%= change[0] %></p>
+      <p><b>After:</b> <%= change[1] %></p>
+    <% end %>
+  </div>
+</div>

@@ -21,6 +21,7 @@
           <th>Artifacts</th>
           <th>New</th>
           <th>Updated</th>
+          <th>Deleted</th>
         </tr>
       </thead>
       <tbody>
@@ -33,6 +34,7 @@
           <th><%= irs.total_count %></th>
           <th><%= irs.new_count %></th>
           <th><%= irs.update_count %></th>
+          <th><%= irs.delete_count %></th>
         </tr>
         <% @import_runs[date].each do |ir| %>
         <tr>
@@ -49,6 +51,7 @@
           <td><%= ir.total_count %></td>
           <td><%= ir.new_count %></td>
           <td><%= ir.update_count %></td>
+          <td><%= ir.delete_count %></td>
         </tr>
         <% end %>
         <% end %>

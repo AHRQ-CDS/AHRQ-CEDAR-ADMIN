@@ -14,7 +14,8 @@ class CreateVersions < ActiveRecord::Migration[6.0]
       t.bigint   :item_id,   null: false
       t.string   :event,     null: false
       t.string   :whodunnit
-      t.text     :object, limit: TEXT_BYTES
+      t.jsonb    :object          # Full object changes
+      t.jsonb    :object_changes  # Optional column-level changes
 
       # Custom association with an import_run 
       t.references :import_run, null: false, foreign_key: true
