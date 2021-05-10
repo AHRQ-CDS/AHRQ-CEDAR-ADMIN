@@ -6,6 +6,9 @@ class Artifact < ApplicationRecord
   belongs_to :repository
   after_save :udpate_index
 
+  # Track all revisions to artifacts
+  has_paper_trail
+
   enum artifact_status: {
     draft: 'draft',
     active: 'active',

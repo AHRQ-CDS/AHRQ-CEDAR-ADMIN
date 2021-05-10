@@ -12,13 +12,11 @@ class UspstfImporter < CedarImporter
     json = Net::HTTP.get(uri)
     importer = UspstfImporter.new(json)
     importer.update_db!
-    importer.remove_obsolete_entries!
   end
 
   def initialize(uspstf_json)
     super()
     @json_data = JSON.parse(uspstf_json)
-    @found_ids = {}
   end
 
   def update_db!
@@ -29,7 +27,6 @@ class UspstfImporter < CedarImporter
       cedar_id = "USPSTF-GR-#{id}"
       # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
       url = "#{Rails.configuration.uspstf_home_page}recommendation/#{recommendation['uspstfAlias']}"
-      @found_ids[cedar_id] = url
       mesh_keywords = []
 
       recommendation['categories'].each do |cat|
@@ -57,7 +54,6 @@ class UspstfImporter < CedarImporter
     @json_data['specificRecommendations'].each do |recommendation|
       cedar_id = "USPSTF-SR-#{recommendation['id']}"
       url = general_rec_urls[recommendation['general'].to_s]
-      @found_ids[cedar_id] = url
 
       # TODO: publish date and url are not explicit fields in the JSON
       update_or_create_artifact!(
@@ -75,7 +71,6 @@ class UspstfImporter < CedarImporter
     @json_data['tools'].each_pair do |id, tool|
       cedar_id = "USPSTF-TOOL-#{id}"
       url = tool['url']
-      @found_ids[cedar_id] = url
       metadata = {
         title: tool['title'],
         url: url,
@@ -85,14 +80,5 @@ class UspstfImporter < CedarImporter
       metadata.merge!(extract_metadata(url))
       update_or_create_artifact!(cedar_id, metadata)
     end
-  end
-
-  # Remove any USPSTF entries that were not found in the completed index run
-  # USPSTF JSON identifiers are not persistent so this step is needed to clean up the
-  # database
-  # TODO: Just mark these as deleted? By adding an artifact status?
-  # TODO: Move this to the base class and do it automatically for all importers (with stats kept)
-  def remove_obsolete_entries!
-    repository.artifacts.where.not(cedar_identifier: @found_ids.keys).destroy_all
   end
 end

@@ -28,10 +28,26 @@ class CedarImporter
   end
 
   def self.run
-    @import_statistics = { total_count: 0, new_count: 0, update_count: 0 }
+    # Track import statistics and set up an import run to store them
+    @import_statistics = { total_count: 0, new_count: 0, update_count: 0, delete_count: 0 }
     import_run = ImportRun.create(repository: repository, start_time: Time.current)
+
+    # When we track any changes to artifacts we want to associate the change with the appropriate import run
+    PaperTrail.request.controller_info = { import_run_id: import_run.id }
+
+    # Track artifacts we update or create so that all others are marked for deletion
+    @imported_artifact_ids = []
+
     try do
+      # Run the individually defined importer
       download_and_update!
+
+      # Remove any entries that were not found in the completed index run; this is needed because e.g. USPSTF
+      # JSON identifiers are not persistent so this step is needed to clean up the database
+      # TODO: Just mark these as deleted? By adding an artifact status?
+      deleted_artifacts = repository.artifacts.where.not(id: @imported_artifact_ids).destroy_all
+      @import_statistics[:delete_count] = deleted_artifacts.length
+
       # TODO: consider if we want to store statistics per-artifact rather than per-run
       import_run.update(@import_statistics.merge(end_time: Time.current, status: 'success'))
     rescue StandardError => e
@@ -62,6 +78,7 @@ class CedarImporter
       @import_statistics[:new_count] += 1
     end
     @import_statistics[:total_count] += 1
+    @imported_artifact_ids << artifact.id
     artifact
   end
 
