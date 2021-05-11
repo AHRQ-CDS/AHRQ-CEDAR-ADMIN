@@ -3,6 +3,7 @@
 # Functionality for importing data from the NGC repository
 class NgcImporter < CedarImporter
   repository_name 'NGC'
+  repository_fhir_id 'ngc'
   repository_home_page Rails.configuration.ngc_base_url
 
   extend PageScraper

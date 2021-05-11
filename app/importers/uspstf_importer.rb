@@ -3,6 +3,7 @@
 # Functionality for importing data from the USPSTF repository
 class UspstfImporter < CedarImporter
   repository_name 'USPSTF'
+  repository_fhir_id 'uspstf'
   repository_home_page Rails.configuration.uspstf_home_page
 
   include PageScraper

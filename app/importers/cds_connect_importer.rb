@@ -3,6 +3,7 @@
 # Functionality for importing data from the CDS Connect repository
 class CdsConnectImporter < CedarImporter
   repository_name 'CDS Connect'
+  repository_fhir_id 'cds-connect'
   repository_home_page Rails.configuration.cds_connect_home_page
 
   def self.download_and_update!
