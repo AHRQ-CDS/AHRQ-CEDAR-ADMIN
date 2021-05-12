@@ -16,7 +16,10 @@ class CedarImporter
 
     raise 'Repository home page not set' unless @repository_home_page
 
-    @repository ||= Repository.where(name: @repository_name).first_or_create!(home_page: @repository_home_page, fhir_id: @repository_name.downcase.gsub(/\W+/, '-'))
+    @repository ||= Repository.where(name: @repository_name).first_or_create!(
+      home_page: @repository_home_page,
+      fhir_id: @repository_name.downcase.gsub(/\W+/, '-')
+    )
   end
 
   # Convenience instance method that just calls the class method
