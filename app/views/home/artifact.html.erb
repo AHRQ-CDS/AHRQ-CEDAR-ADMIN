@@ -19,5 +19,11 @@
     <p><strong>DOI:</strong> <%= @artifact.doi || '<not specified>'%></p>
     <p><strong>Published On:</strong> <%= @artifact.published_on&.to_s(:long) || '<not specified>' %></p>
     <p><strong>Indexed At:</strong> <%= @artifact.created_at&.to_s(:long) || '<not specified>' %></p>
+    <h4>Version History</h4>
+    <ul>
+      <% @artifact.versions.each do |v| %>
+        <li><%= link_to "#{v.event} [#{v.created_at.to_formatted_s(:long)}]", v %></li>
+      <% end %>
+    </ul>
   </div>
 </div>

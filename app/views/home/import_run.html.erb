@@ -1,21 +1,24 @@
 <div class="row">
   <div class="col-sm">
     <h1>Import Run: <%= @import_run.repository.name %> [<%= @import_run.start_time.to_formatted_s(:long) %>]</h1>
-    <h4>Updated</h4>
+    <% updated = @versions.select { |v| v.event == 'update' } %>
+    <h4>Updated [<%= updated.length %>]</h4>
     <ul>
-      <% @versions.select { |v| v.event == 'update' }.each do |v| %>
-        <li><%= link_to v.item.title, v %></li>
+      <% updated.each do |v| %>
+        <li><%= link_to v.item.title, v.item %> [<%= link_to 'changes', v %>]</li>
       <% end %>
     </ul>
-    <h4>Added</h4>
+    <% added = @versions.select { |v| v.event == 'create' } %>
+    <h4>Added [<%= added.length %>]</h4>
     <ul>
-      <% @versions.select { |v| v.event == 'create' }.each do |v| %>
-        <li><%= v.item.title %></li>
+      <% added.each do |v| %>
+        <li><%= link_to v.item.title, v.item %></li>
       <% end %>
     </ul>
-    <h4>Deleted</h4>
+    <% deleted = @versions.select { |v| v.event == 'destroy' } %>
+    <h4>Deleted [<%= deleted.length %>]</h4>
     <ul>
-      <% @versions.select { |v| v.event == 'destroy' }.each do |v| %>
+      <% deleted.each do |v| %>
         <li><%= v.object['title'] %></li>
       <% end %>
     </ul>

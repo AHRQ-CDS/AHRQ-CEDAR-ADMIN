@@ -29,6 +29,7 @@ class CedarImporter
 
   def self.run
     # Track import statistics and set up an import run to store them
+    # TODO: It may be possible to just count the paper trail updates, additions, and deletions at the end instead
     @import_statistics = { total_count: 0, new_count: 0, update_count: 0, delete_count: 0 }
     import_run = ImportRun.create(repository: repository, start_time: Time.current)
 

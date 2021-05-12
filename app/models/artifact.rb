@@ -7,7 +7,7 @@ class Artifact < ApplicationRecord
   after_save :udpate_index
 
   # Track all revisions to artifacts
-  has_paper_trail
+  has_paper_trail ignore: [:updated_at]
 
   enum artifact_status: {
     draft: 'draft',

@@ -84,6 +84,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
+    diffy (3.4.0)
     domain_name (0.5.20190701)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.7.6)
@@ -295,6 +296,7 @@ DEPENDENCIES
   capybara (>= 2.15)
   chartkick
   commonmarker
+  diffy
   dotenv-rails
   factory_bot_rails
   faraday

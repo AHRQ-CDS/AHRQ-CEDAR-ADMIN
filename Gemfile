@@ -55,6 +55,7 @@ gem 'chartkick'
 
 # Track changes to artifacts over time
 gem 'paper_trail'
+gem 'diffy'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
