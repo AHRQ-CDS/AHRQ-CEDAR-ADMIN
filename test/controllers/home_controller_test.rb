@@ -68,4 +68,41 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     response = JSON.parse(@response.body)
     assert_equal 12, response.length
   end
+
+  test 'should get import_run' do
+    with_versioning do
+      repository = create(:repository)
+      import_run = create(:import_run, repository: repository, start_time: Time.current, end_time: Time.current, total_count: 2, new_count: 1, update_count: 1)
+      PaperTrail.request.controller_info = { import_run_id: import_run.id }
+      create(:artifact, repository: repository, description: nil, keywords: [], mesh_keywords: [], artifact_status: 'draft')
+      get import_run_url(import_run)
+      assert_response :success
+      assert_equal import_run, assigns(:import_run)
+      assert_equal 1, assigns(:versions).count
+    end
+  end
+
+  test 'should get version' do
+    with_versioning do
+      repository = create(:repository)
+      import_run = create(:import_run, repository: repository, start_time: Time.current, end_time: Time.current, total_count: 2, new_count: 1, update_count: 1)
+
+      PaperTrail.request.controller_info = { import_run_id: import_run.id }
+      artifact = create(:artifact, repository: repository, description: nil, keywords: [], mesh_keywords: [], artifact_status: 'draft')
+      version = artifact.versions.last
+      get paper_trail_version_url(artifact.versions.last)
+      assert_response :success
+      assert_equal version, assigns(:version)
+      assert_equal 'create', assigns(:version).event
+
+      PaperTrail.request.controller_info = { import_run_id: import_run.id }
+      artifact.update(description: 'Description')
+      version = artifact.versions.last
+      get paper_trail_version_url(artifact.versions.last)
+      assert_response :success
+      assert_equal version, assigns(:version)
+      assert_equal 'update', assigns(:version).event
+      assert_equal 'Description', assigns(:version).object_changes['description'][1]
+    end
+  end
 end

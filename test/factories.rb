@@ -15,7 +15,9 @@ FactoryBot.define do
     artifact_type { 'test' }
   end
 
-  factory :import_run
+  factory :import_run do
+    repository
+  end
 end
 
 def create_repository_with_artifacts(count: 1)
