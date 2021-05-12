@@ -3,7 +3,6 @@
 # Functionality for importing data from the EPC repository
 class EpcImporter < CedarImporter
   repository_name 'EPC'
-  repository_fhir_id 'epc'
   repository_home_page Rails.configuration.epc_home_page
 
   include PageScraper

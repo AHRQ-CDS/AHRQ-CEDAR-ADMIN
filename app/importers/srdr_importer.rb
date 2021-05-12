@@ -3,7 +3,6 @@
 # Functionality for importing data from the SRDR repository
 class SrdrImporter < CedarImporter
   repository_name 'SRDR'
-  repository_fhir_id 'srdr'
   repository_home_page Rails.configuration.srdr_base_url
 
   def self.download_and_update!
