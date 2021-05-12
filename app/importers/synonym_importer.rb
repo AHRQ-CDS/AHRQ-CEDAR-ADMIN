@@ -10,7 +10,8 @@ class SynonymImporter
     File.foreach(file) do |line|
       if line.strip == '*NEWRECORD' && concept.present?
         synonyms << concept unless synonyms.include? concept
-        Concept.create!(canonical: concept, synonyms: synonyms) if synonyms.size > 1
+        synonyms.uniq!
+        Concept.create!(name: concept, synonyms_text: synonyms) if synonyms.size > 1
         concept = ''
         synonyms = []
       end
