@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_07_224403) do
+ActiveRecord::Schema.define(version: 2021_05_05_170405) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,14 @@ ActiveRecord::Schema.define(version: 2021_04_07_224403) do
     t.index ["keywords"], name: "index_artifacts_on_keywords", using: :gin
     t.index ["mesh_keywords"], name: "index_artifacts_on_mesh_keywords", using: :gin
     t.index ["repository_id"], name: "index_artifacts_on_repository_id"
+  end
+
+  create_table "concepts", force: :cascade do |t|
+    t.string "canonical"
+    t.jsonb "synonyms", default: []
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["synonyms"], name: "index_concepts_on_synonyms", using: :gin
   end
 
   create_table "import_runs", force: :cascade do |t|
