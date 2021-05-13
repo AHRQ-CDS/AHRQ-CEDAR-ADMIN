@@ -67,9 +67,11 @@ ActiveRecord::Schema.define(version: 2021_05_05_170405) do
 
   create_table "repositories", force: :cascade do |t|
     t.string "name"
+    t.string "fhir_id"
     t.string "home_page"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["fhir_id"], name: "index_artifacts_on_fhir_id"
   end
 
   add_foreign_key "artifacts", "repositories"
