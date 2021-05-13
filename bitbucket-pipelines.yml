@@ -29,7 +29,8 @@ pipelines:
             - export CEDAR_EHC_FEED_URL=http://DUMMY-URL/product-feed
             - export CEDAR_NGC_BASE_URL=http://DUMMY-URL/
             - RAILS_ENV=test bundle exec rails db:create
-            - bundle exec rake
+            - bin/rails webpacker:compile
+            - bundle exec rails test
             - bundle exec rubocop
             - bundle exec brakeman
 
