@@ -7,7 +7,8 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     repository_1 = create_repository_with_artifacts(count: 2)
     repository_2 = create(:repository)
     create(:artifact, repository: repository_2, description: nil, keywords: [], mesh_keywords: [], artifact_status: 'draft')
-    create(:import_run, repository: repository_1, start_time: Time.current, end_time: Time.current, total_count: 2, new_count: 1, update_count: 1)
+    create(:import_run, repository: repository_1, start_time: Time.current, end_time: Time.current, total_count: 2, new_count: 1, update_count: 1, delete_count: 1)
+    create(:import_run, repository: repository_1, start_time: Time.current, end_time: Time.current, total_count: 2, new_count: 0, update_count: 1, delete_count: 1)
     get root_url
     assert_response :success
     assert_match 'CEDAR Statistics', @response.body
@@ -21,9 +22,12 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, assigns(:top_artifacts_by_type).length
     assert_equal 3, assigns(:top_artifacts_by_type)[0][1]
     assert_equal 8, assigns(:top_artifacts_per_keyword).length
-    assert_equal 1, assigns(:import_runs).length
-    assert_equal 1, assigns(:import_run_summaries).length
-    assert_equal 2, assigns(:import_run_summaries).values.first.total_count
+    assert_equal 2, assigns(:import_runs).values.first.length
+    assert_equal 2, assigns(:import_runs).values.first.first.total_count
+    assert_equal 1, assigns(:import_runs).values.first.first.new_count
+    assert_equal 1, assigns(:import_run_summaries).values.length
+    assert_equal 4, assigns(:import_run_summaries).values.first.total_count
+    assert_equal 1, assigns(:import_run_summaries).values.first.new_count
   end
 
   test 'should get repository' do
