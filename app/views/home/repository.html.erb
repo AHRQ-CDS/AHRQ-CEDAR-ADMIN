@@ -20,8 +20,9 @@
         </tr>
       </thead>
       <tbody>
-        <% @repository.import_runs.order(:id).each do |import| %>
+        <% @repository.import_runs.order(:id).reverse_order.each do |import| %>
           <tr>
+            <%# TODO: display times using a local timezone (CEDAR-219) %>
             <td><%= link_to import.start_time.to_formatted_s(:long), import %></td>
             <td>
               <% if import.start_time && import.end_time %>

@@ -21,7 +21,8 @@
     <p><strong>Indexed At:</strong> <%= @artifact.created_at&.to_s(:long) || '<not specified>' %></p>
     <h4>Version History</h4>
     <ul>
-      <% @artifact.versions.each do |v| %>
+      <% @artifact.versions.order(:id).reverse_order.each do |v| %>
+        <%# TODO: display times using a local timezone (CEDAR-219) %>
         <li><%= link_to "#{v.event} [#{v.created_at.to_formatted_s(:long)}]", v %></li>
       <% end %>
     </ul>
