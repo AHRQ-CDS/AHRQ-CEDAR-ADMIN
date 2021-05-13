@@ -43,11 +43,12 @@ ActiveRecord::Schema.define(version: 2021_05_05_170405) do
   end
 
   create_table "concepts", force: :cascade do |t|
-    t.string "canonical"
-    t.jsonb "synonyms", default: []
+    t.string "name"
+    t.jsonb "synonyms_text", default: []
+    t.jsonb "synonyms_psql", default: []
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["synonyms"], name: "index_concepts_on_synonyms", using: :gin
+    t.index ["synonyms_psql"], name: "index_concepts_on_synonyms_psql", using: :gin
   end
 
   create_table "import_runs", force: :cascade do |t|
