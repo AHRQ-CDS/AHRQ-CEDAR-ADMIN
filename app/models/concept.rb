@@ -4,6 +4,6 @@
 class Concept < ApplicationRecord
   def synonyms_text=(terms)
     super(terms)
-    self.synonyms_psql = terms.map { |t| t.split(/[, ]+/).join('<->') }
+    self.synonyms_psql = terms.map { |t| t.split(/[, ]+/).join('<->').gsub('(', '\(').gsub(')', '\)') }
   end
 end

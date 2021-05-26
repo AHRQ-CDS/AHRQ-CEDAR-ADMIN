@@ -58,5 +58,5 @@ namespace :import do
   end
 
   desc 'Download all repository content and import it to the database'
-  task all: %i[ uspstf cds_connect ehc epc srdr ]
+  task all: %i(uspstf cds_connect ehc epc srdr)
 end
