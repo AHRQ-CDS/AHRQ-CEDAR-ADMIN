@@ -24,8 +24,18 @@ class ConceptTest < ActiveSupport::TestCase
     assert concept.synonyms_psql.include? 'foo<->bar'
   end
 
-  test 'braces in synonyms are escaped' do
+  test 'braces in synonyms are ignored' do
     concept = Concept.new(name: 'Test', synonyms_text: ['(foo),bar'])
-    assert concept.synonyms_psql.include? '\(foo\)<->bar'
+    assert concept.synonyms_psql.include? 'foo<->bar'
+  end
+
+  test 'colons in synonyms are ignored' do
+    concept = Concept.new(name: 'Test', synonyms_text: ['foo::bar'])
+    assert concept.synonyms_psql.include? 'foo<->bar'
+  end
+
+  test 'duplicate synonyms are ignored' do
+    concept = Concept.new(name: 'Test', synonyms_text: ['foo bar', 'foo, bar'])
+    assert_equal 1, concept.synonyms_psql.size
   end
 end
