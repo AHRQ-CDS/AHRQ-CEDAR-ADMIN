@@ -16,6 +16,7 @@ class SynonymImporter
       concept = fields[0]
       synonyms << fields[14].downcase.strip if SYNONYM_LANGAUGES.include? fields[1]
     end
+    Concept.create!(name: concept, synonyms_text: synonyms.uniq) if synonyms.size > 1
   end
 
   def self.import_mesh(file, canonical_prefix, synonym_prefix)
@@ -37,5 +38,6 @@ class SynonymImporter
         synonyms << line.delete_prefix(synonym_line_start).split('|')[0].downcase.strip
       end
     end
+    Concept.create!(name: concept, synonyms_text: synonyms) if concept.present? && synonyms.size > 1
   end
 end
