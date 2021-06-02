@@ -44,13 +44,6 @@ namespace :import do
     NgcImporter.run
   end
 
-  desc 'Import synonyms from MeSH ASCII descriptor file'
-  task mesh_synonyms: :environment do
-    puts 'Importing synonyms'
-    SynonymImporter.import_mesh('d2021.bin', 'MH', 'ENTRY')
-    SynonymImporter.import_mesh('c2021_disease.bin', 'NM', 'SY')
-  end
-
   desc 'Import synonyms from UMLS MRCONSO file'
   task umls_synonyms: :environment do
     puts 'Importing synonyms'
