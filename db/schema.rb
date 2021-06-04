@@ -89,7 +89,8 @@ ActiveRecord::Schema.define(version: 2021_06_03_182344) do
   end
   
   create_table "search_logs", force: :cascade do |t|
-    t.string "url"
+    t.string "search_params"
+    t.string "search_type"
     t.string "sql"
     t.integer "count"
     t.datetime "start_time"

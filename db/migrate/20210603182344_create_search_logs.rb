@@ -1,7 +1,8 @@
 class CreateSearchLogs < ActiveRecord::Migration[6.0]
   def change
     create_table :search_logs do |t|
-      t.string :url
+      t.string :search_params
+      t.string :search_type
       t.string :sql
       t.integer :count
       t.datetime :start_time
