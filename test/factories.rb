@@ -2,11 +2,11 @@
 
 FactoryBot.define do
   factory :search_log do
-    url { "MyString" }
-    sql { "MyString" }
+    url { 'MyString' }
+    sql { 'MyString' }
     count { 1 }
-    start_time { "2021-06-03 13:23:44" }
-    end_time { "2021-06-03 13:23:44" }
+    start_time { '2021-06-03 13:23:44' }
+    end_time { '2021-06-03 13:23:44' }
   end
 
   factory :repository do
