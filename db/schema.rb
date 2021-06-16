@@ -75,6 +75,18 @@ ActiveRecord::Schema.define(version: 2021_06_03_182344) do
     t.index ["fhir_id"], name: "index_artifacts_on_fhir_id"
   end
 
+  create_table "search_logs", force: :cascade do |t|
+    t.string "search_params"
+    t.string "search_type"
+    t.string "sql"
+    t.integer "count"
+    t.cidr "client_ip"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "versions", force: :cascade do |t|
     t.string "item_type", null: false
     t.bigint "item_id", null: false
@@ -86,17 +98,6 @@ ActiveRecord::Schema.define(version: 2021_06_03_182344) do
     t.datetime "created_at"
     t.index ["import_run_id"], name: "index_versions_on_import_run_id"
     t.index ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id"
-  end
-  
-  create_table "search_logs", force: :cascade do |t|
-    t.string "search_params"
-    t.string "search_type"
-    t.string "sql"
-    t.integer "count"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
   end
 
   add_foreign_key "artifacts", "repositories"

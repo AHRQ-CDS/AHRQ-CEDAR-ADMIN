@@ -5,6 +5,7 @@ class CreateSearchLogs < ActiveRecord::Migration[6.0]
       t.string :search_type
       t.string :sql
       t.integer :count
+      t.cidr :client_ip
       t.datetime :start_time
       t.datetime :end_time
 
