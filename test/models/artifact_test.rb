@@ -102,11 +102,6 @@ class ArtifactTest < ActiveSupport::TestCase
     assert_equal "MARKDOWN AND HTML\n\n", artifact.description_markdown
   end
 
-  test 'getting all keywords from an artifact' do
-    artifact = Artifact.new(keywords: ['one', 'two'], mesh_keywords: ['two', 'three'])
-    assert_equal ['one', 'two', 'three'], artifact.all_keywords
-  end
-
   test 'setting a valid URL' do
     repository = create(:repository)
     artifact = Artifact.new(url: 'http://example.com/', repository: repository)
@@ -122,15 +117,28 @@ class ArtifactTest < ActiveSupport::TestCase
   end
 
   test 'normalizing keywords' do
-    artifact = Artifact.new(keywords: ['Duplicate', 'duplicate'], mesh_keywords: ['MeSH_Duplicate', 'mesh_duplicate'])
+    artifact = Artifact.new(keywords: ['Duplicate', 'duplicate'])
     assert_equal(1, artifact.keywords.size)
     assert_equal('duplicate', artifact.keywords.first)
-    assert_equal(1, artifact.mesh_keywords.size)
-    assert_equal('mesh_duplicate', artifact.mesh_keywords.first)
-    artifact = Artifact.new(keywords: ['cáncer', 'cancer'], mesh_keywords: ['cáncer', 'cancer'])
+    artifact = Artifact.new(keywords: ['cáncer', 'cancer'])
     assert_equal(1, artifact.keywords.size)
     assert_equal('cancer', artifact.keywords.first)
-    assert_equal(1, artifact.mesh_keywords.size)
-    assert_equal('cancer', artifact.mesh_keywords.first)
+  end
+
+  test 'associating concepts for keywords' do
+    create_concepts(count: 2)
+    artifact = Artifact.new(keywords: ['synonym 1a', 'synonym 2b'])
+    assert_equal(2, artifact.concepts.size)
+    artifact.keywords = ['synonym 1a']
+    assert_equal(1, artifact.concepts.size)
+    assert_equal('synonym 1a', artifact.concepts.first.codes[0]['description'])
+    assert_equal('1a', artifact.concepts.first.codes[0]['code'])
+    assert_equal('MSH', artifact.concepts.first.codes[0]['system'])
+    artifact.keywords = ['synonym 3a']
+    assert_equal(0, artifact.concepts.size)
+    artifact.keywords = []
+    assert_equal(0, artifact.concepts.size)
+    artifact.keywords = nil
+    assert_equal(0, artifact.concepts.size)
   end
 end

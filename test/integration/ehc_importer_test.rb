@@ -24,11 +24,10 @@ class EhcImporterTest < ActiveSupport::TestCase
     artifact = artifacts.where(title: 'Living Systematic Review on Cannabis and Other Plant-Based Treatments for Chronic Pain').first
     assert(artifact.present?)
     assert(artifact.keywords.include?('chronic pain'))
-    assert(artifact.mesh_keywords.include?('chronic pain'))
 
     artifact = artifacts.where(title: 'Treatments for Seasonal Allergic Rhinitis').first
     assert(artifact.present?)
-    assert(artifact.mesh_keywords.include?('hay fever'))
+    assert(artifact.keywords.include?('hay fever'))
 
     # Check tracking
     assert_equal(1, repository.import_runs.count)

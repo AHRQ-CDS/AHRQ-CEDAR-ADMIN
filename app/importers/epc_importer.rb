@@ -85,8 +85,7 @@ class EpcImporter < CedarImporter
         published_on: artifact_date,
         artifact_type: artifact_type,
         artifact_status: artifact_status,
-        keywords: [],
-        mesh_keywords: []
+        keywords: []
       }
       metadata.merge!(extract_metadata(artifact_url))
       update_or_create_artifact!(cedar_id, metadata)

@@ -28,11 +28,16 @@ class EhcImporter < CedarImporter
         published_on: artifact.at_xpath('Publish-Date').content.presence,
         artifact_status: to_artifact_status(artifact.at_xpath('Status').content),
         artifact_type: artifact.at_xpath('Product-Type').content.presence,
-        mesh_keywords: artifact.at_xpath('Health-Topics').content&.split('|')&.collect { |item| item.strip },
-        keywords: artifact.at_xpath('Keywords').content&.split(',')&.collect { |item| item.strip },
+        keywords: extract_keywords(artifact),
         doi: doi
       )
     end
+  end
+
+  def self.extract_keywords(artifact)
+    topics = artifact.at_xpath('Health-Topics').content&.split('|')&.collect { |item| item.strip } || []
+    keywords = artifact.at_xpath('Keywords').content&.split(',')&.collect { |item| item.strip } || []
+    topics.concat(keywords)
   end
 
   def self.to_artifact_status(status)

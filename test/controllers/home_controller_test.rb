@@ -6,7 +6,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
   test 'should get index' do
     repository_1 = create_repository_with_artifacts(count: 2)
     repository_2 = create(:repository)
-    create(:artifact, repository: repository_2, description: nil, keywords: [], mesh_keywords: [], artifact_status: 'draft')
+    create(:artifact, repository: repository_2, description: nil, keywords: [], artifact_status: 'draft')
     create(:import_run, repository: repository_1, start_time: Time.current, end_time: Time.current,
                         total_count: 2, new_count: 1, update_count: 1, delete_count: 1)
     create(:import_run, repository: repository_1, start_time: Time.current, end_time: Time.current,
@@ -23,7 +23,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_equal 1, assigns(:artifacts_by_status)&.[]('draft')
     assert_equal 1, assigns(:top_artifacts_by_type).length
     assert_equal 3, assigns(:top_artifacts_by_type)[0][1]
-    assert_equal 8, assigns(:top_artifacts_per_keyword).length
+    assert_equal 4, assigns(:top_artifacts_per_keyword).length
     assert_equal 2, assigns(:import_runs).values.last.length
     assert_equal 2, assigns(:import_runs).values.last.last.total_count
     assert_equal 1, assigns(:import_runs).values.last.last.new_count
@@ -34,7 +34,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
 
   test 'should get repository' do
     repository = create_repository_with_artifacts(count: 2)
-    create(:artifact, repository: repository, description: nil, keywords: [], mesh_keywords: [], artifact_status: 'draft')
+    create(:artifact, repository: repository, description: nil, keywords: [], artifact_status: 'draft')
     get repository_url(repository)
     assert_response :success
     assert_match repository.name, @response.body
@@ -45,7 +45,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_equal 2, assigns(:artifacts_by_status)&.[]('active')
     assert_equal 1, assigns(:artifacts_by_status)&.[]('draft')
     assert_equal 3, assigns(:artifacts_by_type)&.[]('test')
-    assert_equal 8, assigns(:top_artifacts_per_keyword).length
+    assert_equal 4, assigns(:top_artifacts_per_keyword).length
   end
 
   test 'should get artifact' do
@@ -64,7 +64,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_match keyword, @response.body
     assert_equal 1, assigns(:artifacts).count
     assert_equal 1, assigns(:artifacts_per_repository)&.[](repository)
-    assert_equal 3, assigns(:top_artifacts_per_keyword).length
+    assert_equal 1, assigns(:top_artifacts_per_keyword).length
   end
 
   test 'should get keyword_counts' do
@@ -72,7 +72,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     get keyword_counts_url
     assert_response :success
     response = JSON.parse(@response.body)
-    assert_equal 12, response.length
+    assert_equal 6, response.length
   end
 
   test 'should get import_run' do
@@ -80,7 +80,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
       repository = create(:repository)
       import_run = create(:import_run, repository: repository, start_time: Time.current, end_time: Time.current, total_count: 2, new_count: 1, update_count: 1)
       PaperTrail.request.controller_info = { import_run_id: import_run.id }
-      create(:artifact, repository: repository, description: nil, keywords: [], mesh_keywords: [], artifact_status: 'draft')
+      create(:artifact, repository: repository, description: nil, keywords: [], artifact_status: 'draft')
       get import_run_url(import_run)
       assert_response :success
       assert_equal import_run, assigns(:import_run)
@@ -94,7 +94,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
       import_run = create(:import_run, repository: repository, start_time: Time.current, end_time: Time.current, total_count: 2, new_count: 1, update_count: 1)
 
       PaperTrail.request.controller_info = { import_run_id: import_run.id }
-      artifact = create(:artifact, repository: repository, description: nil, keywords: [], mesh_keywords: [], artifact_status: 'draft')
+      artifact = create(:artifact, repository: repository, description: nil, keywords: [], artifact_status: 'draft')
       version = artifact.versions.last
       get paper_trail_version_url(artifact.versions.last)
       assert_response :success

@@ -32,8 +32,8 @@ class CdsConnectImporterTest < ActiveSupport::TestCase
     assert_equal('CDS-CONNECT-1186', artifact_1186.cedar_identifier)
     assert_equal('1186', artifact_1186.remote_identifier)
     assert_match(/This CDS artifact identifies patients screened for alcohol use/, artifact_1186.description)
-    assert_equal(['alcohol', 'brief intervention', 'decision aid', 'excessive alcohol use'], artifact_1186.keywords)
-    assert_equal(['preventive health services', 'alcohol drinking', 'risk assessment', 'substance abuse detection'], artifact_1186.mesh_keywords)
+    assert_equal(['alcohol', 'brief intervention', 'decision aid', 'excessive alcohol use', 'preventive health services',
+                  'alcohol drinking', 'risk assessment', 'substance abuse detection'], artifact_1186.keywords)
     assert_match(/node.1186/, artifact_1186.url)
     assert_equal(Date.parse('Thu, 16 Jul 2020'), artifact_1186.published_on)
     assert_equal('Data Summary', artifact_1186.artifact_type)
@@ -44,8 +44,8 @@ class CdsConnectImporterTest < ActiveSupport::TestCase
     assert_equal('CDS-CONNECT-1221', artifact_1221.cedar_identifier)
     assert_equal('1221', artifact_1221.remote_identifier)
     assert_match(/This artifact implements access to Prescription Drug Monitoring/, artifact_1221.description)
-    assert_equal(['chronic pain', 'analgesics, opioid', 'prescription drug misuse', 'risk assessment', 'pain assessment'], artifact_1221.keywords)
-    assert_equal(['analgesics, opioid', 'opioid-related disorders', 'pain management'], artifact_1221.mesh_keywords)
+    assert_equal(['chronic pain', 'analgesics, opioid', 'prescription drug misuse', 'risk assessment', 'pain assessment',
+                  'opioid-related disorders', 'pain management'], artifact_1221.keywords)
     assert_match(/node.1221/, artifact_1221.url)
     assert_nil(artifact_1221.published_on)
     assert_equal('Data Summary', artifact_1221.artifact_type)

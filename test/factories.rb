@@ -18,9 +18,19 @@ FactoryBot.define do
     sequence(:title) { |n| "Artifact #{n}" }
     sequence(:description) { |n| "Description #{n}" }
     sequence(:keywords) { |n| ["keyword #{n}a", "keyword #{n}b"] }
-    sequence(:mesh_keywords) { |n| ["mesh keyword #{n}a", "mesh keyword #{n}b"] }
     artifact_status { 'active' }
     artifact_type { 'test' }
+  end
+
+  factory :concept do
+    sequence(:umls_cui) { |n| "CUI#{n}" }
+    sequence(:synonyms_text) { |n| ["synonym #{n}a", "synonym #{n}b"] }
+    sequence(:codes) do |n|
+      [
+        { system: 'MSH', code: "#{n}a", description: "synonym #{n}a" },
+        { system: 'MSH', code: "#{n}b", description: "synonym #{n}b" }
+      ]
+    end
   end
 
   factory :import_run do
@@ -32,4 +42,8 @@ def create_repository_with_artifacts(count: 1)
   FactoryBot.create :repository do |repository|
     FactoryBot.create_list(:artifact, count, repository: repository)
   end
+end
+
+def create_concepts(count: 1)
+  FactoryBot.create_list(:concept, count)
 end

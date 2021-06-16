@@ -122,3 +122,5 @@ Style/SoleNestedConditional:
 # Local changes
 Style/WordArray:
   Enabled: false
+Rails/HasAndBelongsToMany:
+  Enabled: false

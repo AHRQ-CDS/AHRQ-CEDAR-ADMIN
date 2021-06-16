@@ -44,10 +44,10 @@ namespace :import do
     NgcImporter.run
   end
 
-  desc 'Import synonyms from UMLS MRCONSO file'
-  task umls_synonyms: :environment do
-    puts 'Importing synonyms'
-    SynonymImporter.import_umls_mrconso('MRCONSO.RRF')
+  desc 'Import concepts from UMLS MRCONSO file'
+  task umls_concepts: :environment do
+    puts 'Importing concepts'
+    ConceptImporter.import_umls_mrconso('MRCONSO.RRF')
   end
 
   desc 'Download all repository content and import it to the database'
