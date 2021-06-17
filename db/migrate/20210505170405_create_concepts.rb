@@ -2,6 +2,7 @@ class CreateConcepts < ActiveRecord::Migration[6.0]
   def change
     create_table :concepts do |t|
       t.string :umls_cui
+      t.string :umls_description
       t.jsonb :synonyms_text, default: []
       t.jsonb :synonyms_psql, default: []
       t.jsonb :codes, default: []

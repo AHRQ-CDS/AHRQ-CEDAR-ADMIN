@@ -131,6 +131,8 @@ class ArtifactTest < ActiveSupport::TestCase
     assert_equal(2, artifact.concepts.size)
     artifact.keywords = ['synonym 1a']
     assert_equal(1, artifact.concepts.size)
+    assert_equal('CUI1', artifact.concepts.first.umls_cui)
+    assert_equal('Description 1', artifact.concepts.first.umls_description)
     assert_equal('synonym 1a', artifact.concepts.first.codes[0]['description'])
     assert_equal('1a', artifact.concepts.first.codes[0]['code'])
     assert_equal('MSH', artifact.concepts.first.codes[0]['system'])

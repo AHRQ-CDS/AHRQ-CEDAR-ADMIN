@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(version: 2021_06_03_182344) do
 
   create_table "concepts", force: :cascade do |t|
     t.string "umls_cui"
+    t.string "umls_description"
     t.jsonb "synonyms_text", default: []
     t.jsonb "synonyms_psql", default: []
     t.jsonb "codes", default: []

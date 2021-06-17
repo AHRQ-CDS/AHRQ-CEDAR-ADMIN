@@ -14,6 +14,7 @@ class ConceptImporterTest < ActiveSupport::TestCase
     assert_equal(2, Concept.all.count)
 
     concept = Concept.where(umls_cui: 'C0000001').first
+    assert_equal('Foo desc', concept.umls_description)
     assert_equal(2, concept.synonyms_text.size)
     assert_equal(2, concept.codes.size)
     assert_equal('Foo', concept.codes[0]['description'])
@@ -24,6 +25,7 @@ class ConceptImporterTest < ActiveSupport::TestCase
     assert(concept.synonyms_text.include?('baz'))
 
     concept = Concept.where(umls_cui: 'C0000002').first
+    assert_equal('Abc desc', concept.umls_description)
     assert_equal(2, concept.synonyms_text.size)
     assert_equal(2, concept.codes.size)
     assert(concept.synonyms_text.include?('abc'))
