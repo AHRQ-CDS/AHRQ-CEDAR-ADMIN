@@ -77,7 +77,7 @@ class Artifact < ApplicationRecord
       matching_concepts = Concept.where('synonyms_text @> ?', "[\"#{keyword}\"]")
       mapped_concepts.concat(matching_concepts)
     end
-    self.concepts = mapped_concepts
+    self.concepts = mapped_concepts.uniq
   end
 
   # Preprocess keywords (both regular and MeSH) to normalize, remove duplicates, and store for searching

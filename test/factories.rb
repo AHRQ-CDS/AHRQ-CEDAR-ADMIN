@@ -24,7 +24,7 @@ FactoryBot.define do
 
   factory :concept do
     sequence(:umls_cui) { |n| "CUI#{n}" }
-    sequence(:synonyms_text) { |n| ["synonym #{n}a", "synonym #{n}b"] }
+    sequence(:synonyms_text) { |n| ["synonym #{n}a", "synonym #{n}b", "foo"] }
     sequence(:codes) do |n|
       [
         { system: 'MSH', code: "#{n}a", description: "synonym #{n}a" },

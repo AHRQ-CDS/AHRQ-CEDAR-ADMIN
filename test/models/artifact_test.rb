@@ -127,7 +127,7 @@ class ArtifactTest < ActiveSupport::TestCase
 
   test 'associating concepts for keywords' do
     create_concepts(count: 2)
-    artifact = Artifact.new(keywords: ['synonym 1a', 'synonym 2b'])
+    artifact = Artifact.new(keywords: ['synonym 1a', 'synonym 2b', 'foo'])
     assert_equal(2, artifact.concepts.size)
     artifact.keywords = ['synonym 1a']
     assert_equal(1, artifact.concepts.size)
