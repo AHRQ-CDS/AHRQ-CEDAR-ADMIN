@@ -39,7 +39,7 @@ class ConceptImporter
          SYNONYM_CODE_SYSTEMS.include?(fields[SYSTEM_COLUMN]) &&
          SYNONYM_SUPPRESSION_FLAGS.include?(fields[SUPPRESS_COLUMN])
         synonyms << fields[CODE_DESC_COLUMN].downcase.strip
-        if fields[SYSTEM_COLUMN] == 'MSH' && fields[PREFERRED_COLUMN] == 'Y'
+        if fields[SYSTEM_COLUMN] != 'MSH' || (fields[SYSTEM_COLUMN] == 'MSH' && fields[PREFERRED_COLUMN] == 'Y')
           # only include MeSH codes for preferred terms
           codes << {
             system: fields[SYSTEM_COLUMN].strip,
