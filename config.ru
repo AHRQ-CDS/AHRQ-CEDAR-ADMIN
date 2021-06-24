@@ -4,4 +4,7 @@
 
 require_relative 'config/environment'
 
-run Rails.application
+# If we have a relative root for a deployment behind a reverse proxy
+map Rails.application.config.relative_url_root || '/' do
+  run Rails.application
+end

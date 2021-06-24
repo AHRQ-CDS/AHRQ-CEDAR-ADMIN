@@ -1,6 +1,9 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # This app is deployed in a subdirectory
+  config.relative_url_root = '/stats'
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 

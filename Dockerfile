@@ -25,9 +25,12 @@ RUN rm -r node_modules log tmp
 
 RUN yarn install
 
-# TODO: We will likely want to precompile at some point, but this currently fails
-# RUN bundle exec rake assets:precompile
+# Build the production assets
+ENV RAILS_ENV production
+RUN bundle exec rails assets:precompile
+RUN bundle exec rails webpacker:compile
 
+# Logging should be handled at the docker image level
 ENV RAILS_LOG_TO_STDOUT true
 
 EXPOSE 3000

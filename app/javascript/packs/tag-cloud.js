@@ -12,7 +12,7 @@ $(document).on('turbolinks:load', function() {
 
   // Only load data on pages where we have a place to put it
   if($(id).length > 0) {
-    fetch('/keyword_counts.json')
+    fetch('keyword_counts.json')
       .then(response => response.json())
       .then(data => tagCloud(id, size, data));
   }
