@@ -40,6 +40,8 @@ class CdsConnectImporter < CedarImporter
       # Store artifact metadata
       artifact = JSON.parse(response.body)
       cds_connect_status = artifact['status'].downcase
+      keywords = artifact['creation_and_usage']['keywords'] || []
+      keywords.concat(artifact['organization']['mesh_topics'] || [])
       update_or_create_artifact!(
         "CDS-CONNECT-#{artifact_id}",
         remote_identifier: artifact_id.to_s,
@@ -49,8 +51,7 @@ class CdsConnectImporter < CedarImporter
         published_on: artifact['repository_information']['publication_date'],
         artifact_type: artifact['artifact_type'],
         artifact_status: Artifact.artifact_statuses[cds_connect_status] || 'unknown',
-        keywords: artifact['creation_and_usage']['keywords'] || [],
-        mesh_keywords: artifact['organization']['mesh_topics'] || []
+        keywords: keywords
       )
     end
 

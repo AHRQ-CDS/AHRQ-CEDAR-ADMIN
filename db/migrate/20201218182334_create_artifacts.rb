@@ -14,17 +14,14 @@ class CreateArtifacts < ActiveRecord::Migration[6.0]
       t.string :artifact_status
       t.date :published_on
       t.jsonb :keywords, default: []
-      t.jsonb :mesh_keywords, default: []
       t.text :keyword_text
-      t.text :mesh_keyword_text
       t.tsvector :content_search
 
       t.timestamps
     end
     # TODO: Confirm that these are reasonable indexes for how we wind up using keywords
     add_index :artifacts, :keywords, :using => :gin, :name => 'index_artifacts_on_keywords'
-    add_index :artifacts, :mesh_keywords, :using => :gin, :name => 'index_artifacts_on_mesh_keywords'
     add_index :artifacts, :content_search, :using => :gin, :name => 'index_artifacts_on_content_search'
-    add_index :artifacts, "to_tsvector('english', coalesce(keyword_text, '') || '' || coalesce(mesh_keyword_text, ''))", :using => :gin, :name => 'index_artifacts_on_keyword_text'
+    add_index :artifacts, "to_tsvector('english', coalesce(keyword_text, ''))", :using => :gin, :name => 'index_artifacts_on_keyword_text'
   end
 end

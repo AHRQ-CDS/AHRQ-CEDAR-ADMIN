@@ -53,14 +53,13 @@ class NgcImporter < CedarImporter
         published_on: artifact_date,
         artifact_type: 'Guideline',
         artifact_status: 'active',
-        keywords: [],
-        mesh_keywords: []
+        keywords: []
       }
       html_file = File.join(CACHE_DIR, "#{artifact_id}.html")
       if File.exist?(html_file)
         html = File.read(html_file)
         metadata.merge!(extract_html_metadata(html))
-        metadata.merge!(extract_keywords(html))
+        metadata.merge!({ keywords: extract_keywords(html) })
       end
       cedar_id = "NGC-#{URI.parse(artifact_url).select(:host, :path, :fragment, :query).join('-').scan(/\w+/).join('-')}"
       update_or_create_artifact!(cedar_id, metadata)
@@ -69,24 +68,24 @@ class NgcImporter < CedarImporter
   end
 
   def self.extract_keywords(html_text)
-    all_keywords = {}
+    keywords = []
     html = Nokogiri::HTML(html_text)
     html.css('div#classification-tab div.field').each do |field|
       title = field.at_css('h5.field-label').content
+      # TODO: use keyword metadata to identify UMLS CUI as well
       case title
       when 'MSH'
-        all_keywords[:mesh_keywords] = []
         field.css('div.field-content a').each do |mesh_keyword|
-          all_keywords[:mesh_keywords] << mesh_keyword.content
+          keywords << mesh_keyword.content
         end
       when 'MTH'
-        all_keywords[:keywords] = []
         field.css('div.field-content a').each do |keyword|
-          all_keywords[:keywords] << keyword.content
+          keywords << keyword.content
         end
       end
     end
-    all_keywords
+
+    keywords
   end
 
   def self.fetch_missing_files(index)

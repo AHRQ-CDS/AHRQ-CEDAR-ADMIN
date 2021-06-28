@@ -29,26 +29,35 @@ ActiveRecord::Schema.define(version: 2021_06_03_182344) do
     t.string "artifact_status"
     t.date "published_on"
     t.jsonb "keywords", default: []
-    t.jsonb "mesh_keywords", default: []
     t.text "keyword_text"
-    t.text "mesh_keyword_text"
     t.tsvector "content_search"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index "to_tsvector('english'::regconfig, ((COALESCE(keyword_text, ''::text) || ''::text) || COALESCE(mesh_keyword_text, ''::text)))", name: "index_artifacts_on_keyword_text", using: :gin
+    t.index "to_tsvector('english'::regconfig, COALESCE(keyword_text, ''::text))", name: "index_artifacts_on_keyword_text", using: :gin
     t.index ["content_search"], name: "index_artifacts_on_content_search", using: :gin
     t.index ["keywords"], name: "index_artifacts_on_keywords", using: :gin
-    t.index ["mesh_keywords"], name: "index_artifacts_on_mesh_keywords", using: :gin
     t.index ["repository_id"], name: "index_artifacts_on_repository_id"
   end
 
+  create_table "artifacts_concepts", id: false, force: :cascade do |t|
+    t.bigint "concept_id"
+    t.bigint "artifact_id"
+    t.index ["artifact_id"], name: "index_artifacts_concepts_on_artifact_id"
+    t.index ["concept_id"], name: "index_artifacts_concepts_on_concept_id"
+  end
+
   create_table "concepts", force: :cascade do |t|
-    t.string "name"
+    t.string "umls_cui"
+    t.string "umls_description"
     t.jsonb "synonyms_text", default: []
     t.jsonb "synonyms_psql", default: []
+    t.jsonb "codes", default: []
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["codes"], name: "index_concepts_on_codes", using: :gin
     t.index ["synonyms_psql"], name: "index_concepts_on_synonyms_psql", using: :gin
+    t.index ["synonyms_text"], name: "index_concepts_on_synonyms_text", using: :gin
+    t.index ["umls_cui"], name: "index_concepts_on_umls_cui", unique: true
   end
 
   create_table "import_runs", force: :cascade do |t|

@@ -24,14 +24,12 @@ class UspstfImporter < CedarImporter
     # Extract general recommendations
     @json_data['generalRecommendations'].each_pair do |id, recommendation|
       keywords = recommendation['keywords']&.split('|') || []
+      recommendation['categories'].each do |cat|
+        keywords << @json_data['categories'][cat.to_s]['name']
+      end
       cedar_id = "USPSTF-GR-#{id}"
       # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
       url = "#{Rails.configuration.uspstf_home_page}recommendation/#{recommendation['uspstfAlias']}"
-      mesh_keywords = []
-
-      recommendation['categories'].each do |cat|
-        mesh_keywords << @json_data['categories'][cat.to_s]['name']
-      end
 
       update_or_create_artifact!(
         cedar_id,
@@ -42,8 +40,7 @@ class UspstfImporter < CedarImporter
         published_on: Date.new(recommendation['topicYear'].to_i),
         artifact_type: 'General Recommendation',
         artifact_status: 'active',
-        keywords: keywords,
-        mesh_keywords: mesh_keywords
+        keywords: keywords
       )
       general_rec_urls[id] = url
     end

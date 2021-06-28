@@ -30,7 +30,7 @@ class SrdrImporter < CedarImporter
         published_on: artifact['published_at'],
         artifact_status: 'unknown' # TODO: see if this can be determined in some way
         # TODO: see if there's a reasonable value for artifact_type
-        # TODO: see if there are ways to determine keywords or mesh_keywords
+        # TODO: see if there are ways to determine keywords
       )
     end
   end

@@ -4,7 +4,8 @@
 # indexed by CEDAR.
 class Artifact < ApplicationRecord
   belongs_to :repository
-  after_save :udpate_index
+  has_and_belongs_to_many :concepts
+  after_save :update_index
 
   # Track all revisions to artifacts
   has_paper_trail ignore: [:updated_at]
@@ -70,23 +71,22 @@ class Artifact < ApplicationRecord
     end
   end
 
+  def update_concepts
+    mapped_concepts = []
+    keywords&.each do |keyword|
+      matching_concepts = Concept.where('synonyms_text @> ?', "[\"#{keyword}\"]")
+      mapped_concepts.concat(matching_concepts)
+    end
+    self.concepts = mapped_concepts.uniq
+  end
+
   # Preprocess keywords (both regular and MeSH) to normalize, remove duplicates, and store for searching
 
   def keywords=(keywords)
-    keywords = keywords.map { |k| I18n.transliterate(k).downcase }.uniq
+    keywords = keywords&.map { |k| I18n.transliterate(k).downcase }&.uniq
     super(keywords)
-    self.keyword_text = keywords.join(', ')
-  end
-
-  def mesh_keywords=(mesh_keywords)
-    mesh_keywords = mesh_keywords.map { |k| I18n.transliterate(k).downcase }.uniq
-    super(mesh_keywords)
-    self.mesh_keyword_text = mesh_keywords.join(', ')
-  end
-
-  # Return a list of all keywords, regardless of type, with any duplicates pruned
-  def all_keywords
-    keywords | mesh_keywords
+    self.keyword_text = keywords&.join(', ')
+    update_concepts
   end
 
   # When being displayed to a user, show the title
@@ -94,13 +94,12 @@ class Artifact < ApplicationRecord
     title
   end
 
-  def udpate_index
+  def update_index
     query = <<-SQL.squish
       UPDATE artifacts SET content_search = (
         setweight(to_tsvector('english', coalesce(title, '')), 'A') ||
         setweight(to_tsvector('english', coalesce(keyword_text, '')), 'B') ||
-        setweight(to_tsvector('english', coalesce(mesh_keyword_text, '')), 'B') ||
-        setweight(to_tsvector('english', coalesce(description, '')), 'D'))
+        setweight(to_tsvector('english', coalesce(description, '')), 'C'))
       WHERE id=#{ActiveRecord::Base.connection.quote(id)}
     SQL
     ActiveRecord::Base.connection.execute(query)

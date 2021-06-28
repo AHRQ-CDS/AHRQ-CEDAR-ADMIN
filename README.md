@@ -29,6 +29,16 @@ To run tests, run
 rails test
 ```
 
+## Importing UMLS Concepts
+
+Download the MRCONSO.RRF file from: [https://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html](https://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html) and move it to the CEDAR directory. Run
+
+```
+rake import:umls_concepts
+```
+
+Due to the size of the MRCONSO.RRF file, this can take several hours to complete, be patient.
+
 ## Importing Data from Repositories
 
 To import data from the US Preventative Services Task Force, run
