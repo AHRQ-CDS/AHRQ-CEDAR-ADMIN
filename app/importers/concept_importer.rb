@@ -6,11 +6,20 @@ class ConceptImporter
   SYNONYM_LANGAUGES = ['ENG', 'SPA'].freeze
   SYNONYM_CODE_SYSTEMS = ['MSH', 'MEDLINEPLUS', 'SNOMEDCT_US', 'SCTSPA', 'MSHSPA', 'ICD10CM', 'RXNORM'].freeze
   SYNONYM_SUPPRESSION_FLAGS = ['N'].freeze
+  INCLUDED_TERM_TYPES = {
+    'MSH' => 'MH',
+    'MSHSPA' => 'MH',
+    'SNOMEDCT_US' => 'PT',
+    'SCTSPA' => 'PT',
+    'ICD10CM' => 'PT',
+    'RXNORM' => 'IN'
+  }.freeze
 
   CUI_COLUMN = 0
   LANG_COLUMN = 1
   PREFERRED_COLUMN = 6
   SYSTEM_COLUMN = 11
+  TERM_TYPE_COLUMN = 12
   CODE_COLUMN = 13
   CODE_DESC_COLUMN = 14
   SUPPRESS_COLUMN = 16
@@ -22,33 +31,39 @@ class ConceptImporter
 
   def self.import_umls_mrconso(file)
     concept = ''
-    description = ''
+    mth_description = ''
     synonyms = []
     codes = []
     File.foreach(file) do |line|
       fields = line.split('|')
       if fields[0] != concept && concept.present?
-        create_or_update_concept(concept, description, synonyms, codes)
+        create_or_update_concept(concept, mth_description, synonyms, codes)
         synonyms = []
         codes = []
-        description = ''
+        mth_description = ''
       end
-      concept = fields[CUI_COLUMN]
-      description = fields[CODE_DESC_COLUMN].strip if fields[SYSTEM_COLUMN] == 'MTH' && fields[PREFERRED_COLUMN] == 'Y'
-      if SYNONYM_LANGAUGES.include?(fields[LANG_COLUMN]) &&
-         SYNONYM_CODE_SYSTEMS.include?(fields[SYSTEM_COLUMN]) &&
+      concept = fields[CUI_COLUMN].strip
+      code_system = fields[SYSTEM_COLUMN].strip
+      code = fields[CODE_COLUMN].strip
+      preferred = fields[PREFERRED_COLUMN].strip
+      description = fields[CODE_DESC_COLUMN].strip
+      mth_description = description if code_system == 'MTH' && preferred == 'Y'
+      if SYNONYM_LANGAUGES.include?(fields[LANG_COLUMN].strip) &&
+         SYNONYM_CODE_SYSTEMS.include?(code_system) &&
          SYNONYM_SUPPRESSION_FLAGS.include?(fields[SUPPRESS_COLUMN])
-        synonyms << fields[CODE_DESC_COLUMN].downcase.strip
-        if fields[SYSTEM_COLUMN] != 'MSH' || (fields[SYSTEM_COLUMN] == 'MSH' && fields[PREFERRED_COLUMN] == 'Y')
-          # Only include preferred MeSH codes
+        synonyms << description.downcase.strip
+        # Only include preferred terms as codes to avoid duplication of codes
+        if (code_system != 'MSH' || (code_system == 'MSH' && preferred == 'Y')) &&
+           INCLUDED_TERM_TYPES.include?(code_system) &&
+           fields[TERM_TYPE_COLUMN].strip == INCLUDED_TERM_TYPES[code_system]
           codes << {
-            system: fields[SYSTEM_COLUMN].strip,
-            code: fields[CODE_COLUMN].strip,
-            description: fields[CODE_DESC_COLUMN].strip
+            system: code_system,
+            code: code,
+            description: description
           }
         end
       end
     end
-    create_or_update_concept(concept, description, synonyms, codes)
+    create_or_update_concept(concept, mth_description, synonyms, codes)
   end
 end
