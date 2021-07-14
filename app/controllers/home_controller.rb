@@ -23,6 +23,7 @@ class HomeController < ApplicationController
 
     keywords = Artifact.where.not('keywords <@ ?', '[]').flat_map(&:keywords)
     @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
+    @search_logs = SearchLog.order(:start_time).reverse_order
   end
 
   def repository

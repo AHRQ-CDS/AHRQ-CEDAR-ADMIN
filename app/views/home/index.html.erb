@@ -67,3 +67,35 @@
     <div id='tag-cloud' />
   </div>
 </div>
+
+<div class="row mt-5">
+  <div class="col-sm">
+    <h3>Search Statistics</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Date Time</th>
+          <th>Search Type</th>
+          <th>Search Parameters</th>
+          <th>SQL</th>
+          <th>Result Count</th>
+          <th>Client IP</th>
+          <th>Time Consumed (ms)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @search_logs.each do |sl| %>
+        <tr>
+          <td><%= sl.start_time %></td>
+          <td><%= sl.search_type %></td>
+          <td><%= sl.search_params %></td>
+          <td><%= sl.sql %></td>
+          <td><%= sl.count %></td>
+          <td><%= sl.client_ip %></td>
+          <td><%= Integer((sl.end_time - sl.start_time) * 1000) %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
