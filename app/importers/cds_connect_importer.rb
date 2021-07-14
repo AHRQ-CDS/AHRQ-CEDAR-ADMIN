@@ -28,8 +28,36 @@ class CdsConnectImporter < CedarImporter
     raise "CDS Connect ID retrieval failed with status #{response.status}" unless response.status == 200
 
     # Pull out the list of IDs
+    # The list we pull back can include many duplicate entries, presumably different versions of the same thing.
+    # This list appears to be ordered most recent first so we can take the first unique entry and use the url
+    # slug of the artifact to detect duplicates.
+    # The url slugs include a trailing -nn or -nn-nn for each new version after the initial one, we match on the
+    # URL slug minus the trailing numbers (if present).
+    # Here's an example
+    # {
+    #   "field_version": "0.1.3",
+    #   "uuid": "dd5e7f81-37bd-419a-a9a4-1e3f7427be57",
+    #   "nid": "13416",
+    #   "title": "<a href=\"/cdsconnect/artifact/aspirin-therapy-primary-prevention-cvd-and-colorectal-cancer-38\"
+    #             hreflang=\"en\">Aspirin Therapy for Primary Prevention of CVD and Colorectal Cancer</a>"
+    # }
     artifact_list = JSON.parse(response.body)
-    artifact_ids = artifact_list.map { |a| a['nid'] }
+    artifact_ids = []
+    slugs = {}
+    artifact_list.each do |artifact|
+      # Extract the full URL slug, e.g.:
+      # /cdsconnect/artifact/aspirin-therapy-primary-prevention-cvd-and-colorectal-cancer-38
+      slug = artifact['title'].match(%r{<a href="([/a-z0-9-]+)})[1]
+      while slug.match(%r{([a-z0-9/-]+)-[0-9]+$})
+        # Strip off a trailing -nn if present, may need to do this more than once if -nn-nn suffix
+        # /cdsconnect/artifact/aspirin-therapy-primary-prevention-cvd-and-colorectal-cancer
+        slug = slug.match(%r{([a-z0-9/-]+)-[0-9]+$})[1]
+      end
+      unless slugs.include? slug
+        slugs[slug] = true
+        artifact_ids << artifact['nid']
+      end
+    end
 
     # Retrieve and process each artifact based on the ID
     artifact_ids.each do |artifact_id|
