@@ -88,6 +88,7 @@ ActiveRecord::Schema.define(version: 2021_06_03_182344) do
     t.string "search_params"
     t.string "search_type"
     t.string "sql"
+    t.jsonb "keywords", default: []
     t.integer "count"
     t.cidr "client_ip"
     t.datetime "start_time"

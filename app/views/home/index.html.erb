@@ -70,7 +70,7 @@
 
 <div class="row mt-5">
   <div class="col-sm">
-    <h3>Search Statistics</h3>
+    <h3>Search Logs</h3>
     <table class="table">
       <thead>
         <tr>
@@ -99,3 +99,7 @@
     </table>
   </div>
 </div>
+
+<%= render 'data_with_pie_chart', title: 'Last 10 days search', data: @search_logs_day_count, count_term: 'searches' %>
+
+<%= render 'data_with_pie_chart', title: 'Last 10 days search by Keywords', data: @search_per_keyword %>

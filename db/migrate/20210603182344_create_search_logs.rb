@@ -4,6 +4,7 @@ class CreateSearchLogs < ActiveRecord::Migration[6.0]
       t.string :search_params
       t.string :search_type
       t.string :sql
+      t.jsonb :keywords, default: []
       t.integer :count
       t.cidr :client_ip
       t.datetime :start_time

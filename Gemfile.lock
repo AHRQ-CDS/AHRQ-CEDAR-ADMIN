@@ -110,6 +110,8 @@ GEM
     ffi (1.13.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
+    groupdate (5.2.2)
+      activesupport (>= 5)
     hashdiff (1.0.1)
     hashery (2.1.2)
     http-cookie (1.0.3)
@@ -302,6 +304,7 @@ DEPENDENCIES
   faraday
   faraday-cookie_jar
   faraday_middleware
+  groupdate
   jbuilder (~> 2.7)
   listen (~> 3.2)
   paper_trail

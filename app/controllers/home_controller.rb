@@ -23,7 +23,13 @@ class HomeController < ApplicationController
 
     keywords = Artifact.where.not('keywords <@ ?', '[]').flat_map(&:keywords)
     @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
-    @search_logs = SearchLog.order(:start_time).reverse_order
+
+    start_dates = SearchLog.select('DISTINCT DATE(start_time) AS start_date').order(:start_date).reverse_order.limit(10).map(&:start_date)
+    search_last_10_days = SearchLog.where('DATE(start_time) >= ?', start_dates.last)
+    @search_logs = search_last_10_days.order(:start_time).reverse_order
+    @search_logs_day_count = search_last_10_days.where('DATE(start_time) >= ?', start_dates.last).group_by_day(:start_time, series: false, reverse: true, format: "%Y-%m-%d").count
+    keywords = search_last_10_days.where.not('keywords <@ ?', '[]').flat_map(&:keywords)
+    @search_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
   end
 
   def repository
