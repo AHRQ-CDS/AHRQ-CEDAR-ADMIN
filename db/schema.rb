@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_03_182344) do
+ActiveRecord::Schema.define(version: 2021_07_20_115000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,16 +85,22 @@ ActiveRecord::Schema.define(version: 2021_06_03_182344) do
   end
 
   create_table "search_logs", force: :cascade do |t|
-    t.string "search_params"
-    t.string "search_type"
-    t.string "sql"
-    t.jsonb "keywords", default: []
+    t.jsonb "search_params", default: {}
     t.integer "count"
+    t.integer "total"
     t.cidr "client_ip"
     t.datetime "start_time"
     t.datetime "end_time"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "search_parameter_logs", force: :cascade do |t|
+    t.bigint "search_log_id", null: false
+    t.string "name"
+    t.string "value"
+    t.datetime "start_time"
+    t.index ["search_log_id"], name: "index_search_parameter_logs_on_search_log_id"
   end
 
   create_table "versions", force: :cascade do |t|
@@ -112,5 +118,6 @@ ActiveRecord::Schema.define(version: 2021_06_03_182344) do
 
   add_foreign_key "artifacts", "repositories"
   add_foreign_key "import_runs", "repositories"
+  add_foreign_key "search_parameter_logs", "search_logs"
   add_foreign_key "versions", "import_runs"
 end

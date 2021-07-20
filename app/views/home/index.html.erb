@@ -75,9 +75,7 @@
       <thead>
         <tr>
           <th>Date Time</th>
-          <th>Search Type</th>
           <th>Search Parameters</th>
-          <th>SQL</th>
           <th>Result Count</th>
           <th>Client IP</th>
           <th>Time Consumed (ms)</th>
@@ -87,9 +85,7 @@
         <% @search_logs.each do |sl| %>
         <tr>
           <td><%= sl.start_time %></td>
-          <td><%= sl.search_type %></td>
           <td><%= sl.search_params %></td>
-          <td><%= sl.sql %></td>
           <td><%= sl.count %></td>
           <td><%= sl.client_ip %></td>
           <td><%= Integer((sl.end_time - sl.start_time) * 1000) %></td>
@@ -100,6 +96,8 @@
   </div>
 </div>
 
-<%= render 'data_with_pie_chart', title: 'Last 10 days search', data: @search_logs_day_count, count_term: 'searches' %>
+<%= render 'data_with_pie_chart', title: 'Last 10 days search', data: @search_per_day, count_term: 'searches' %>
 
-<%= render 'data_with_pie_chart', title: 'Last 10 days search by Keywords', data: @search_per_keyword %>
+<%= render 'data_with_pie_chart', title: 'Last 10 days search by parameter name', data: @search_per_parameter_name, count_term: 'searches' %>
+
+<%= render 'data_with_pie_chart', title: 'Last 10 days search by parameter value', data: @search_per_parameter_value, count_term: 'searches' %>

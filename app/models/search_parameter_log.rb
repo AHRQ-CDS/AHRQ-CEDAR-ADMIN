@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
 # Model for tracking the serach query at CEDAR API
-class SearchLog < ApplicationRecord
-  has_many :search_parameter_logs
+class SearchParameterLog < ApplicationRecord
+  belongs_to :search_log
 end
