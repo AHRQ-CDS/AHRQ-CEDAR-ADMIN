@@ -99,7 +99,6 @@ ActiveRecord::Schema.define(version: 2021_07_20_115000) do
     t.bigint "search_log_id", null: false
     t.string "name"
     t.string "value"
-    t.datetime "start_time"
     t.index ["search_log_id"], name: "index_search_parameter_logs_on_search_log_id"
   end
 

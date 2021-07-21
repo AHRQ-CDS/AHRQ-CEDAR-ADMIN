@@ -15,7 +15,6 @@ class CreateSearchLogs < ActiveRecord::Migration[6.0]
       t.references :search_log, null: false, foreign_key: true
       t.string :name
       t.string :value
-      t.datetime :start_time
     end
   end
 end

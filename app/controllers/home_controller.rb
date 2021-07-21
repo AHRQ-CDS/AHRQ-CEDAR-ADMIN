@@ -28,7 +28,7 @@ class HomeController < ApplicationController
     search_last_10_days = SearchLog.where('DATE(start_time) >= ?', start_dates.last)
     @search_logs = search_last_10_days.order(:start_time).reverse_order
     @search_per_day = search_last_10_days.group('DATE(start_time)').count
-    search_parameter_last_10_days = SearchParameterLog.where('DATE(start_time) >= ?', start_dates.last)
+    search_parameter_last_10_days = SearchParameterLog.joins(:search_log).where('DATE(search_logs.start_time) >= ?', start_dates.last)
     @search_per_parameter_name = search_parameter_last_10_days.group(:name).count
     @search_per_parameter_value = search_parameter_last_10_days.group(:value).count
   end
