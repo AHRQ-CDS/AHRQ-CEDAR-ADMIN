@@ -1,10 +1,10 @@
 C0000001|ENG|||||Y|||||MTH|||Foo desc||N||
-C0000001|ENG|||||Y|||||MSH|||Foo||N||
-C0000001|ENG|||||Y|||||MSH|||Bar||O||
-C0000001|SPA|||||Y|||||MSH|||Baz||N||
-C0000001|GER|||||Y|||||MSH|||Foo2||N||
-C0000002|GER|||||Y|||||MSH|||Abc2||N||
-C0000002|ENG|||||Y|||||MSH|||Abc||N||
+C0000001|ENG|||||Y|||||MSH|MH||Foo||N||
+C0000001|ENG|||||Y|||||MSH|MH||Bar||O||
+C0000001|SPA|||||Y|||||MSH|MH||Baz||N||
+C0000001|GER|||||Y|||||MSH|MH||Foo2||N||
+C0000002|GER|||||Y|||||MSH|MH||Abc2||N||
+C0000002|ENG|||||Y|||||MSH|MH||Abc||N||
 C0000002|ENG|||||Y|||||MTH|||Abc desc||N||
-C0000002|ENG|||||Y|||||MSH|||Def||O||
-C0000002|SPA|||||Y|||||MSH|||Ghi||N||
+C0000002|ENG|||||Y|||||MSH|MH||Def||O||
+C0000002|SPA|||||Y|||||MSH|MH||Ghi||N||
