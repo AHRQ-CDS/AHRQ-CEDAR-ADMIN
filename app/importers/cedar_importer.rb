@@ -68,12 +68,13 @@ class CedarImporter
 
     # Find existing or initialize new entry; this is roughly equivalent to find_or_initialize_by but broken
     # out so we can keep statistics on whether there are existing entries we're updating
+    @import_statistics[:total_count] += 1
     artifact = Artifact.find_by(cedar_identifier: cedar_identifier)
     if attributes[:error].present?
       # if a (presumably transient) error occured while processing an artifact we don't change an
       # existing artifact or create a new one
       @import_statistics[:error_count] += 1
-    elsif artifact
+    elsif artifact.present?
       artifact.assign_attributes(attributes.merge(repository: repository))
       changed = artifact.changed?
       artifact.save!
@@ -82,7 +83,6 @@ class CedarImporter
       artifact = Artifact.create!(attributes.merge(cedar_identifier: cedar_identifier, repository: repository))
       @import_statistics[:new_count] += 1
     end
-    @import_statistics[:total_count] += 1
     @imported_artifact_ids << artifact.id unless artifact.nil?
     artifact
   end
