@@ -30,7 +30,7 @@ class CedarImporter
   def self.run
     # Track import statistics and set up an import run to store them
     # TODO: It may be possible to just count the paper trail updates, additions, and deletions at the end instead
-    @import_statistics = { total_count: 0, new_count: 0, update_count: 0, delete_count: 0 }
+    @import_statistics = { total_count: 0, new_count: 0, update_count: 0, delete_count: 0, error_count: 0 }
     import_run = ImportRun.create(repository: repository, start_time: Time.current)
 
     # When we track any changes to artifacts we want to associate the change with the appropriate import run
@@ -69,7 +69,11 @@ class CedarImporter
     # Find existing or initialize new entry; this is roughly equivalent to find_or_initialize_by but broken
     # out so we can keep statistics on whether there are existing entries we're updating
     artifact = Artifact.find_by(cedar_identifier: cedar_identifier)
-    if artifact
+    if attributes[:error].present?
+      # if a (presumably transient) error occured while processing an artifact we don't change an
+      # existing artifact or create a new one
+      @import_statistics[:error_count] += 1
+    elsif artifact
       artifact.assign_attributes(attributes.merge(repository: repository))
       changed = artifact.changed?
       artifact.save!
@@ -79,7 +83,7 @@ class CedarImporter
       @import_statistics[:new_count] += 1
     end
     @import_statistics[:total_count] += 1
-    @imported_artifact_ids << artifact.id
+    @imported_artifact_ids << artifact.id unless artifact.nil?
     artifact
   end
 

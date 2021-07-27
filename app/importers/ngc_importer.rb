@@ -33,6 +33,7 @@ class NgcImporter < CedarImporter
 
     index = JSON.parse(File.read(index_file))
     index.each_pair do |artifact_id, cached_data|
+      metadata = {}
       xml_file = File.join(CACHE_DIR, "#{artifact_id}.xml")
       if File.exist?(xml_file)
         xml_dom = Nokogiri::XML(File.read(xml_file))
@@ -43,9 +44,11 @@ class NgcImporter < CedarImporter
           Rails.logger.warn "Unable to parse date (#{artifact_date_str}) for NGC artifact #{artifact_id}"
         end
         artifact_description_html = xml_dom.at_xpath('//Field[@FieldID="151"]/FieldValue/@Value').value
+      else
+        metadata[:error] = "Failed to retrieve #{artifact_id}.xml"
       end
       artifact_url = "#{Rails.configuration.ngc_base_url}#{cached_data['html_path']}"
-      metadata = {
+      metadata.merge!(
         remote_identifier: artifact_id,
         title: cached_data['title'],
         description_html: artifact_description_html,
@@ -54,12 +57,14 @@ class NgcImporter < CedarImporter
         artifact_type: 'Guideline',
         artifact_status: 'active',
         keywords: []
-      }
+      )
       html_file = File.join(CACHE_DIR, "#{artifact_id}.html")
       if File.exist?(html_file)
         html = File.read(html_file)
         metadata.merge!(extract_html_metadata(html))
-        metadata.merge!({ keywords: extract_keywords(html) })
+        metadata.merge!(keywords: extract_keywords(html))
+      else
+        metadata[:error] = "Failed to retrieve #{artifact_id}.html"
       end
       cedar_id = "NGC-#{URI.parse(artifact_url).select(:host, :path, :fragment, :query).join('-').scan(/\w+/).join('-')}"
       update_or_create_artifact!(cedar_id, metadata)

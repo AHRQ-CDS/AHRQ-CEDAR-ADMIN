@@ -13,6 +13,7 @@ class EpcImporterTest < ActiveSupport::TestCase
     stub_request(:get, /management-infantile-epilepsy/).to_return(status: 200, headers: { 'Content-Type' => 'text/html' }, body: artifact_mock)
     stub_request(:get, /palliative-care-integration/).to_return(status: 200, headers: { 'Content-Type' => 'text/html' }, body: artifact_mock)
     stub_request(:get, /carotid-artery-stenosis-screening/).to_return(status: 200, headers: { 'Content-Type' => 'text/html' }, body: artifact_mock)
+    stub_request(:get, /non-existant/).to_return(status: 404)
 
     # Ensure that none are loaded before the test runs
     assert_equal(0, Repository.where(name: 'EHC').count)
@@ -46,8 +47,9 @@ class EpcImporterTest < ActiveSupport::TestCase
     assert_equal(1, repository.import_runs.count)
     import_run = repository.import_runs.last
     assert_equal('success', import_run.status)
-    assert_equal(3, import_run.total_count)
+    assert_equal(4, import_run.total_count)
     assert_equal(3, import_run.new_count)
     assert_equal(0, import_run.update_count)
+    assert_equal(1, import_run.error_count)
   end
 end

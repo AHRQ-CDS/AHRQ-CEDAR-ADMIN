@@ -6,6 +6,8 @@ class NgcImporterTest < ActiveSupport::TestCase
     NgcImporter.const_set(:CACHE_DIR, 'test/fixtures/files/ngc')
     index_mock = file_fixture('ngc_index.html').read
     stub_request(:get, /search/).to_return(status: 200, headers: { 'Content-Type' => 'text/html' }, body: index_mock)
+    stub_request(:get, %r{/summaries/downloadcontent/ngc-999999}).to_return(status: 404)
+    stub_request(:get, %r{/summaries/summary/999999/non-existant}).to_return(status: 404)
 
     # Ensure that none are loaded before the test runs
     assert_equal(0, Repository.where(name: 'NGC').count)
@@ -22,5 +24,14 @@ class NgcImporterTest < ActiveSupport::TestCase
     assert_equal('Guideline', artifact.artifact_type)
     assert(artifact.keywords.include?('asthma'))
     assert(artifact.keywords.include?('counseling'))
+
+    # Check tracking
+    assert_equal(1, repository.import_runs.count)
+    import_run = repository.import_runs.last
+    assert_equal('success', import_run.status)
+    assert_equal(3, import_run.total_count)
+    assert_equal(2, import_run.new_count)
+    assert_equal(0, import_run.update_count)
+    assert_equal(1, import_run.error_count)
   end
 end

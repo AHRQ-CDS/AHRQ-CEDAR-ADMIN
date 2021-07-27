@@ -2,6 +2,8 @@
 
 # Functionality for importing metadata from web pages
 module PageScraper
+  KEYWORD_SEPARATOR = /[,;]/.freeze
+
   # Process an individual HTML page or PDF to extract metadata
   def extract_metadata(page_url)
     connection = Faraday.new page_url.strip do |con|
@@ -10,8 +12,9 @@ module PageScraper
     end
     response = connection.get
     if response.status != 200
-      Rails.logger.warn "Page retrieval (#{page_url}) failed with status #{response.status}"
-      return {}
+      error_msg = "Page retrieval (#{page_url}) failed with status #{response.status}"
+      Rails.logger.warn error_msg
+      return { error: error_msg }
     end
 
     metadata = {}
@@ -23,8 +26,9 @@ module PageScraper
     metadata
   rescue Faraday::ConnectionFailed
     # Some pages are unavailable
-    Rails.logger.warn "Failed to retrieve page: #{page_url}"
-    {}
+    error_msg = "Failed to retrieve page: #{page_url}"
+    Rails.logger.warn error_msg
+    { error: error_msg }
   end
 
   def extract_html_metadata(html)
@@ -37,12 +41,11 @@ module PageScraper
     keywords_node =
       html.at_css('head meta[name="keywords"]') ||
       html.at_css('head meta[name="Keywords"]')
-    metadata[:keywords] =
-      if keywords_node.present?
-        keywords_node['content'].split(',').collect(&:strip)
-      else
-        html.css('head meta[name="citation_keyword"]').collect { |keyword_node| keyword_node['content'] }
-      end
+    if keywords_node.present?
+      metadata[:keywords] = keywords_node['content'].split(KEYWORD_SEPARATOR).collect(&:strip)
+    elsif html.at_css('head meta[name="citation_keyword"]').present?
+      metadata[:keywords] = html.css('head meta[name="citation_keyword"]').collect { |keyword_node| keyword_node['content'] }
+    end
     date_node =
       html.at_css('head meta[name="citation_publication_date"]') ||
       html.at_css('head meta[name="citation_date"]') ||
@@ -58,7 +61,7 @@ module PageScraper
     metadata = {}
     reader = PDF::Reader.new(StringIO.new(pdf))
     metadata[:description] = reader.info[:Subject] unless reader.info[:Subject].nil?
-    metadata[:keywords] = reader.info[:Keywords].split(',').collect(&:strip) unless reader.info[:Keywords].nil?
+    metadata[:keywords] = reader.info[:Keywords].split(KEYWORD_SEPARATOR).collect(&:strip) unless reader.info[:Keywords].nil?
     pdf_date_str = reader.info[:ModDate] || reader.info[:CreationDate]
     # PDF date format is "D:20150630104759-04'00'"
     metadata[:published_on] = Date.parse(pdf_date_str[2..9]) unless pdf_date_str.nil?

@@ -6,6 +6,12 @@
     "field_version": "0.5.0"
   },
   {
+    "title": "<a href=\"/cdsconnect/artifact/non-existant\" hreflang=\"en\">Non-existant artifact</a>",
+    "nid": "1234",
+    "uuid": "b0f55940-7fb9-4050-870d-0355c69764de",
+    "field_version": "0.5.0"
+  },
+  {
     "title": "<a href=\"/cdsconnect/artifact/facilitating-shared-decision-making-people-who-drink-alcohol-patient-decision\" hreflang=\"en\">Facilitating Shared Decision Making For People Who Drink Alcohol: A Patient Decision Aid</a>",
     "nid": "1186",
     "uuid": "4162d853-0aa8-4bdd-b292-9dcc0bdd3c7f",

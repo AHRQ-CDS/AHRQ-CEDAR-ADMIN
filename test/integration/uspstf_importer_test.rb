@@ -12,7 +12,8 @@ class UspstfImporterTest < ActiveSupport::TestCase
     # Stub out all request and return mock data as appropriate
     stub_request(:get, %r{api/json}).to_return(status: 200, body: artifact_list_mock)
     stub_request(:get, /cervical-cancer-screening2/).to_return(status: 200, headers: { 'Content-Type' => 'application/pdf' }, body: pdf_tool_mock)
-    stub_request(:get, /jamanetwork.com/).to_return(status: 200, headers: { 'Content-Type' => 'text/html' }, body: html_tool_mock)
+    stub_request(:get, %r{jama/fullarticle/1234567}).to_return(status: 404)
+    stub_request(:get, %r{jama/fullarticle/2697698}).to_return(status: 200, headers: { 'Content-Type' => 'text/html' }, body: html_tool_mock)
 
     # Ensure that none are loaded before the test runs
     assert_equal(0, Repository.where(name: 'USPSTF').count)
@@ -57,9 +58,10 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal(1, repository.import_runs.count)
     import_run = repository.import_runs.last
     assert_equal('success', import_run.status)
-    assert_equal(7, import_run.total_count)
+    assert_equal(8, import_run.total_count)
     assert_equal(7, import_run.new_count)
     assert_equal(0, import_run.update_count)
+    assert_equal(1, import_run.error_count)
 
     # Import sample data a second time
     UspstfImporter.run
@@ -78,8 +80,9 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal(2, repository.import_runs.count)
     import_run = repository.import_runs.last
     assert_equal('success', import_run.status)
-    assert_equal(7, import_run.total_count)
+    assert_equal(8, import_run.total_count)
     assert_equal(0, import_run.new_count)
     assert_equal(0, import_run.update_count)
+    assert_equal(1, import_run.error_count)
   end
 end

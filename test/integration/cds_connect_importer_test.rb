@@ -11,6 +11,7 @@ class CdsConnectImporterTest < ActiveSupport::TestCase
     stub_request(:post, /login/).to_return(status: 200)
     stub_request(:get, /artifacts/).to_return(status: 200, body: artifact_list_mock)
     stub_request(:get, /cds_api.1221/).to_return(status: 200, body: artifact_1221_mock)
+    stub_request(:get, /cds_api.1234/).to_return(status: 404)
     stub_request(:get, /cds_api.1186/).to_return(status: 200, body: artifact_1186_mock)
     stub_request(:post, /logout/).to_return(status: 200)
 
@@ -55,8 +56,9 @@ class CdsConnectImporterTest < ActiveSupport::TestCase
     assert_equal(1, repository.import_runs.count)
     import_run = repository.import_runs.last
     assert_equal('success', import_run.status)
-    assert_equal(2, import_run.total_count)
+    assert_equal(3, import_run.total_count)
     assert_equal(2, import_run.new_count)
     assert_equal(0, import_run.update_count)
+    assert_equal(1, import_run.error_count)
   end
 end
