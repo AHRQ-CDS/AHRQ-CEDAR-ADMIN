@@ -48,7 +48,7 @@ class HomeController < ApplicationController
 
     query = <<-SQL.squish
       WITH concept_count as (
-        SELECT a.id, COUNT(*) as count_all FROM artifacts a
+        SELECT a.id, COUNT(ac.concept_id) as count_all FROM artifacts a
         LEFT JOIN artifacts_concepts ac ON a.id = ac.artifact_id
         GROUP BY a.id
       )    
@@ -125,7 +125,7 @@ class HomeController < ApplicationController
   def reports
     query = <<-SQL.squish
       WITH concept_count as (
-        SELECT a.id, COUNT(*) as count_all FROM artifacts a
+        SELECT a.id, COUNT(ac.concept_id) as count_all FROM artifacts a
         LEFT JOIN artifacts_concepts ac ON a.id = ac.artifact_id
         GROUP BY a.id
       )
