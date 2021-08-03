@@ -47,9 +47,19 @@ class HomeController < ApplicationController
     @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
 
     query = <<-SQL.squish
-      SELECT#{' '}
+      WITH concept_count as (
+        SELECT a.id, COUNT(*) as count_all FROM artifacts a
+        LEFT JOIN artifacts_concepts ac ON a.id = ac.artifact_id
+        GROUP BY a.id
+      )    
+      SELECT
         a.artifact_type,
         COUNT(*) AS total,
+        SUM(
+          CASE WHEN (
+            (a.title IS NULL OR LENGTH(a.title) = 0)
+          )
+          THEN 1 ELSE 0 END) AS missing_title,        
         SUM(
           CASE WHEN (
             (a.description IS NULL OR LENGTH(a.description) = 0)
@@ -59,9 +69,16 @@ class HomeController < ApplicationController
           CASE WHEN (
             (a.keywords IS NULL OR JSONB_ARRAY_LENGTH(a.keywords) = 0)
           )
-          THEN 1 ELSE 0 END) AS missing_keyword
+          THEN 1 ELSE 0 END) AS missing_keyword,
+        SUM(
+          CASE WHEN (
+            (ac.count_all IS NULL OR ac.count_all = 0)
+          )
+          THEN 1 ELSE 0 END) AS missing_concept          
       FROM
         artifacts a
+      INNER JOIN
+        concept_count ac on a.id = ac.id        
       WHERE
         a.repository_id = $1
       GROUP BY

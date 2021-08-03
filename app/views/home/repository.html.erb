@@ -6,14 +6,16 @@
 
 <div class="row mt-5">
   <div class="col-sm">
-    <h3 id="missing_desc">Missing Description</h3>    
+    <h3 id="missing_desc">Missing Attributes</h3>    
     <table class="table">
       <thead>
         <tr>
           <th>Artifact Type</th>
           <th>Total</th>
+          <th>Missing Title</th>
           <th>Missing Description</th>
-          <th>Missing Keywords</th>
+          <th>Missing Keyword</th>
+          <th>Missing Concpet</th>
         </tr>
       </thead>
       <tbody>
@@ -21,8 +23,10 @@
           <tr>
             <td><%= row["artifact_type"] %></td>
             <td><%= row["total"] %></td>
+            <td><%= row["missing_title"] %></td>
             <td><%= row["missing_desc"] %></td>
             <td><%= row["missing_keyword"] %></td>
+            <td><%= row["missing_concept"] %></td>
           </tr>
         <% end %>
       </tbody>
