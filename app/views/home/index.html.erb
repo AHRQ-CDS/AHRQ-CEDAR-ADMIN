@@ -80,6 +80,7 @@
           <th>Date Time</th>
           <th>Search Parameters</th>
           <th>Result Count</th>
+          <th>Total</th>
           <th>Client IP</th>
           <th>Time Consumed (ms)</th>
         </tr>
@@ -90,6 +91,7 @@
           <td><%= sl.start_time %></td>
           <td><%= sl.search_params %></td>
           <td><%= sl.count %></td>
+          <td><%= sl.total %></td>
           <td><%= sl.client_ip %></td>
           <td><%= Integer((sl.end_time - sl.start_time) * 1000) %></td>
         </tr>

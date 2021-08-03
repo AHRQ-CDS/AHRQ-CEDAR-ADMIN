@@ -45,6 +45,34 @@ class HomeController < ApplicationController
 
     keywords = artifacts.where.not('keywords <@ ?', '[]').flat_map(&:keywords)
     @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
+
+    query = <<-SQL.squish
+      SELECT#{' '}
+        a.artifact_type,
+        COUNT(*) AS total,
+        SUM(
+          CASE WHEN (
+            (a.description IS NULL OR LENGTH(a.description) = 0)
+          )
+          THEN 1 ELSE 0 END) AS missing_desc,
+        SUM(
+          CASE WHEN (
+            (a.keywords IS NULL OR JSONB_ARRAY_LENGTH(a.keywords) = 0)#{' '}
+          )
+          THEN 1 ELSE 0 END) AS missing_keyword#{'        '}
+      FROM
+        artifacts a
+      WHERE
+        a.repository_id = $1
+      GROUP BY
+        a.artifact_type
+      ORDER BY
+        COUNT(*) DESC;
+    SQL
+    binds = [
+      ActiveRecord::Relation::QueryAttribute.new('repository_id', params[:id].to_i, ActiveRecord::Type::Integer.new)
+    ]
+    @missing_description = ActiveRecord::Base.connection.exec_query(query, 'sql_repository_missing_records', binds)
   end
 
   def import_run
@@ -75,5 +103,37 @@ class HomeController < ApplicationController
     # Scale size from 1 to 100 based on the max_count
     scale_factor = 120.0 / max_count
     render json: keyword_counts.sort_by { |_, v| -v }.map { |k, v| { text: k, size: (v * scale_factor).ceil } }[0, 250]
+  end
+
+  def reports
+    query = <<-SQL.squish
+      SELECT
+        r.name as repository,
+        r.id as repository_id,
+        COUNT(*) AS total,
+        SUM(
+          CASE WHEN (
+            (a.title IS NULL OR LENGTH(a.title) = 0)
+          )
+          THEN 1 ELSE 0 END) AS missing_title,
+        SUM(
+          CASE WHEN (
+            (a.description IS NULL OR LENGTH(a.description) = 0)
+          )
+          THEN 1 ELSE 0 END) AS missing_desc,
+        SUM(
+          CASE WHEN (
+            (a.keywords IS NULL OR JSONB_ARRAY_LENGTH(a.keywords) = 0)#{' '}
+          )
+          THEN 1 ELSE 0 END) AS missing_keyword
+      FROM
+        artifacts a,
+        repositories r WHERE a.repository_id = r.id
+      GROUP BY
+        r.name, r.id
+      ORDER BY
+        r.name
+    SQL
+    @missing_fields = ActiveRecord::Base.connection.exec_query(query)
   end
 end

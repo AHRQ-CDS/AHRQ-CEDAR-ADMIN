@@ -13,8 +13,9 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar navbar-dark bg-dark" style="justify-content:normal">
       <%= link_to 'CEDAR', root_path, class: 'navbar-brand' %>
+      <%= link_to 'Repository Reports', "/reports", class: 'navbar-brand' %>
     </nav>
     <div class="container mt-4">
       <%= yield %>

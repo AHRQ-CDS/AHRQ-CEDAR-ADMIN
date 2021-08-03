@@ -1,0 +1,40 @@
+<div class="row mt-5">
+  <div class="col-sm">
+    <h3>Repository Artifacts</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Repository</th>
+          <th>Total</th>
+          <th>Missing Title</th>
+          <th>Missing Description</th>
+          <th>Missing Keywords</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @missing_fields.each do |row| %>
+        <tr>
+          <td><%= row['repository'] %></td>
+          <td><%= row['total'] %></td>
+          <td>
+            <%= row['missing_title'] %>
+          </td>     
+          <td>
+            <% if row['missing_desc'] > 0 %>
+              <%= link_to row['missing_desc'], "repository/#{row['repository_id']}#missing_desc" %>
+            <% else %>
+              <%= row['missing_desc'] %>
+            <% end %>
+          </td>
+          <td>
+            <% if row['missing_keyword'] > 0 %>
+              <%= link_to row['missing_keyword'], "repository/#{row['repository_id']}#missing_desc" %>
+            <% else %>
+              <%= row['missing_keyword'] %>
+            <% end %>
+          </td>                   
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+</div>
