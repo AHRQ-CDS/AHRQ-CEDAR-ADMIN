@@ -57,9 +57,9 @@ class HomeController < ApplicationController
           THEN 1 ELSE 0 END) AS missing_desc,
         SUM(
           CASE WHEN (
-            (a.keywords IS NULL OR JSONB_ARRAY_LENGTH(a.keywords) = 0)#{' '}
+            (a.keywords IS NULL OR JSONB_ARRAY_LENGTH(a.keywords) = 0)
           )
-          THEN 1 ELSE 0 END) AS missing_keyword#{'        '}
+          THEN 1 ELSE 0 END) AS missing_keyword
       FROM
         artifacts a
       WHERE
@@ -107,6 +107,11 @@ class HomeController < ApplicationController
 
   def reports
     query = <<-SQL.squish
+      WITH concept_count as (
+        SELECT a.id, COUNT(*) as count_all FROM artifacts a
+        LEFT JOIN artifacts_concepts ac ON a.id = ac.artifact_id
+        GROUP BY a.id
+      )
       SELECT
         r.name as repository,
         r.id as repository_id,
@@ -123,12 +128,20 @@ class HomeController < ApplicationController
           THEN 1 ELSE 0 END) AS missing_desc,
         SUM(
           CASE WHEN (
-            (a.keywords IS NULL OR JSONB_ARRAY_LENGTH(a.keywords) = 0)#{' '}
+            (a.keywords IS NULL OR JSONB_ARRAY_LENGTH(a.keywords) = 0)
           )
-          THEN 1 ELSE 0 END) AS missing_keyword
+          THEN 1 ELSE 0 END) AS missing_keyword,
+        SUM(
+          CASE WHEN (
+            (ac.count_all IS NULL OR ac.count_all = 0)
+          )
+          THEN 1 ELSE 0 END) AS missing_concept
       FROM
-        artifacts a,
-        repositories r WHERE a.repository_id = r.id
+        artifacts a
+      INNER JOIN
+        repositories r on a.repository_id = r.id
+      INNER JOIN
+        concept_count ac on a.id = ac.id
       GROUP BY
         r.name, r.id
       ORDER BY

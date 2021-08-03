@@ -9,6 +9,7 @@
           <th>Missing Title</th>
           <th>Missing Description</th>
           <th>Missing Keywords</th>
+          <th>Missing Concept</th>
         </tr>
       </thead>
       <tbody>
@@ -32,7 +33,14 @@
             <% else %>
               <%= row['missing_keyword'] %>
             <% end %>
-          </td>                   
+          </td>     
+          <td>
+            <% if row['missing_concept'] > 0 %>
+              <%= link_to row['missing_concept'], "repository/#{row['repository_id']}#missing_desc" %>
+            <% else %>
+              <%= row['missing_concept'] %>
+            <% end %>
+          </td>                          
         </tr>
         <% end %>
       </tbody>
