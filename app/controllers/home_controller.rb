@@ -51,7 +51,7 @@ class HomeController < ApplicationController
         SELECT a.id, COUNT(ac.concept_id) as count_all FROM artifacts a
         LEFT JOIN artifacts_concepts ac ON a.id = ac.artifact_id
         GROUP BY a.id
-      )    
+      )
       SELECT
         a.artifact_type,
         COUNT(*) AS total,
@@ -59,7 +59,7 @@ class HomeController < ApplicationController
           CASE WHEN (
             (a.title IS NULL OR LENGTH(a.title) = 0)
           )
-          THEN 1 ELSE 0 END) AS missing_title,        
+          THEN 1 ELSE 0 END) AS missing_title,
         SUM(
           CASE WHEN (
             (a.description IS NULL OR LENGTH(a.description) = 0)
@@ -74,11 +74,11 @@ class HomeController < ApplicationController
           CASE WHEN (
             (ac.count_all IS NULL OR ac.count_all = 0)
           )
-          THEN 1 ELSE 0 END) AS missing_concept          
+          THEN 1 ELSE 0 END) AS missing_concept
       FROM
         artifacts a
       INNER JOIN
-        concept_count ac on a.id = ac.id        
+        concept_count ac on a.id = ac.id
       WHERE
         a.repository_id = $1
       GROUP BY
@@ -89,7 +89,7 @@ class HomeController < ApplicationController
     binds = [
       ActiveRecord::Relation::QueryAttribute.new('repository_id', params[:id].to_i, ActiveRecord::Type::Integer.new)
     ]
-    @missing_description = ActiveRecord::Base.connection.exec_query(query, 'sql_repository_missing_records', binds)
+    @missing_attribute = ActiveRecord::Base.connection.exec_query(query, 'sql_repository_missing_records', binds)
   end
 
   def import_run
@@ -122,7 +122,7 @@ class HomeController < ApplicationController
     render json: keyword_counts.sort_by { |_, v| -v }.map { |k, v| { text: k, size: (v * scale_factor).ceil } }[0, 250]
   end
 
-  def reports
+  def repository_report
     query = <<-SQL.squish
       WITH concept_count as (
         SELECT a.id, COUNT(ac.concept_id) as count_all FROM artifacts a

@@ -7,5 +7,6 @@ Rails.application.routes.draw do
   get '/version/:id', to: 'home#version', as: 'paper_trail_version'
   get '/keyword/:keyword', to: 'home#keyword', as: 'keyword'
   get '/keyword_counts', to: 'home#keyword_counts', as: 'keyword_counts'
-  get '/reports', to: 'home#reports', as: 'reports'
+  get '/repository_report', to: 'home#repository_report', as: 'repository_report'
+  get '/repository_missing/:id', to: 'home#repository_missing', as: 'repository_missing'
 end
