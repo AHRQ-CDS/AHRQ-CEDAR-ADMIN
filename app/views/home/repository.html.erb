@@ -12,10 +12,10 @@
         <tr>
           <th>Artifact Type</th>
           <th>Total</th>
-          <th>Missing Title</th>
-          <th>Missing Description</th>
-          <th>Missing Keyword</th>
-          <th>Missing Concpet</th>
+          <th><%= link_to 'Missing Title', "/repository_missing/#{@repository.id}?missing=title" %></th>
+          <th><%= link_to 'Missing Description', "/repository_missing/#{@repository.id}?missing=description" %></th>
+          <th><%= link_to 'Missing Keyword', "/repository_missing/#{@repository.id}?missing=keyword" %></th>
+          <th><%= link_to 'Missing Concpet', "/repository_missing/#{@repository.id}?missing=concept" %></th>
         </tr>
       </thead>
       <tbody>

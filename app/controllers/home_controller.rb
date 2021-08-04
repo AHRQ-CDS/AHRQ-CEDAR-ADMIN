@@ -166,4 +166,21 @@ class HomeController < ApplicationController
     SQL
     @missing_fields = ActiveRecord::Base.connection.exec_query(query)
   end
+
+  def repository_missing
+    @repository = Repository.find(params[:id])
+    @missing_type = params[:missing]
+    artifacts = @repository.artifacts
+
+    case @missing_type
+    when 'title'
+      @missing_artifacts = artifacts.where('title IS NULL OR LENGTH(title) = 0')
+    when 'description'
+      @missing_artifacts = artifacts.where('description IS NULL OR LENGTH(description) = 0')
+    when 'keyword'
+      @missing_artifacts = artifacts.where('keywords IS NULL OR JSONB_ARRAY_LENGTH(keywords) = 0')
+    when 'concept'
+      @missing_artifacts = artifacts.where(id: artifacts.left_joins(:artifacts_concepts).group(:id).having('COUNT(artifacts_concepts.concept_id) = 0'))
+    end
+  end
 end

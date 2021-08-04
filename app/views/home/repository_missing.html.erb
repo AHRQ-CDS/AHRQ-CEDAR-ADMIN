@@ -1,0 +1,26 @@
+<div class="row mt-5">
+  <div class="col-sm">
+    <h3><%= "#{@repository.name} Arfitfacts with missing #{@missing_type}" %></h3>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Identifier</th>
+          <th>Cedar Identifier</th>
+          <th>Artifact Type</th>
+          <th>Title</th>
+        </tr>
+      </thead>    
+      <tbody>
+        <% @missing_artifacts.each do |row| %>  
+          <tr>
+            <td><%= row.remote_identifier %></td>
+            <td><%= row.cedar_identifier %></td>
+            <td><%= row.artifact_type %></td>
+            <td><%= row.title %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
