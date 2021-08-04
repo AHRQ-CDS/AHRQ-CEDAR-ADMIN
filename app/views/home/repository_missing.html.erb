@@ -17,7 +17,13 @@
             <td><%= row.remote_identifier %></td>
             <td><%= row.cedar_identifier %></td>
             <td><%= row.artifact_type %></td>
-            <td><%= row.title %></td>
+            <td>
+              <% if row.title.present? %>
+                <%= link_to row.title, row.url, target: :_blank %>
+              <% else %>
+                <%= link_to 'No Title', row.url, target: :_blank %>
+              <% end %>
+            </td>
           </tr>
         <% end %>
       </tbody>
