@@ -15,7 +15,8 @@
           <th><%= link_to 'Missing Title', "/repository_missing/#{@repository.id}?missing=title" %></th>
           <th><%= link_to 'Missing Description', "/repository_missing/#{@repository.id}?missing=description" %></th>
           <th><%= link_to 'Missing Keyword', "/repository_missing/#{@repository.id}?missing=keyword" %></th>
-          <th><%= link_to 'Missing Concpet', "/repository_missing/#{@repository.id}?missing=concept" %></th>
+          <th>Missing Concept</th>
+          <th><%= link_to 'Missing Concpet with keyword', "/repository_missing/#{@repository.id}?missing=concept" %></th>
         </tr>
       </thead>
       <tbody>
@@ -27,6 +28,7 @@
             <td><%= row["missing_desc"] %></td>
             <td><%= row["missing_keyword"] %></td>
             <td><%= row["missing_concept"] %></td>
+            <td><%= row["missing_concept"] - row["missing_keyword"] %></td>
           </tr>
         <% end %>
       </tbody>

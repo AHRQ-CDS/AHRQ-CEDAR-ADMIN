@@ -180,7 +180,7 @@ class HomeController < ApplicationController
     when 'keyword'
       @missing_artifacts = artifacts.where('keywords IS NULL OR JSONB_ARRAY_LENGTH(keywords) = 0')
     when 'concept'
-      @missing_artifacts = artifacts.where(id: artifacts.left_joins(:artifacts_concepts).group(:id).having('COUNT(artifacts_concepts.concept_id) = 0'))
+      @missing_artifacts = artifacts.where(id: artifacts.left_joins(:artifacts_concepts).group(:id).having('COUNT(artifacts_concepts.concept_id) = 0')).where('length(keyword_text) > 0')
     end
   end
 end
