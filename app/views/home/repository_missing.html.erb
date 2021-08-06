@@ -6,7 +6,6 @@
       <thead>
         <tr>
           <th>Identifier</th>
-          <th>Cedar Identifier</th>
           <th>Artifact Type</th>
           <th>Title</th>
         </tr>
@@ -15,7 +14,6 @@
         <% @missing_artifacts.each do |row| %>  
           <tr>
             <td><%= row.remote_identifier %></td>
-            <td><%= row.cedar_identifier %></td>
             <td><%= row.artifact_type %></td>
             <td>
               <% if row.title.present? %>
