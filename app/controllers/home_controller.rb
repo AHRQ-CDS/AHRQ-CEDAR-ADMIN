@@ -174,13 +174,13 @@ class HomeController < ApplicationController
 
     case @missing_type
     when 'title'
-      @missing_artifacts = artifacts.where('title IS NULL OR LENGTH(title) = 0')
+      @missing_artifacts = artifacts.where('title IS NULL OR LENGTH(title) = 0').order(:id)
     when 'description'
-      @missing_artifacts = artifacts.where('description IS NULL OR LENGTH(description) = 0')
+      @missing_artifacts = artifacts.where('description IS NULL OR LENGTH(description) = 0').order(:id)
     when 'keyword'
-      @missing_artifacts = artifacts.where('keywords IS NULL OR JSONB_ARRAY_LENGTH(keywords) = 0')
+      @missing_artifacts = artifacts.where('keywords IS NULL OR JSONB_ARRAY_LENGTH(keywords) = 0').order(:id)
     when 'concept'
-      @missing_artifacts = artifacts.where(id: artifacts.left_joins(:artifacts_concepts).group(:id).having('COUNT(artifacts_concepts.concept_id) = 0')).where('length(keyword_text) > 0')
+      @missing_artifacts = artifacts.where(id: artifacts.left_joins(:artifacts_concepts).group(:id).having('COUNT(artifacts_concepts.concept_id) = 0')).where('length(keyword_text) > 0').order(:id)
     end
   end
 end
