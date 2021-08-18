@@ -37,6 +37,13 @@ FactoryBot.define do
   factory :import_run do
     repository
   end
+
+  factory :mesh_tree_node do
+    sequence(:tree_number) { |n| "Tree Number #{n}" }
+    sequence(:code) { |n| "Code #{n}" }
+    sequence(:description) { |n| "Description #{n}" }
+    sequence(:name) { |n| "Name #{n}" }
+  end
 end
 
 def create_repository_with_artifacts(count: 1)
