@@ -50,6 +50,12 @@ namespace :import do
     ConceptImporter.import_umls_mrconso('MRCONSO.RRF')
   end
 
+  desc 'Import MESH Concepts'
+  task mesh_concepts: :environment do
+    puts 'Importing MESH'
+    MeshImporter.import_mesh('desc2021.xml')
+  end
+
   desc 'Download all repository content and import it to the database'
   task all: %i(uspstf cds_connect ehc epc srdr)
 end
