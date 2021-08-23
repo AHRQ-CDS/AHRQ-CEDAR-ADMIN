@@ -21,12 +21,6 @@ class MeshImporterTest < ActiveSupport::TestCase
     assert organisms_tree.children.map(&:name).include? 'Organism Forms'
     assert organisms_tree.children.map(&:name).include? 'Eukaryota'
 
-    assert_equal(4, organisms_tree.descendants.count)
-    assert organisms_tree.descendants.map(&:name).include? 'Organism Forms'
-    assert organisms_tree.descendants.map(&:name).include? 'Eukaryota'
-    assert organisms_tree.descendants.map(&:name).include? 'Amoebozoa'
-    assert organisms_tree.descendants.map(&:name).include? 'Mycetozoa'
-
     amoebozoa_node = MeshTreeNode.find_by(name: 'Amoebozoa')
     assert_equal(amoebozoa_node.parent.name, 'Eukaryota')
     assert_equal(1, amoebozoa_node.children.count)
