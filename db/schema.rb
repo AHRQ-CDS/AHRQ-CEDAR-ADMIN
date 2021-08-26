@@ -83,7 +83,7 @@ ActiveRecord::Schema.define(version: 2021_08_23_125203) do
     t.text "description"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "parent_id"
+    t.bigint "parent_id"
     t.index ["parent_id"], name: "index_mesh_tree_nodes_on_parent_id"
     t.index ["tree_number"], name: "index_mesh_tree_nodes_on_tree_number"
   end
