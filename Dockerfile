@@ -26,9 +26,11 @@ RUN rm -rf node_modules log tmp
 RUN yarn install
 
 # Build the production assets
-ENV RAILS_ENV production
-RUN bundle exec rails assets:precompile
-RUN bundle exec rails webpacker:compile
+# TODO: This requires production keys, which doesn't make sense to have available at build time
+# See https://github.com/rails/rails/issues/32947
+# ENV RAILS_ENV production
+# RUN bundle exec rails assets:precompile
+# RUN bundle exec rails webpacker:compile
 
 # Logging should be handled at the docker image level
 ENV RAILS_LOG_TO_STDOUT true
