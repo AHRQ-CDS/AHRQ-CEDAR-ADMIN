@@ -21,7 +21,7 @@ RUN update-ca-certificates
 #RUN yarn install
 
 COPY . .
-RUN rm -r node_modules log tmp
+RUN rm -rf node_modules log tmp
 
 RUN yarn install
 
