@@ -24,7 +24,7 @@ module PageScraper
       metadata = extract_pdf_metadata(response.body)
     end
     metadata
-  rescue Faraday::ConnectionFailed
+  rescue Faraday::ConnectionFailed, FaradayMiddleware::RedirectLimitReached
     # Some pages are unavailable
     error_msg = "Failed to retrieve page: #{page_url}"
     Rails.logger.warn error_msg
