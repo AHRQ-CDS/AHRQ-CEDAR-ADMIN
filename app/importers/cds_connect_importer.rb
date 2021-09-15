@@ -20,10 +20,7 @@ class CdsConnectImporter < CedarImporter
     raise "CDS Connect ID retrieval failed with status #{response.status}" unless response.status == 200
 
     artifact_list = JSON.parse(response.body)
-    artifact_ids = []
-    artifact_list.each do |artifact|
-      artifact_ids << artifact['nid']
-    end
+    artifact_ids = artifact_list.map { |a| a['nid'] }
 
     # Send our login request so we can access each artifact via the API
     credentials = {
