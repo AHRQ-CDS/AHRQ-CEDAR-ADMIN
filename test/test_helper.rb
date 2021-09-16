@@ -7,6 +7,17 @@ require 'rails/test_help'
 require 'webmock/minitest'
 WebMock.disable_net_connect!
 
+# Set up some dummy importer configuration settings for testing
+Rails.configuration.cds_connect_basic_auth_username = 'DUMMY-KEY'
+Rails.configuration.cds_connect_basic_auth_password = 'DUMMY-KEY'
+Rails.configuration.cds_connect_username = 'DUMMY-KEY'
+Rails.configuration.cds_connect_password = 'DUMMY-KEY'
+Rails.configuration.cds_connect_base_url = 'http://DUMMY-URL/'
+Rails.configuration.ehc_feed_url = 'http://DUMMY-URL/product-feed'
+Rails.configuration.srdr_base_url = 'http://DUMMY-URL/'
+Rails.configuration.srdr_api_key = 'DUMMY-KEY'
+Rails.configuration.ngc_base_url = 'http://DUMMY-URL/'
+
 # Disable version tracking for tests
 PaperTrail.enabled = false
 
