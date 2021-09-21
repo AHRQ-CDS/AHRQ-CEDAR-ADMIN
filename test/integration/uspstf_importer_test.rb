@@ -53,6 +53,13 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal('A sample HTML USPSTF tool', artifact.description)
     assert(artifact.keywords.include?('uspstf'))
     assert(artifact.keywords.include?('tool'))
+    assert(artifact.keywords.include?('one'))
+    assert(artifact.keywords.include?('two'))
+    assert(artifact.keywords.include?('three'))
+    assert(artifact.keywords.include?('four'))
+    assert(artifact.keywords.include?('five'))
+    assert(artifact.keywords.include?('six'))
+    assert(artifact.keywords.include?('seven'))
 
     # Check tracking
     assert_equal(1, repository.import_runs.count)
