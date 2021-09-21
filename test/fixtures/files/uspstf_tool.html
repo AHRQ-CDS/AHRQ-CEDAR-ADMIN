@@ -1,9 +1,31 @@
 <html>
-<head>
-<meta name="description" content="A sample HTML USPSTF tool">
-<meta name="keywords" content="uspstf, tool">
-</head>
-<body>
-<p>This is a mocked USPSTF HTML tool.</p>
-</body>
+  <head>
+    <meta name="description" content="A sample HTML USPSTF tool">
+    <meta name="keywords" content="uspstf, tool">
+    <meta name="citation_keyword" content="one">
+    <meta name="citation_keyword" content="two">
+  </head>
+  <body>
+    <p>This is a mocked USPSTF HTML tool.</p>
+    <div class="related-topics-block"> <!-- Sample JAMA Network keyword block -->
+      <h4 class="related-topics-heading topic-suggestions-heading sb-sc">See More About</h4>
+      <div class="related-topics topic-suggestions">
+        <a href="foo.html" id="item_Link" class="related-topic topic-suggestion no-wrap sb-anchor-light">three</a>
+        <a href="bar.html" id="item_Link_1" class="related-topic topic-suggestion no-wrap sb-anchor-light">four</a>
+      </div>
+    </div>
+    <div class="content" style="display:block;"> <!-- Sample AAFP keyword block -->
+      <h4 class="relatedContent">Editor's Collections</h4>
+      <hr class="relatedContent">
+      <ul class="relatedContent">
+        <li><strong><a id="relContentLink" href="baz.html">five</a></strong></li>
+        <li><strong><a id="relContentLink" href="xyz.html">six</a></strong></li>
+      </ul>
+      <h4 class="relatedContent">Related Content</h4>
+      <hr class="relatedContent">
+      <ul class="relatedContent">
+        <li><strong><a id="relContentLink" href="yyz.html">seven</a></strong></li>
+      </ul>
+    </div>
+  </body>
 </html>

@@ -38,14 +38,18 @@ module PageScraper
       html.at_css('head meta[name="description"]') ||
       html.at_css('head meta[name="DCTERMS.description"]')
     metadata[:description] = description_node['content'] unless description_node.nil?
+    metadata[:keywords] = []
     keywords_node =
       html.at_css('head meta[name="keywords"]') ||
       html.at_css('head meta[name="Keywords"]')
-    if keywords_node.present?
-      metadata[:keywords] = keywords_node['content'].split(KEYWORD_SEPARATOR).collect(&:strip)
-    elsif html.at_css('head meta[name="citation_keyword"]').present?
-      metadata[:keywords] = html.css('head meta[name="citation_keyword"]').collect { |keyword_node| keyword_node['content'] }
+    metadata[:keywords].concat(keywords_node['content'].split(KEYWORD_SEPARATOR).collect(&:strip)) if keywords_node.present?
+    if html.at_css('head meta[name="citation_keyword"]').present?
+      metadata[:keywords].concat(html.css('head meta[name="citation_keyword"]').collect { |keyword_node| keyword_node['content'] })
     end
+    # JAMA Network pages
+    metadata[:keywords].concat(html.css('a.related-topic').collect(&:content)) if html.at_css('a.related-topic').present?
+    # AAFP pages
+    metadata[:keywords].concat(html.css('ul.relatedContent a').collect(&:content)) if html.at_css('ul.relatedContent a').present?
     date_node =
       html.at_css('head meta[name="citation_publication_date"]') ||
       html.at_css('head meta[name="citation_date"]') ||
@@ -53,7 +57,11 @@ module PageScraper
       html.at_css('head meta[name="DCTERMS.created"]') ||
       html.at_css('head meta[name="DC.Date"]') ||
       html.at_css('head meta[name="DC.date"]')
-    metadata[:published_on] = Date.parse(date_node['content']) unless date_node.nil?
+    begin
+      metadata[:published_on] = Date.parse(date_node['content']) unless date_node.nil?
+    rescue Date::Error
+      # ignore malformed dates
+    end
     metadata
   end
 
