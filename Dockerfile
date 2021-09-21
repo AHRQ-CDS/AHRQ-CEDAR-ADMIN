@@ -26,7 +26,7 @@ RUN rm -rf node_modules log tmp
 RUN yarn install
 
 # Build the production assets
-# TODO: This requires production keys, which doesn't make sense to have available at build time
+# Note: This requires keys, which doesn't make sense to have available at build time
 # See https://github.com/rails/rails/issues/32947
 RUN RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
 RUN RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec rails webpacker:compile

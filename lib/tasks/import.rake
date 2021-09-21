@@ -46,14 +46,14 @@ namespace :import do
   desc 'Import concepts from UMLS MRCONSO file'
   task umls_concepts: :environment do
     puts 'Importing concepts'
-    ConceptImporter.import_umls_mrconso('MRCONSO.RRF')
+    ConceptImporter.import_umls_mrconso('datafiles/MRCONSO.RRF')
     Rake::Task["import:update_counts"].invoke() unless ENV['dont_update_artifact_counts']
   end
 
   desc 'Import MESH Concepts'
   task mesh_concepts: :environment do
     puts 'Importing MESH'
-    MeshImporter.import_mesh('desc2021.xml')
+    MeshImporter.import_mesh('datafiles/desc2021.xml')
     Rake::Task["import:update_counts"].invoke() unless ENV['dont_update_artifact_counts']
   end
 
