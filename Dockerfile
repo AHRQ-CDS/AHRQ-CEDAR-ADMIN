@@ -1,6 +1,6 @@
-FROM ruby:2.7.1
+FROM ruby:2.7.1-alpine
 
-RUN apt-get update && apt-get install -y nodejs npm cron && npm install -g yarn
+RUN apk update && apk upgrade && apk add --update --no-cache build-base postgresql-dev shared-mime-info nodejs npm yarn tzdata libxml2-dev libxslt-dev
 
 WORKDIR /app
 
