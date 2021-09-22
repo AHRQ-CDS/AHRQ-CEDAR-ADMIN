@@ -7,6 +7,7 @@ WORKDIR /app
 # Copy dependency config first for better build caching
 COPY Gemfile Gemfile.lock ./
 RUN gem install bundler
+RUN bundle config set without 'development test'
 RUN bundle install
 
 # To successfully run yarn within a firewall may require a certificate with building the image
