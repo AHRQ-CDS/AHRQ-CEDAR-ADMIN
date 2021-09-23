@@ -29,8 +29,10 @@ RUN yarn install
 # Build the production assets
 # Note: This requires keys, which doesn't make sense to have available at build time
 # See https://github.com/rails/rails/issues/32947
-RUN RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
-RUN RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec rails webpacker:compile
+# Note: NODE_OPTIONS are to limit asset precompile memory footprint
+# See https://github.com/rails/webpacker/issues/1189#issuecomment-542340621
+RUN NODE_OPTIONS="--max-old-space-size=4096" RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
+RUN NODE_OPTIONS="--max-old-space-size=4096" RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec rails webpacker:compile
 
 # Logging should be handled at the docker image level
 ENV RAILS_LOG_TO_STDOUT true
