@@ -31,8 +31,8 @@ RUN yarn install
 # See https://github.com/rails/rails/issues/32947
 # Note: NODE_OPTIONS are to limit asset precompile memory footprint
 # See https://github.com/rails/webpacker/issues/1189#issuecomment-542340621
-RUN NODE_OPTIONS="--max-old-space-size=4096" RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec rails assets:precompile
-RUN NODE_OPTIONS="--max-old-space-size=4096" RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec rails webpacker:compile
+RUN NODE_OPTIONS="--max-old-space-size=2048" RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec rails assets:precompile --trace
+RUN NODE_OPTIONS="--max-old-space-size=2048" RAILS_ENV=production SECRET_KEY_BASE=dummy bundle exec rails webpacker:compile
 
 # Logging should be handled at the docker image level
 ENV RAILS_LOG_TO_STDOUT true
