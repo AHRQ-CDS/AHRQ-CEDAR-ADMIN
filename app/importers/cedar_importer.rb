@@ -16,7 +16,9 @@ class CedarImporter
 
     raise 'Repository home page not set' unless @repository_home_page
 
-    @repository ||= Repository.where(name: @repository_name).first_or_create!(
+    # Don't cache this value since it causes problems when running tests if the same importer is used
+    # in different test files
+    Repository.where(name: @repository_name).first_or_create!(
       home_page: @repository_home_page,
       fhir_id: @repository_name.downcase.gsub(/\W+/, '-')
     )

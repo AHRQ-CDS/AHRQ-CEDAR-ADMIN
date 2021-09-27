@@ -8,10 +8,10 @@ class ConceptImporterTest < ActiveSupport::TestCase
     assert_equal(0, Concept.all.count)
 
     ConceptImporter.import_umls_mrconso(file_fixture('umls_mth.rrf'))
-    assert_equal(2, Concept.all.count)
+    assert_equal(3, Concept.all.count)
     # import again and make sure the concepts weren't duplicated
     ConceptImporter.import_umls_mrconso(file_fixture('umls_mth.rrf'))
-    assert_equal(2, Concept.all.count)
+    assert_equal(3, Concept.all.count)
 
     concept = Concept.where(umls_cui: 'C0000001').first
     assert_equal('Foo desc', concept.umls_description)

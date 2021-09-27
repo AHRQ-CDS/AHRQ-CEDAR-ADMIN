@@ -36,4 +36,27 @@ class MeshImporterTest < ActiveSupport::TestCase
     assert_equal(16, MeshTreeNode.roots.count)
     assert_equal(20, MeshTreeNode.all.count)
   end
+
+  test 'count artifacts for MeSH concepts' do
+    MeshImporter.import_mesh(file_fixture('desc2021.xml'))
+    ConceptImporter.import_umls_mrconso(file_fixture('umls_mth.rrf'))
+    artifact_list_mock = file_fixture('ehc_product_feed.xml').read
+    stub_request(:get, /product-feed/).to_return(status: 200, headers: { 'Content-Type' => 'application/xml' }, body: artifact_list_mock)
+    assert_equal(0, Repository.where(name: 'EHC').count)
+    EhcImporter.run
+    MeshImporter.update_artifact_counts
+
+    # 2 artifacts have the keyword 'Mycetozoa'
+    mycetozoa = MeshTreeNode.find_by(name: 'Mycetozoa')
+    assert_equal(2, mycetozoa.direct_artifact_count)
+    assert_equal(0, mycetozoa.indirect_artifact_count)
+
+    # walk the tree and ensure parent nodes reflect indirect artifact counts
+    parent = mycetozoa.parent
+    while parent.present?
+      assert_equal(2, parent.indirect_artifact_count)
+      assert_equal(0, parent.direct_artifact_count)
+      parent = parent.parent
+    end
+  end
 end

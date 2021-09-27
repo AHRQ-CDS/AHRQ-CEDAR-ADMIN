@@ -76,4 +76,60 @@ class MeshImporter
       end
     end
   end
+
+  def self.update_artifact_counts
+    # Compute counts of artifacts that include each MeSH concept
+    # "Direct" means that the artifact directly references a concept
+    # "Indirect" means that the artifact directly references a child concept in the MeSH tree
+    mesh_nodes = {}
+    Artifact.includes(:concepts).all.each do |artifact|
+      artifact.concepts.each do |concept|
+        concept.codes.each do |code|
+          next if code['system'] != 'MSH'
+
+          # Find each MeSH tree node (there can be more than one) with this unique code
+          MeshTreeNode.where(code: code['code']).each do |mesh_node|
+            mesh_nodes[mesh_node.id] ||= {
+              code: mesh_node.code, # not used but useful for debugging
+              direct: 0,
+              indirect: 0,
+              counted_sources: {}
+            }
+            artifact_source_code = "#{artifact.id}_#{mesh_node.code}"
+            mesh_nodes[mesh_node.id][:direct] += 1
+            mesh_nodes[mesh_node.id][:counted_sources][artifact_source_code] = true
+            # Now visit each parent node walking up the tree and add to their indirect counts
+            parent_node_id = mesh_node.parent_id
+            while parent_node_id.present?
+              parent_node = MeshTreeNode.find(parent_node_id)
+              mesh_nodes[parent_node_id] ||= {
+                code: parent_node.code, # not used but useful for debugging
+                direct: 0,
+                indirect: 0,
+                counted_sources: {}
+              }
+              # Don't double count when a MeSH code is present in multiple tree branches
+              unless mesh_nodes[parent_node.id][:counted_sources].include? artifact_source_code
+                mesh_nodes[parent_node.id][:indirect] += 1
+                mesh_nodes[parent_node.id][:counted_sources][artifact_source_code] = true
+              end
+              parent_node_id = parent_node.parent_id
+            end
+          end
+        end
+      end
+    end
+
+    # Save counts to database
+    mesh_nodes.each_pair do |mesh_node_id, count|
+      MeshTreeNode.update(
+        mesh_node_id,
+        direct_artifact_count: count[:direct],
+        indirect_artifact_count: count[:indirect]
+      )
+    end
+    MeshTreeNode.where.not(id: mesh_nodes.keys).each do |mesh_node|
+      mesh_node.update(direct_artifact_count: 0, indirect_artifact_count: 0)
+    end
+  end
 end

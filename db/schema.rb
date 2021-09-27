@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_23_125203) do
+ActiveRecord::Schema.define(version: 2021_09_23_130500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,9 @@ ActiveRecord::Schema.define(version: 2021_08_23_125203) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.bigint "parent_id"
+    t.integer "direct_artifact_count"
+    t.integer "indirect_artifact_count"
+    t.index ["code"], name: "index_mesh_tree_nodes_on_code"
     t.index ["parent_id"], name: "index_mesh_tree_nodes_on_parent_id"
     t.index ["tree_number"], name: "index_mesh_tree_nodes_on_tree_number"
   end
