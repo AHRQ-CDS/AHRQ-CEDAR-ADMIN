@@ -85,7 +85,7 @@ class MeshImporter
     Artifact.includes(:concepts).all.each do |artifact|
       artifact.concepts.each do |concept|
         concept.codes.each do |code|
-          next if code['system'] != 'MSH'
+          next if %w[MSH MSHSPA].exclude?(code['system'])
 
           # Find each MeSH tree node (there can be more than one) with this unique code
           MeshTreeNode.where(code: code['code']).each do |mesh_node|
