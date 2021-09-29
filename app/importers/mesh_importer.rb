@@ -96,8 +96,12 @@ class MeshImporter
               counted_sources: {}
             }
             artifact_source_code = "#{artifact.id}_#{mesh_node.code}"
-            mesh_nodes[mesh_node.id][:direct] += 1
-            mesh_nodes[mesh_node.id][:counted_sources][artifact_source_code] = true
+            # Don't double count when the same MeSH code appears more than once, e.g. if there
+            # are English and Spanish language versions of the same code
+            unless mesh_nodes[mesh_node.id][:counted_sources].include? artifact_source_code
+              mesh_nodes[mesh_node.id][:direct] += 1
+              mesh_nodes[mesh_node.id][:counted_sources][artifact_source_code] = true
+            end
             # Now visit each parent node walking up the tree and add to their indirect counts
             parent_node_id = mesh_node.parent_id
             while parent_node_id.present?
@@ -108,7 +112,8 @@ class MeshImporter
                 indirect: 0,
                 counted_sources: {}
               }
-              # Don't double count when a MeSH code is present in multiple tree branches
+              # Don't double count when the same MeSH code appears more than once or when a
+              # MeSH code is present in multiple tree branches
               unless mesh_nodes[parent_node.id][:counted_sources].include? artifact_source_code
                 mesh_nodes[parent_node.id][:indirect] += 1
                 mesh_nodes[parent_node.id][:counted_sources][artifact_source_code] = true
