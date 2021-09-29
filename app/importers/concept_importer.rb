@@ -7,12 +7,12 @@ class ConceptImporter
   SYNONYM_CODE_SYSTEMS = ['MSH', 'MEDLINEPLUS', 'SNOMEDCT_US', 'SCTSPA', 'MSHSPA', 'ICD10CM', 'RXNORM'].freeze
   SYNONYM_SUPPRESSION_FLAGS = ['N'].freeze
   INCLUDED_TERM_TYPES = {
-    'MSH' => 'MH',
-    'MSHSPA' => 'MH',
-    'SNOMEDCT_US' => 'PT',
-    'SCTSPA' => 'PT',
-    'ICD10CM' => 'PT',
-    'RXNORM' => 'IN'
+    'MSH' => ['MH', 'ET'],
+    'MSHSPA' => ['MH'],
+    'SNOMEDCT_US' => ['PT'],
+    'SCTSPA' => ['PT'],
+    'ICD10CM' => ['PT'],
+    'RXNORM' => ['IN']
   }.freeze
 
   CUI_COLUMN = 0
@@ -34,6 +34,7 @@ class ConceptImporter
     mth_description = ''
     synonyms = []
     codes = []
+    assigned_codes = {}
     File.foreach(file) do |line|
       fields = line.split('|')
       if fields[0] != concept && concept.present?
@@ -41,6 +42,7 @@ class ConceptImporter
         synonyms = []
         codes = []
         mth_description = ''
+        assigned_codes = {}
       end
       concept = fields[CUI_COLUMN].strip
       code_system = fields[SYSTEM_COLUMN].strip
@@ -53,14 +55,17 @@ class ConceptImporter
          SYNONYM_SUPPRESSION_FLAGS.include?(fields[SUPPRESS_COLUMN])
         synonyms << description.downcase.strip
         # Only include preferred terms as codes to avoid duplication of codes
+        code_to_assign = "#{code_system}_#{code}"
         if (code_system != 'MSH' || (code_system == 'MSH' && preferred == 'Y')) &&
+           assigned_codes.exclude?(code_to_assign) &&
            INCLUDED_TERM_TYPES.include?(code_system) &&
-           fields[TERM_TYPE_COLUMN].strip == INCLUDED_TERM_TYPES[code_system]
+           INCLUDED_TERM_TYPES[code_system].include?(fields[TERM_TYPE_COLUMN].strip)
           codes << {
             system: code_system,
             code: code,
             description: description
           }
+          assigned_codes[code_to_assign] = true
         end
       end
     end
