@@ -1,10 +1,11 @@
 C0000001|ENG|||||Y|||||MTH|||Foo desc||N||
-C0000001|ENG|||||Y|||||MSH|MH||Foo||N||
-C0000001|ENG|||||Y|||||MSH|MH||Bar||O||
-C0000001|SPA|||||Y|||||MSH|MH||Baz||N||
-C0000001|GER|||||Y|||||MSH|MH||Foo2||N||
-C0000002|GER|||||Y|||||MSH|MH||Abc2||N||
-C0000002|ENG|||||Y|||||MSH|MH||Abc||N||
+C0000001|ENG|||||Y|||||MSH|MH|D01|Foo||N||
+C0000001|ENG|||||Y|||||MSH|MH|D02|Bar||O||
+C0000001|SPA|||||Y|||||MSHSPA|MH|D02|Baz||N||
+C0000001|GER|||||Y|||||MSH|MH|D01|Foo2||N||
+C0000002|GER|||||Y|||||MSH|MH|E01|Abc2||N||
+C0000002|ENG|||||Y|||||MSH|MH|E01|Abc||N||
 C0000002|ENG|||||Y|||||MTH|||Abc desc||N||
-C0000002|ENG|||||Y|||||MSH|MH||Def||O||
-C0000002|SPA|||||Y|||||MSH|MH||Ghi||N||
+C0000002|ENG|||||Y|||||MSH|MH|E02|Def||O||
+C0000002|SPA|||||Y|||||MSHSPA|MH|E02|Ghi||N||
+C0000003|ENG|||||Y|||||MSH|MH|D056895|Mycetozoa||N||
