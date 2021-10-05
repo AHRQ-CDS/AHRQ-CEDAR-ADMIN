@@ -66,7 +66,7 @@ class NgcImporter < CedarImporter
       else
         metadata[:error] = "Failed to retrieve #{artifact_id}.html"
       end
-      cedar_id = "NGC-#{URI.parse(artifact_url).select(:host, :path, :fragment, :query).join('-').scan(/\w+/).join('-')}"
+      cedar_id = "NGC-#{Digest::MD5.hexdigest(artifact_url)}"
       update_or_create_artifact!(cedar_id, metadata)
       Rails.logger.info "Processed NGC artifact #{artifact_url}"
     end

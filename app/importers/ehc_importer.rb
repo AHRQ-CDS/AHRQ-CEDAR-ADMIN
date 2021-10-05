@@ -15,7 +15,7 @@ class EhcImporter < CedarImporter
     response_xml.xpath('/nodes/node').each do |artifact|
       artifact_uri = URI.parse(artifact.at_xpath('Link').content)
       artifact_path = artifact_uri.path
-      cedar_id = ['EHC', artifact_path.split('/').reject(&:empty?)].flatten.join('-')
+      cedar_id = "EHC-#{Digest::MD5.hexdigest(artifact_uri.to_s)}"
       doi = Regexp.last_match(1) if artifact.at_xpath('Citation').content =~ %r{(10.\d{4,9}/[-._;()/:A-Z0-9]+)}
 
       # Store artifact metadata
