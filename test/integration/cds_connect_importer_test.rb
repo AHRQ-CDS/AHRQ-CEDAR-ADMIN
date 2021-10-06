@@ -59,6 +59,6 @@ class CdsConnectImporterTest < ActiveSupport::TestCase
     assert_equal(3, import_run.total_count)
     assert_equal(2, import_run.new_count)
     assert_equal(0, import_run.update_count)
-    assert_equal(1, import_run.error_count)
+    assert_equal(1, import_run.error_msgs.size)
   end
 end

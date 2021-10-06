@@ -32,26 +32,33 @@ class CdsConnectImporter < CedarImporter
 
     # Retrieve and process each artifact based on the ID
     artifact_ids.each do |artifact_id|
-      response = connection.get("cds_api/#{artifact_id}")
       attributes = {}
-      if response.status == 200
-        # Extract artifact metadata
-        artifact = JSON.parse(response.body)
-        cds_connect_status = artifact['status'].downcase
-        keywords = artifact['creation_and_usage']['keywords'] || []
-        keywords.concat(artifact['organization']['mesh_topics'] || [])
-        attributes.merge!(
-          remote_identifier: artifact_id.to_s,
-          title: artifact['title'],
-          description_html: artifact['description'],
-          url: "#{Rails.configuration.cds_connect_base_url}node/#{artifact_id}",
-          published_on: artifact['repository_information']['publication_date'],
-          artifact_type: artifact['artifact_type'],
-          artifact_status: Artifact.artifact_statuses[cds_connect_status] || 'unknown',
-          keywords: keywords
-        )
-      else
-        error_msg = "CDS Connect artifact retrieval failed with status #{response.status}"
+      artifact_path = "cds_api/#{artifact_id}"
+      try do
+        response = connection.get(artifact_path)
+        if response.status == 200
+          # Extract artifact metadata
+          artifact = JSON.parse(response.body)
+          cds_connect_status = artifact['status'].downcase
+          keywords = artifact['creation_and_usage']['keywords'] || []
+          keywords.concat(artifact['organization']['mesh_topics'] || [])
+          attributes.merge!(
+            remote_identifier: artifact_id.to_s,
+            title: artifact['title'],
+            description_html: artifact['description'],
+            url: "#{Rails.configuration.cds_connect_base_url}node/#{artifact_id}",
+            published_on: artifact['repository_information']['publication_date'],
+            artifact_type: artifact['artifact_type'],
+            artifact_status: Artifact.artifact_statuses[cds_connect_status] || 'unknown',
+            keywords: keywords
+          )
+        else
+          error_msg = "CDS Connect artifact retrieval failed for #{artifact_path} with status #{response.status}"
+          Rails.logger.warn error_msg
+          attributes[:error] = error_msg
+        end
+      rescue Faraday::ConnectionFailed => e
+        error_msg = "CDS Connect artifact retrieval failed for #{artifact_path}: #{e.message}"
         Rails.logger.warn error_msg
         attributes[:error] = error_msg
       end

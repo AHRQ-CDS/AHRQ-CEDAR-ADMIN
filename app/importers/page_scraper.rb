@@ -19,19 +19,19 @@ module PageScraper
 
     metadata = {}
     if response.headers['content-type'].include?('text/html')
-      metadata = extract_html_metadata(response.body)
+      metadata = extract_html_metadata(response.body, page_url)
     elsif response.headers['content-type'].include?('application/pdf')
       metadata = extract_pdf_metadata(response.body)
     end
     metadata
-  rescue Faraday::ConnectionFailed, FaradayMiddleware::RedirectLimitReached
+  rescue Faraday::ConnectionFailed, FaradayMiddleware::RedirectLimitReached => e
     # Some pages are unavailable
-    error_msg = "Failed to retrieve page: #{page_url}"
+    error_msg = "Failed to retrieve page (#{page_url}): #{e.message}"
     Rails.logger.warn error_msg
     { error: error_msg }
   end
 
-  def extract_html_metadata(html)
+  def extract_html_metadata(html, page_url)
     metadata = {}
     html = Nokogiri::HTML(html)
     description_node =
@@ -50,17 +50,25 @@ module PageScraper
     metadata[:keywords].concat(html.css('a.related-topic').collect(&:content)) if html.at_css('a.related-topic').present?
     # AAFP pages
     metadata[:keywords].concat(html.css('ul.relatedContent a').collect(&:content)) if html.at_css('ul.relatedContent a').present?
+
+    # DOI
+    doi_node = html.at_css('head meta[name="citation_doi"]')
+    metadata[:doi] = doi_node['content'] unless doi_node.nil?
+
+    # Publication date
     date_node =
-      html.at_css('head meta[name="citation_publication_date"]') ||
-      html.at_css('head meta[name="citation_date"]') ||
       html.at_css('head meta[name="DCTERMS.issued"]') ||
       html.at_css('head meta[name="DCTERMS.created"]') ||
       html.at_css('head meta[name="DC.Date"]') ||
-      html.at_css('head meta[name="DC.date"]')
+      html.at_css('head meta[name="DC.date"]') ||
+      html.at_css('head meta[name="citation_publication_date"]') ||
+      html.at_css('head meta[name="citation_date"]')
     begin
       metadata[:published_on] = Date.parse(date_node['content']) unless date_node.nil?
     rescue Date::Error
       # ignore malformed dates
+      metadata[:warnings] ||= []
+      metadata[:warnings] << "Unable to parse '#{date_node['content']}' as date from #{page_url}"
     end
     metadata
   end

@@ -34,6 +34,7 @@ class NgcImporter < CedarImporter
     index = JSON.parse(File.read(index_file))
     index.each_pair do |artifact_id, cached_data|
       metadata = {}
+      warnings = []
       artifact_url = "#{Rails.configuration.ngc_base_url}#{cached_data['html_path']}"
       xml_file = File.join(CACHE_DIR, "#{artifact_id}.xml")
       if File.exist?(xml_file)
@@ -42,7 +43,9 @@ class NgcImporter < CedarImporter
           artifact_date_str = xml_dom.at_xpath('//Field[@FieldID="128"]/FieldValue/@Value').value
           artifact_date = Date.parse(artifact_date_str)
         rescue Date::Error
-          Rails.logger.warn "Unable to parse date (#{artifact_date_str}) for NGC artifact #{artifact_id}"
+          message = "Unable to parse date (#{artifact_date_str}) for NGC artifact #{artifact_id}"
+          Rails.logger.warn message
+          warnings << message
         end
         artifact_description_html = xml_dom.at_xpath('//Field[@FieldID="151"]/FieldValue/@Value').value
         metadata.merge!(
@@ -61,11 +64,13 @@ class NgcImporter < CedarImporter
       html_file = File.join(CACHE_DIR, "#{artifact_id}.html")
       if File.exist?(html_file)
         html = File.read(html_file)
-        metadata.merge!(extract_html_metadata(html))
+        metadata.merge!(extract_html_metadata(html, html_file))
         metadata.merge!(keywords: extract_keywords(html))
       else
         metadata[:error] = "Failed to retrieve #{artifact_id}.html"
       end
+      metadata[:warnings] ||= []
+      metadata[:warnings].concat warnings
       cedar_id = "NGC-#{Digest::MD5.hexdigest(artifact_url)}"
       update_or_create_artifact!(cedar_id, metadata)
       Rails.logger.info "Processed NGC artifact #{artifact_url}"

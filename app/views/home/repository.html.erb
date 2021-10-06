@@ -6,7 +6,7 @@
 
 <div class="row mt-5">
   <div class="col-sm">
-    <h3 id="missing_desc">Missing Attributes</h3>    
+    <h3 id="missing_desc">Missing Attributes</h3>
     <table class="table">
       <thead>
         <tr>
@@ -50,6 +50,7 @@
           <th>Updated</th>
           <th>Deleted</th>
           <th>Errored</th>
+          <th>Warnings</th>
         </tr>
       </thead>
       <tbody>
@@ -69,7 +70,8 @@
             <td><%= import.new_count %></td>
             <td><%= import.update_count %></td>
             <td><%= import.delete_count %></td>
-            <td><%= import.error_count %></td>
+            <td><%= import.error_msgs.size %></td>
+            <td><%= import.warning_msgs.size %></td>
           </tr>
         <% end %>
       </tbody>

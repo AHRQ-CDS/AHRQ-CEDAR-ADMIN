@@ -23,5 +23,21 @@
         <li><%= v.object['title'] %></li>
       <% end %>
     </ul>
+    <% if @import_run.error_msgs.present? %>
+    <h4>Errors [<%= @import_run.error_msgs.size %>]</h4>
+    <ul>
+      <% @import_run.error_msgs.each do |msg| %>
+      <li><%= msg %></li>
+      <% end %>
+    </ul>
+    <% end %>
+    <% if @import_run.warning_msgs.present? %>
+    <h4>Warnings [<%= @import_run.warning_msgs.size %>]</h4>
+    <ul>
+      <% @import_run.warning_msgs.each do |msg| %>
+      <li><%= msg %></li>
+      <% end %>
+    </ul>
+    <% end %>
   </div>
 </div>
