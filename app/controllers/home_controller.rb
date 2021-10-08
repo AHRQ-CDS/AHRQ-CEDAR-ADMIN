@@ -24,13 +24,15 @@ class HomeController < ApplicationController
     keywords = Artifact.where.not('keywords <@ ?', '[]').flat_map(&:keywords)
     @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
 
-    start_dates = SearchLog.select('DISTINCT DATE(start_time) AS start_date').order(:start_date).reverse_order.limit(10).map(&:start_date)
-    search_last_10_days = SearchLog.where('DATE(start_time) >= ?', start_dates.last)
-    @search_logs = search_last_10_days.order(:start_time).reverse_order
-    @search_per_day = search_last_10_days.group('DATE(start_time)').count
-    search_parameter_last_10_days = SearchParameterLog.joins(:search_log).where('DATE(search_logs.start_time) >= ?', start_dates.last)
-    @search_per_parameter_name = search_parameter_last_10_days.group(:name).count
-    @search_per_parameter_value = search_parameter_last_10_days.group(:value).count
+    search_last_10_days = SearchLog.last_ten_days
+    @search_per_day = SearchLog.last_ten_days.order("DATE(start_time) DESC").group("DATE(start_time)").count
+
+    search_parameter_last_10_days = SearchParameterLog.joins(:search_log).where(search_log_id: search_last_10_days.map(&:id))
+    @search_per_parameter_name = search_parameter_last_10_days.group(:name).order(count_all: :desc).count
+    @search_per_parameter_value = search_parameter_last_10_days.group(:value).order(count_all: :desc).limit(20).count
+
+    @search_logs = SearchLog.last_searches(10)
+    @subnavigation = ["Artifacts", "Imports", "Tags", "Searches", "Back to Top"]
   end
 
   def repository

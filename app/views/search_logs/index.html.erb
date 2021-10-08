@@ -1,0 +1,8 @@
+<div class="row mt-5">
+  <div class="col-sm">
+    <h1>Search Logs</h1></br>
+    <span class="float-heading">Total count: <%= @search_logs.total_count %></span>
+    <%= paginate @search_logs, window: 2 %>
+    <%= render 'search_log_table', locals: {data: @search_logs} %>
+  </div>
+</div>

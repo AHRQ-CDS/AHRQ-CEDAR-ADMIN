@@ -1,0 +1,35 @@
+<% if local_assigns.has_key?(:title) %>
+  <h3><%= title %></h3>
+<% end %>
+<table class="table">
+  <thead>
+  <tr>
+    <th style="width: 16.66%">Date Time</th>
+    <th style="width: 50%">Search Params</th>
+    <th style="width: 8.33%">Results Returned</th>
+    <th style="width: 8.33%">Total Results</th>
+    <th style="width: 8.33%">Client IP</th>
+    <th style="width: 8.33%">Time (ms)</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @search_logs.each_with_index do |sl, index| %>
+    <tr>
+      <td><%= sl.start_time %></td>
+      <td>
+        <ul class="bare-list">
+          <% human_readable_search_params(sl.search_params).each do |param, param_value| %>
+            <li><%= param %>: <%= param_value %></li>
+          <% end %>
+        </ul>
+        <a class="show-raw-json" id=<%= index %>>Show Raw JSON</a>
+        <pre class="hidden" id="raw-json-<%= index %>" ><%= JSON.pretty_generate(sl.search_params) %></pre>
+      </td>
+      <td><%= sl.count %></td>
+      <td><%= sl.total %></td>
+      <td><%= sl.client_ip %></td>
+      <td><%= Integer((sl.end_time - sl.start_time) * 1000) %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
