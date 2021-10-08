@@ -25,14 +25,14 @@ class HomeController < ApplicationController
     @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
 
     search_last_10_days = SearchLog.last_ten_days
-    @search_per_day = SearchLog.last_ten_days.order("DATE(start_time) DESC").group("DATE(start_time)").count
+    @search_per_day = SearchLog.last_ten_days.order('DATE(start_time) DESC').group('DATE(start_time)').count
 
     search_parameter_last_10_days = SearchParameterLog.joins(:search_log).where(search_log_id: search_last_10_days.map(&:id))
     @search_per_parameter_name = search_parameter_last_10_days.group(:name).order(count_all: :desc).count
     @search_per_parameter_value = search_parameter_last_10_days.group(:value).order(count_all: :desc).limit(20).count
 
     @search_logs = SearchLog.last_searches(10)
-    @subnavigation = ["Artifacts", "Imports", "Tags", "Searches", "Back to Top"]
+    @subnavigation = ['Artifacts', 'Imports', 'Tags', 'Searches', 'Back to Top']
   end
 
   def repository
