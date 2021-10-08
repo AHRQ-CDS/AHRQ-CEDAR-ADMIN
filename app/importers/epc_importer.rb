@@ -77,7 +77,6 @@ class EpcImporter < CedarImporter
         artifact_date = Date.parse(artifact_date_str) unless artifact_date_str.nil? # Date.parse ignores the 'Date: ' prefix in the field
       rescue Date::Error
         message = "Encountered EPC search entry '#{artifact_title}' with invalid date '#{artifact_date_str}'"
-        Rails.logger.warn message
         warnings << message
       end
 

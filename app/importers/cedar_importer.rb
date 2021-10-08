@@ -79,10 +79,8 @@ class CedarImporter
     # out so we can keep statistics on whether there are existing entries we're updating
     @import_statistics[:total_count] += 1
     artifact = Artifact.find_by(cedar_identifier: cedar_identifier)
-    unless attributes[:warnings].nil?
-      @import_statistics[:warning_msgs].concat attributes[:warnings]
-      attributes.delete(:warnings)
-    end
+    @import_statistics[:warning_msgs].concat attributes[:warnings] if attributes[:warnings].present?
+    attributes.delete(:warnings)
     if attributes[:error].present?
       # if a (presumably transient) error occured while processing an artifact we don't change an
       # existing artifact or create a new one
