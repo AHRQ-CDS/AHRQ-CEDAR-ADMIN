@@ -44,7 +44,6 @@ class NgcImporter < CedarImporter
           artifact_date = Date.parse(artifact_date_str)
         rescue Date::Error
           message = "Unable to parse date (#{artifact_date_str}) for NGC artifact #{artifact_id}"
-          Rails.logger.warn message
           warnings << message
         end
         artifact_description_html = xml_dom.at_xpath('//Field[@FieldID="151"]/FieldValue/@Value').value
