@@ -13,10 +13,31 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-dark bg-dark" style="justify-content:normal">
-      <%= link_to 'CEDAR', root_path, class: 'navbar-brand' %>
-      <%= link_to 'Repository Reports', "/repository_report", class: 'navbar-brand' %>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="justify-content:normal">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <%= link_to 'CEDAR', root_path, class: 'navbar-brand' %>
+        <%= nav_bar do %>
+          <%= nav_link 'Repository Reports', "/repository_report" %>
+          <%= nav_link 'Search Logs', search_logs_path %>
+        <% end %>
+        <a id="back to top"></a>
+      </div>
     </nav>
+    <% if defined?(@subnavigation) %>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+        <span class="navbar-brand">Jump to: </span>
+        <ul class="navbar-nav">
+          <% @subnavigation.each do |item| %>
+            <li class="nav-item">
+              <a class="nav-link" href="#<%= item.downcase %>" data-turbolinks="false"><%= item %></a>
+            </li>
+          <% end %>
+        </ul>
+      </nav>
+    <% end %>
     <div class="container mt-4">
       <%= yield %>
     </div>
