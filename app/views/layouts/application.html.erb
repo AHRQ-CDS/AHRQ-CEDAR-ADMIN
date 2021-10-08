@@ -14,17 +14,12 @@
 
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="justify-content:normal">
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <%= link_to 'CEDAR', root_path, class: 'navbar-brand' %>
-        <%= nav_bar do %>
-          <%= nav_link 'Repository Reports', "/repository_report" %>
-          <%= nav_link 'Search Logs', search_logs_path %>
-        <% end %>
-        <a id="back to top"></a>
-      </div>
+      <%= link_to 'CEDAR', root_path, class: 'navbar-brand' %>
+      <%= nav_bar do %>
+        <%= nav_link 'Repository Reports', "/repository_report" %>
+        <%= nav_link 'Search Logs', search_logs_path %>
+      <% end %>
+      <a id="back to top"></a>
     </nav>
     <% if defined?(@subnavigation) %>
       <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
