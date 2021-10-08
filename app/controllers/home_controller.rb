@@ -2,6 +2,11 @@
 
 # Primary application controller, providing a statistical overview of CEDAR
 class HomeController < ApplicationController
+  #NOTE: If we want to show search count by publisher:
+  # When no artifact-publisher is selected, the API queries against all artifact-publishers.
+  # So, artifact-publisher is absent from the query params, even though the user of the API is querying
+  # against all publishers. Thus, we must make sure any code calculating counts by publisher takes into account
+  # that non-publisher-specifying searches are a search for all publishers
   def index
     @artifact_count = Artifact.count
     @artifact_count_missing_description = Artifact.where(description: nil, description_html: nil, description_markdown: nil).count
