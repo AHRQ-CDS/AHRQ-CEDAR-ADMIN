@@ -68,7 +68,7 @@ class EpcImporter < CedarImporter
         artifact_uri.scheme = page_uri.scheme
         artifact_url = artifact_uri.to_s
       end
-      cedar_id = "EPC-#{artifact_uri.select(:host, :path, :fragment, :query).join('-').scan(/\w+/).join('-')}"
+      cedar_id = "EPC-#{Digest::MD5.hexdigest(artifact_url)}"
       artifact_type = artifact.at_css('div.views-field-field-epc-type span.field-content')&.content
       artifact_status = to_artifact_status(artifact_uri)
       artifact_date_str = artifact.at_css('div.views-field-field-timestamp  span.field-content')&.content
