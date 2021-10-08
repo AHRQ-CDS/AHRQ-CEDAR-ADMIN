@@ -23,6 +23,7 @@
           <th>Updated</th>
           <th>Deleted</th>
           <th>Errored</th>
+          <th>Warnings</th>
         </tr>
       </thead>
       <tbody>
@@ -36,7 +37,8 @@
           <th><%= irs.new_count %></th>
           <th><%= irs.update_count %></th>
           <th><%= irs.delete_count %></th>
-          <th><%= irs.error_count %></th>
+          <th><%= irs.error_msgs.size %></th>
+          <th><%= irs.warning_msgs.size %></th>
         </tr>
         <% @import_runs[date].each do |ir| %>
         <tr>
@@ -54,7 +56,8 @@
           <td><%= ir.new_count %></td>
           <td><%= ir.update_count %></td>
           <td><%= ir.delete_count %></td>
-          <td><%= ir.error_count %></td>
+          <td><%= ir.error_msgs.size %></td>
+          <td><%= ir.warning_msgs.size %></td>
         </tr>
         <% end %>
         <% end %>

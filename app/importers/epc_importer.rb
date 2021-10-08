@@ -61,6 +61,7 @@ class EpcImporter < CedarImporter
         next # skip products that are hosted on other indexed repositories
       end
 
+      warnings = []
       artifact_uri = URI.parse(artifact_url)
       if artifact_uri.host.nil?
         page_uri = URI.parse(url)
@@ -75,7 +76,8 @@ class EpcImporter < CedarImporter
       begin
         artifact_date = Date.parse(artifact_date_str) unless artifact_date_str.nil? # Date.parse ignores the 'Date: ' prefix in the field
       rescue Date::Error
-        Rails.logger.warn "Encountered EPC search entry '#{artifact_title}' with invalid date '#{artifact_date_str}'"
+        message = "Encountered EPC search entry '#{artifact_title}' with invalid date '#{artifact_date_str}'"
+        warnings << message
       end
 
       metadata = {
@@ -85,9 +87,11 @@ class EpcImporter < CedarImporter
         published_on: artifact_date,
         artifact_type: artifact_type,
         artifact_status: artifact_status,
+        warnings: [],
         keywords: []
       }
       metadata.merge!(extract_metadata(artifact_url))
+      metadata[:warnings].concat warnings
       update_or_create_artifact!(cedar_id, metadata)
       Rails.logger.info "Processed EPC artifact #{artifact_url}"
     end

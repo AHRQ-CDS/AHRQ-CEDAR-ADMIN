@@ -68,7 +68,7 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal(8, import_run.total_count)
     assert_equal(7, import_run.new_count)
     assert_equal(0, import_run.update_count)
-    assert_equal(1, import_run.error_count)
+    assert_equal(1, import_run.error_msgs.size)
 
     # Import sample data a second time
     UspstfImporter.run
@@ -90,6 +90,6 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal(8, import_run.total_count)
     assert_equal(0, import_run.new_count)
     assert_equal(0, import_run.update_count)
-    assert_equal(1, import_run.error_count)
+    assert_equal(1, import_run.error_msgs.size)
   end
 end

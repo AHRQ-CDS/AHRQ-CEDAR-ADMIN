@@ -50,6 +50,7 @@ class EpcImporterTest < ActiveSupport::TestCase
     assert_equal(4, import_run.total_count)
     assert_equal(3, import_run.new_count)
     assert_equal(0, import_run.update_count)
-    assert_equal(1, import_run.error_count)
+    assert_equal(1, import_run.error_msgs.size)
+    assert_equal(3, import_run.warning_msgs.size)
   end
 end

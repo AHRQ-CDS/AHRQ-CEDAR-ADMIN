@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_23_130500) do
+ActiveRecord::Schema.define(version: 2021_10_05_135200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -72,7 +72,8 @@ ActiveRecord::Schema.define(version: 2021_09_23_130500) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "delete_count", default: 0, null: false
-    t.integer "error_count", default: 0, null: false
+    t.jsonb "error_msgs", default: []
+    t.jsonb "warning_msgs", default: []
     t.index ["repository_id"], name: "index_import_runs_on_repository_id"
   end
 
