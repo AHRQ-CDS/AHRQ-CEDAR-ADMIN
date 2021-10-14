@@ -1,7 +1,7 @@
 <% if local_assigns.has_key?(:title) %>
   <h3><%= title %></h3>
 <% end %>
-<% if local_assigns.has_key?(:show_link) %>
+<% if local_assigns[:show_link] %>
   <div class="row mt-3 mb-3">
     <div class="col-sm">
       <%= link_to 'View All Search Logs', search_logs_path, class: "btn btn-primary float-right" %>
