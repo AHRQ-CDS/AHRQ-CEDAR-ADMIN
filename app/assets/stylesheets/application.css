@@ -27,3 +27,14 @@
     float: left;
     font-size: x-large;
 }
+
+.show-raw-json {
+    cursor: pointer;
+}
+
+#tag-cloud {
+    height: 1200px;
+    width: 1200px;
+    display:block;
+    overflow: hidden;
+}

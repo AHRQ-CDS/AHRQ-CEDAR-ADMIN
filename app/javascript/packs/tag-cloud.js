@@ -4,7 +4,7 @@ import * as cloud from 'd3-cloud';
 $(document).on('turbolinks:load', function() {
 
   const id = '#tag-cloud';
-  const size = [800, 800];
+  const size = [1200, 1200];
 
   // Only load data on pages where we have a place to put it
   if($(id).length > 0) {
