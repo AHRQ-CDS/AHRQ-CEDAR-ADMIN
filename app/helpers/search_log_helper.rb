@@ -15,11 +15,8 @@ module SearchLogHelper
   }.freeze
 
   def human_readable_search_params(search_log)
-    human_readable_params = {}
-
-    search_log.each do |key, value|
-      human_readable_params[HUMAN_READABLE_PARAMS[key]] = value.delete('()') if HUMAN_READABLE_PARAMS.key?(key)
+    search_log.each_with_object({}) do |(key, value), hash|
+      hash[HUMAN_READABLE_PARAMS[key]] = value.delete('()') if HUMAN_READABLE_PARAMS.key?(key)
     end
-    human_readable_params
   end
 end
