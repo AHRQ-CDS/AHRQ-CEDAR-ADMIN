@@ -29,7 +29,7 @@ namespace :db do
   private
 
   def with_config
-    yield Rails.application.class.parent_name.underscore,
+    yield Rails.application.class.module_parent_name.underscore,
           Date.today.strftime("%Y_%m_%d"),
           ActiveRecord::Base.connection_config[:host] || 'localhost',
           ActiveRecord::Base.connection_config[:database],
