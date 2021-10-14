@@ -39,5 +39,6 @@ yarn-debug.log*
 .env
 .nova
 
+*.dump
 MRCONSO.RRF
 desc2021.xml
