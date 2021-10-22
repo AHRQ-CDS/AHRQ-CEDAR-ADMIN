@@ -98,7 +98,6 @@ ActiveRecord::Schema.define(version: 2021_10_22_153224) do
     t.string "home_page"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "full_name"
     t.string "name"
     t.index ["fhir_id"], name: "index_artifacts_on_fhir_id"
   end
