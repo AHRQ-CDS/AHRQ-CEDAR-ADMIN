@@ -2,7 +2,8 @@
 
 # Functionality for importing data from the USPSTF repository
 class UspstfImporter < CedarImporter
-  repository_name 'USPSTF'
+  repository_name 'United States Preventive Services Taskforce'
+  repository_alias 'USPSTF'
   repository_home_page Rails.configuration.uspstf_home_page
 
   include PageScraper

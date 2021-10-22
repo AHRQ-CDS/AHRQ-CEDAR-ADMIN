@@ -2,7 +2,8 @@
 
 # Functionality for importing data from the SRDR repository
 class SrdrImporter < CedarImporter
-  repository_name 'SRDR'
+  repository_name 'Systematic Review Data Repository'
+  repository_alias 'SRDR'
   repository_home_page Rails.configuration.srdr_base_url
 
   def self.download_and_update!

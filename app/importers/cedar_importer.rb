@@ -2,12 +2,16 @@
 
 # Base class for all importers; supports set up of repository and tracking of each import
 class CedarImporter
-  def self.repository_name(name)
-    @repository_name = name
+  def self.repository_name(repository_name)
+    @repository_name = repository_name
   end
 
-  def self.repository_home_page(home_page)
-    @repository_home_page = home_page
+  def self.repository_alias(repository_alias)
+    @repository_alias = repository_alias
+  end
+
+  def self.repository_home_page(repository_home_page)
+    @repository_home_page = repository_home_page
   end
 
   # Set up the repository and cache it for access
@@ -19,8 +23,9 @@ class CedarImporter
     # Don't cache this value since it causes problems when running tests if the same importer is used
     # in different test files
     Repository.where(name: @repository_name).first_or_create!(
+      alias: @repository_alias,
       home_page: @repository_home_page,
-      fhir_id: @repository_name.downcase.gsub(/\W+/, '-')
+      fhir_id: @repository_alias.downcase.gsub(/\W+/, '-')
     )
   end
 
