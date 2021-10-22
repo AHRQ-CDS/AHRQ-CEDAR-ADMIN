@@ -32,6 +32,9 @@ def with_versioning
   end
 end
 
+# Force pack compilation before forking to prevent race condition; see https://github.com/rails/webpacker/issues/2860
+Webpacker.manifest.lookup('missing.js')
+
 class ActiveSupport::TestCase
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors)
