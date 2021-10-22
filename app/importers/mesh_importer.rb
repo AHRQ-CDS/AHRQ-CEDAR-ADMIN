@@ -5,22 +5,22 @@ class MeshImporter
   # NOTE: The root nodes for the Mesh trees are not included in the XML file, so we include them here
   # Source: https://meshb.nlm.nih.gov/treeView
   MESH_ROOTS = {
-    'A': 'Anatomy',
-    'B': 'Organisms',
-    'C': 'Diseases',
-    'D': 'Chemicals and Drugs',
-    'E': 'Analytical, Diagnostic and Therapeutic Techniques, and Equipment',
-    'F': 'Psychiatry and Psychology',
-    'G': 'Phenomena and Processes',
-    'H': 'Disciplines and Occupations',
-    'I': 'Anthropology, Education, Sociology, and Social Phenomena',
-    'J': 'Technology, Industry, and Agriculture',
-    'K': 'Humanities',
-    'L': 'Information Science',
-    'M': 'Named Groups',
-    'N': 'Health Care',
-    'V': 'Publication Characteristics',
-    'Z': 'Geographicals'
+    A: 'Anatomy',
+    B: 'Organisms',
+    C: 'Diseases',
+    D: 'Chemicals and Drugs',
+    E: 'Analytical, Diagnostic and Therapeutic Techniques, and Equipment',
+    F: 'Psychiatry and Psychology',
+    G: 'Phenomena and Processes',
+    H: 'Disciplines and Occupations',
+    I: 'Anthropology, Education, Sociology, and Social Phenomena',
+    J: 'Technology, Industry, and Agriculture',
+    K: 'Humanities',
+    L: 'Information Science',
+    M: 'Named Groups',
+    N: 'Health Care',
+    V: 'Publication Characteristics',
+    Z: 'Geographicals'
   }.freeze
 
   # NOTE: xml_file is sourced from the following URL, downloaded, and placed in project root:
