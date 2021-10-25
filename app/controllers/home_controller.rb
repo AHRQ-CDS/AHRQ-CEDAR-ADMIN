@@ -114,7 +114,7 @@ class HomeController < ApplicationController
 
   def keyword
     @keyword = params[:keyword]
-    @artifacts = Artifact.where('keywords @> ?', "[\"#{@keyword}\"]")
+    @artifacts = Artifact.where('keywords @> ?', JSON.generate([@keyword]))
     @artifacts_per_repository = @artifacts.joins(:repository).group('repository').count
     related_keywords = @artifacts.flat_map(&:keywords) - [@keyword] # Don't include the keyword itself
     @top_artifacts_per_keyword = related_keywords.tally.sort_by { |_, v| -v }[0, 10]
