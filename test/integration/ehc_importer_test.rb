@@ -9,15 +9,15 @@ class EhcImporterTest < ActiveSupport::TestCase
     stub_request(:get, /product-feed/).to_return(status: 200, headers: { 'Content-Type' => 'application/xml' }, body: artifact_list_mock)
 
     # Ensure that none are loaded before the test runs
-    assert_equal(0, Repository.where(name: 'EHC').count)
+    assert_equal(0, Repository.where(alias: 'EHC').count)
 
     # Load the mock records
     EhcImporter.run
 
     # Ensure that all the expected data is loaded
-    assert_equal(1, Repository.where(name: 'EHC').count)
+    assert_equal(1, Repository.where(alias: 'EHC').count)
 
-    repository = Repository.where(name: 'EHC').first
+    repository = Repository.where(alias: 'EHC').first
     artifacts = repository.artifacts
     assert_equal(2, artifacts.count)
 

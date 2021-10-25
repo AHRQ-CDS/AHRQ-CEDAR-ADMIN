@@ -9,15 +9,15 @@ class SrdrImporterTest < ActiveSupport::TestCase
     stub_request(:get, /public_projects.json/).to_return(status: 200, body: artifact_list_mock)
 
     # Ensure that none are loaded before the test runs
-    assert_equal(0, Repository.where(name: 'SRDR').count)
+    assert_equal(0, Repository.where(alias: 'SRDR').count)
 
     # Load the mock records
     SrdrImporter.run
 
     # Ensure that all the expected data is loaded
-    assert_equal(1, Repository.where(name: 'SRDR').count)
+    assert_equal(1, Repository.where(alias: 'SRDR').count)
 
-    repository = Repository.where(name: 'SRDR').first
+    repository = Repository.where(alias: 'SRDR').first
     artifacts = repository.artifacts
     assert_equal(6, artifacts.count)
 

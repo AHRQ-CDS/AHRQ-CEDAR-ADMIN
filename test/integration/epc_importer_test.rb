@@ -16,15 +16,15 @@ class EpcImporterTest < ActiveSupport::TestCase
     stub_request(:get, /non-existant/).to_return(status: 404)
 
     # Ensure that none are loaded before the test runs
-    assert_equal(0, Repository.where(name: 'EHC').count)
+    assert_equal(0, Repository.where(alias: 'EPC').count)
 
     # Load the mock records
     EpcImporter.run
 
     # Ensure that all the expected data is loaded
-    assert_equal(1, Repository.where(name: 'EPC').count)
+    assert_equal(1, Repository.where(alias: 'EPC').count)
 
-    repository = Repository.where(name: 'EPC').first
+    repository = Repository.where(alias: 'EPC').first
     artifacts = repository.artifacts
     assert_equal(3, artifacts.count)
 

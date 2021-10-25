@@ -16,15 +16,15 @@ class CdsConnectImporterTest < ActiveSupport::TestCase
     stub_request(:post, /logout/).to_return(status: 200)
 
     # Ensure that none are loaded before the test runs
-    assert_equal(0, Repository.where(name: 'CDS Connect').count)
+    assert_equal(0, Repository.where(alias: 'CDS Connect').count)
 
     # Load the mock records
     CdsConnectImporter.run
 
     # Ensure that all the expected data is loaded
-    assert_equal(1, Repository.where(name: 'CDS Connect').count)
+    assert_equal(1, Repository.where(alias: 'CDS Connect').count)
 
-    repository = Repository.where(name: 'CDS Connect').first
+    repository = Repository.where(alias: 'CDS Connect').first
     artifacts = repository.artifacts
     assert_equal(2, artifacts.count)
 
