@@ -1,6 +1,6 @@
 #  Run application tests, rubocop style checking, and brakeman security evaluation
 
-image: ruby:2.7.1
+image: ruby:2.7.4
 
 pipelines:
   default:
@@ -19,7 +19,6 @@ pipelines:
             - bundle install
             - yarn install
             - RAILS_ENV=test bundle exec rails db:create
-            - bin/rails webpacker:compile
             - bundle exec rails test
             - bundle exec rubocop
             - bundle exec brakeman

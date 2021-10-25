@@ -1,6 +1,6 @@
-FROM ruby:2.7.1-alpine
+FROM ruby:2.7.4-alpine
 
-RUN apk update && apk upgrade && apk add --update --no-cache build-base postgresql-dev shared-mime-info nodejs npm yarn tzdata libxml2-dev libxslt-dev
+RUN apk update && apk upgrade && apk add --update --no-cache build-base postgresql-dev postgresql-client shared-mime-info nodejs npm yarn tzdata libxml2-dev libxslt-dev
 
 WORKDIR /app
 
