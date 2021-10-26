@@ -10,12 +10,12 @@ class NgcImporterTest < ActiveSupport::TestCase
     stub_request(:get, %r{/summaries/summary/999999/non-existant}).to_return(status: 404)
 
     # Ensure that none are loaded before the test runs
-    assert_equal(0, Repository.where(name: 'NGC').count)
+    assert_equal(0, Repository.where(alias: 'NGC').count)
 
     NgcImporter.run
 
-    assert_equal(1, Repository.where(name: 'NGC').count)
-    repository = Repository.where(name: 'NGC').first
+    assert_equal(1, Repository.where(alias: 'NGC').count)
+    repository = Repository.where(alias: 'NGC').first
     artifacts = repository.artifacts
     assert_equal(2, artifacts.count)
 
