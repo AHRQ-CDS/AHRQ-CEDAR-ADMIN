@@ -35,16 +35,16 @@ module PageScraper
     metadata = {}
     html = Nokogiri::HTML(html)
     description_node =
-      html.at_css('head meta[name="description"]') ||
-      html.at_css('head meta[name="DCTERMS.description"]')
+      html.at_css('meta[name="description"]') ||
+      html.at_css('meta[name="DCTERMS.description"]')
     metadata[:description] = description_node['content'] unless description_node.nil?
     metadata[:keywords] = []
     keywords_node =
-      html.at_css('head meta[name="keywords"]') ||
-      html.at_css('head meta[name="Keywords"]')
+      html.at_css('meta[name="keywords"]') ||
+      html.at_css('meta[name="Keywords"]')
     metadata[:keywords].concat(keywords_node['content'].split(KEYWORD_SEPARATOR).collect(&:strip)) if keywords_node.present?
-    if html.at_css('head meta[name="citation_keyword"]').present?
-      metadata[:keywords].concat(html.css('head meta[name="citation_keyword"]').collect { |keyword_node| keyword_node['content'] })
+    if html.at_css('meta[name="citation_keyword"]').present?
+      metadata[:keywords].concat(html.css('meta[name="citation_keyword"]').collect { |keyword_node| keyword_node['content'] })
     end
     # JAMA Network pages
     metadata[:keywords].concat(html.css('a.related-topic').collect(&:content)) if html.at_css('a.related-topic').present?
@@ -52,17 +52,17 @@ module PageScraper
     metadata[:keywords].concat(html.css('ul.relatedContent a').collect(&:content)) if html.at_css('ul.relatedContent a').present?
 
     # DOI
-    doi_node = html.at_css('head meta[name="citation_doi"]')
+    doi_node = html.at_css('meta[name="citation_doi"]')
     metadata[:doi] = doi_node['content'] unless doi_node.nil?
 
     # Publication date
     date_node =
-      html.at_css('head meta[name="DCTERMS.issued"]') ||
-      html.at_css('head meta[name="DCTERMS.created"]') ||
-      html.at_css('head meta[name="DC.Date"]') ||
-      html.at_css('head meta[name="DC.date"]') ||
-      html.at_css('head meta[name="citation_publication_date"]') ||
-      html.at_css('head meta[name="citation_date"]')
+      html.at_css('meta[name="DCTERMS.issued"]') ||
+      html.at_css('meta[name="DCTERMS.created"]') ||
+      html.at_css('meta[name="DC.Date"]') ||
+      html.at_css('meta[name="DC.date"]') ||
+      html.at_css('meta[name="citation_publication_date"]') ||
+      html.at_css('meta[name="citation_date"]')
     begin
       metadata[:published_on] = Date.parse(date_node['content']) unless date_node.nil?
     rescue Date::Error

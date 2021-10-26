@@ -25,6 +25,7 @@ class ConceptImporter
   SUPPRESS_COLUMN = 16
 
   def self.create_or_update_concept(umls_cui, description, synonyms, codes)
+    description = synonyms[0] if description.blank? && synonyms.present?
     synonyms = synonyms.map { |s| I18n.transliterate(s).downcase }.uniq
     Concept.find_or_initialize_by(umls_cui: umls_cui).update!(umls_description: description, synonyms_text: synonyms, codes: codes)
   end
@@ -69,6 +70,6 @@ class ConceptImporter
         end
       end
     end
-    create_or_update_concept(concept, mth_description, synonyms, codes)
+    create_or_update_concept(concept, mth_description, synonyms, codes) if synonyms.present?
   end
 end
