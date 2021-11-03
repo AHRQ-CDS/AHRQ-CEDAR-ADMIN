@@ -24,6 +24,8 @@ class SrdrImporterTest < ActiveSupport::TestCase
     artifact_1343 = artifacts.where(remote_identifier: '1343').first
     assert_equal('SRDR-PLUS-1343', artifact_1343.cedar_identifier)
     assert_equal('1343', artifact_1343.remote_identifier)
+    assert_equal(1, artifact_1343.keywords.size)
+    assert_equal('colorectal neoplasms', artifact_1343.keywords[0])
     assert_match(/The lack of evidence for PET/, artifact_1343.title)
     assert_match(/Systematic review of diagnostic accuracy and clinical impact of PET and PET-CT/, artifact_1343.description)
     assert_match(/Systematic review of diagnostic accuracy and clinical impact of PET and PET-CT/, artifact_1343.description_html)

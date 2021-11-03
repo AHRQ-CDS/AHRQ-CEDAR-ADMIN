@@ -21,6 +21,7 @@ class SrdrImporter < CedarImporter
       # Store artifact metadata
       # TODO: Artifact contains the URL for the API entry point for the artifact; look into 1) whether this
       # has additional data and, if so, 2) updating SRDR to allow read access to anyone with an API key
+      keywords = artifact['mesh_descriptors']&.collect { |descriptor| descriptor['name'] }
       update_or_create_artifact!(
         "SRDR-PLUS-#{artifact['id']}",
         remote_identifier: artifact['id'].to_s,
@@ -29,9 +30,9 @@ class SrdrImporter < CedarImporter
         url: "#{Rails.configuration.srdr_base_url}projects/#{artifact['id']}",
         doi: artifact['doi'],
         published_on: artifact['published_at'],
+        keywords: keywords,
         artifact_status: 'unknown' # TODO: see if this can be determined in some way
         # TODO: see if there's a reasonable value for artifact_type
-        # TODO: see if there are ways to determine keywords
       )
     end
   end
