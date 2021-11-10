@@ -22,6 +22,13 @@ class SrdrImporter < CedarImporter
       # TODO: Artifact contains the URL for the API entry point for the artifact; look into 1) whether this
       # has additional data and, if so, 2) updating SRDR to allow read access to anyone with an API key
       keywords = artifact['mesh_descriptors']&.collect { |descriptor| descriptor['name'] }
+      status = if artifact['deleted_at'].present?
+                 'retired'
+               elsif artifact['published_at'].blank?
+                 'draft'
+               else
+                 'active'
+               end
       update_or_create_artifact!(
         "SRDR-PLUS-#{artifact['id']}",
         remote_identifier: artifact['id'].to_s,
@@ -31,8 +38,8 @@ class SrdrImporter < CedarImporter
         doi: artifact['doi'],
         published_on: artifact['published_at'],
         keywords: keywords,
-        artifact_status: 'unknown' # TODO: see if this can be determined in some way
-        # TODO: see if there's a reasonable value for artifact_type
+        artifact_status: status,
+        artifact_type: 'Systematic Review'
       )
     end
   end
