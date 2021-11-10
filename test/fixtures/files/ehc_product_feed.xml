@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<nodes>
-  <node>
+<response>
+  <item key="0">
     <Title>Living Systematic Review on Cannabis and Other Plant-Based Treatments for Chronic Pain</Title>
     <Link>https://effectivehealthcare.ahrq.gov/products/plant-based-chronic-pain-treatment/living-review</Link>
     <Author-Name>lnawrocki</Author-Name>
@@ -11,8 +11,8 @@
     <Status></Status>
     <Keywords>Cannabis, Chronic Pain, Mycetozoa</Keywords>
     <Citation></Citation>
-  </node>
-  <node>
+  </item>
+  <item key="1">
     <Title>Treatments for Seasonal Allergic Rhinitis</Title>
     <Link>https://effectivehealthcare.ahrq.gov/products/allergy-seasonal/research</Link>
     <Author-Name>bahdevteam19</Author-Name>
@@ -23,5 +23,5 @@
     <Status>Archived</Status>
     <Keywords>Mycetozoa</Keywords>
     <Citation>Glacy J, Putnam K, Godfrey S, Falzon L, Mauger B, Samson D, Aronson N. Treatments for Seasonal Allergic Rhinitis. Comparative Effectiveness Review No. 120. (Prepared by the Blue Cross and Blue Shield Association Technology Evaluation Center Evidence-based Practice Center under Contract No. 290-2007-10058.) AHRQ Publication No. 13-EHC098-EF. Rockville, MD: Agency for Healthcare Research and Quality; July 2013.</Citation>
-  </node>
-</nodes>
+  </item>
+</response>

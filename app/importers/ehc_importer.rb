@@ -13,24 +13,27 @@ class EhcImporter < CedarImporter
 
     # Process each artifact
     response_xml = Nokogiri::XML(response.body)
-    response_xml.xpath('/nodes/node').each do |artifact|
-      artifact_uri = URI.parse(artifact.at_xpath('Link').content)
+    response_xml.xpath('/response/item').each do |artifact|
+      artifact_uri = URI.parse(artifact.at_xpath('Link').content.strip)
       artifact_path = artifact_uri.path
       cedar_id = "EHC-#{Digest::MD5.hexdigest(artifact_uri.to_s)}"
       doi = Regexp.last_match(1) if artifact.at_xpath('Citation').content =~ %r{(10.\d{4,9}/[-._;()/:A-Z0-9]+)}
+      artifact_title = artifact.at_xpath('Title').content.presence
+      warnings = ["Missing URL for #{cedar_id} (#{artifact_title})"] if artifact_uri.to_s.empty?
 
       # Store artifact metadata
       update_or_create_artifact!(
         cedar_id,
         remote_identifier: artifact_path.to_s,
-        title: artifact.at_xpath('Title').content.presence,
+        title: artifact_title,
         description: artifact.at_xpath('Description').content.presence,
-        url: artifact_uri.to_s,
+        url: artifact_uri.to_s.empty? ? artifact_uri.to_s : nil,
         published_on: artifact.at_xpath('Publish-Date').content.presence,
         artifact_status: to_artifact_status(artifact.at_xpath('Status').content),
         artifact_type: artifact.at_xpath('Product-Type').content.presence,
         keywords: extract_keywords(artifact),
-        doi: doi
+        doi: doi,
+        warnings: warnings
       )
     end
   end
