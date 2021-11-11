@@ -27,7 +27,7 @@ class EhcImporter < CedarImporter
         remote_identifier: artifact_path.to_s,
         title: artifact_title,
         description: artifact.at_xpath('Description').content.presence,
-        url: artifact_uri.to_s.empty? ? artifact_uri.to_s : nil,
+        url: artifact_uri.to_s.presence,
         published_on: artifact.at_xpath('Publish-Date').content.presence,
         artifact_status: to_artifact_status(artifact.at_xpath('Status').content),
         artifact_type: artifact.at_xpath('Product-Type').content.presence,
