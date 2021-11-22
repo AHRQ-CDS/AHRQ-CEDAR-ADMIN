@@ -69,7 +69,6 @@ class CedarImporter
       # Track the failure and re-raise the error
       # TODO: We can use "retry" if indexing fails; number of retries should be configurable?
       import_run.update(@import_statistics.merge(end_time: Time.current, status: 'failure', error_message: e.message))
-      raise
     ensure
       @import_statistics = nil
     end
