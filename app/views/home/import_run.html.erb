@@ -2,6 +2,9 @@
   <div class="col-sm">
     <%# TODO: display times using a local timezone (CEDAR-219) %>
     <h1>Import Run: <%= @import_run.repository.name %> [<%= @import_run.start_time.to_formatted_s(:long) %>]</h1>
+    <% if @import_run.status == 'failure' %>
+    <h4>Failed: <%= @import_run.error_message %></h4>
+    <% end %>
     <% updated = @versions.select { |v| v.event == 'update' } %>
     <h4>Updated [<%= updated.length %>]</h4>
     <ul>
