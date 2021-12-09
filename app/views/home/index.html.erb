@@ -43,9 +43,9 @@
           <th><%= irs.error_msgs.size %></th>
           <th><%= irs.warning_msgs.size %></th>
         </tr>
-        <% @import_runs[date].each do |ir| %>
+        <% @import_runs[date].sort_by(&:start_time).each do |ir| %>
         <tr>
-          <td></td>
+          <td><%= link_to ir.start_time.to_formatted_s(:long), ir %></td>
           <td><%= link_to ir.repository.name, ir.repository %></td>
           <td>
             <% if ir.start_time && ir.end_time %>
