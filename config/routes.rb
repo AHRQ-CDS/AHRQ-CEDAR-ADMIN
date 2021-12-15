@@ -1,7 +1,18 @@
 Rails.application.routes.draw do
+  get 'home', to: 'home#index'
+
+  devise_for :users, controllers: {
+    sessions: 'users/sessions'
+  }
+
+  devise_scope :user do
+    root to: 'users/sessions#new'
+    get 'sign_in', to: 'users/sessions#new'
+    get '/users/sign_out', to: 'users/sessions#destroy'
+  end
+
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   resources :search_logs, only: [:index]
-  root 'home#index'
   get '/repository/:id', to: 'home#repository', as: 'repository'
   get '/import_run/:id', to: 'home#import_run', as: 'import_run'
   get '/artifact/:id', to: 'home#artifact', as: 'artifact'

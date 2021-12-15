@@ -2,6 +2,8 @@
 
 # Primary application controller, providing a statistical overview of CEDAR
 class HomeController < ApplicationController
+  before_action :authenticate_user!
+
   # NOTE: If we want to show search count by publisher:
   # When no artifact-publisher is selected, the API queries against all artifact-publishers.
   # So, artifact-publisher is absent from the query params, even though the user of the API is querying

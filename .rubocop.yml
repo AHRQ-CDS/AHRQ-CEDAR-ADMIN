@@ -107,6 +107,8 @@ Lint/TopLevelReturnWithArgument:
   Enabled: true
 Lint/UnreachableLoop:
   Enabled: true
+Lint/UselessMethodDefinition:
+  Enabled: false
 Style/StringConcatenation:
   Enabled: false
 Style/SingleArgumentDig:

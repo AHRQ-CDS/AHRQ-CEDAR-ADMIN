@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  factory :user do
+    username { 'Dummy' }
+  end
+
   factory :search_log do
     url { 'MyString' }
     sql { 'MyString' }

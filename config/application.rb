@@ -39,8 +39,11 @@ module CedarAdmin
     # Settings for the SRDR importer
     config.srdr_base_url = ENV['CEDAR_SRDR_BASE_URL']
     config.srdr_api_key = ENV['CEDAR_SRDR_API_KEY']
-    
+
     # Settings for the NGC importer
     config.ngc_base_url = ENV['CEDAR_NGC_BASE_URL']
+
+    # Authentication bypass setting
+    config.ldap_auth_bypass = ENV['CEDAR_LDAP_AUTH_BYPASS']&.downcase == 'yes' ? true : false
   end
 end
