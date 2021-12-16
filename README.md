@@ -29,6 +29,15 @@ To run tests, run
 rails test
 ```
 
+## Run
+
+After installing and testing, to run the CEDAR Admin application:
+(Consider populating the app via the import commands below if this is your first run)
+
+```
+rails server
+```
+
 ## Importing UMLS Concepts
 
 Download the MRCONSO.RRF file from: [https://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html](https://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html) and move it to the CEDAR directory. Run
@@ -49,7 +58,7 @@ rake import:uspstf
 
 ## Docker
 
-Building the docker image:
+Building the docker image for deployment:
 
 ```
 docker build -t cedar_admin .
