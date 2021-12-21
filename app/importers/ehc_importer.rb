@@ -39,7 +39,7 @@ class EhcImporter < CedarImporter
   end
 
   def self.extract_keywords(artifact)
-    topics = artifact.at_xpath('Health-Topics').content&.split('|')&.collect { |item| item.strip } || []
+    topics = artifact.at_xpath('Health-Topics').content&.split(',')&.collect { |item| item.strip } || []
     keywords = artifact.at_xpath('Keywords').content&.split(',')&.collect { |item| item.strip } || []
     topics.concat(keywords)
   end

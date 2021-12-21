@@ -85,6 +85,7 @@ class CedarImporter
     artifact = Artifact.find_by(cedar_identifier: cedar_identifier)
     @import_statistics[:warning_msgs].concat attributes[:warnings] if attributes[:warnings].present?
     attributes.delete(:warnings)
+    normalize_attribute_values(attributes)
     if attributes[:error].present?
       # if a (presumably transient) error occured while processing an artifact we don't change an
       # existing artifact or create a new one
@@ -105,5 +106,13 @@ class CedarImporter
   # Convenience instance method that just calls the class method
   def update_or_create_artifact!(cedar_identifier, attributes)
     self.class.update_or_create_artifact!(cedar_identifier, attributes)
+  end
+
+  def self.normalize_attribute_values(attributes)
+    text_fields = %i[title description description_html description_markdown url doi artifact_type artifact_status]
+    text_fields.each do |field|
+      # Strip whitespace if the attribute has a value. Don't use present? or blank? since these ignore whitespace
+      attributes[field] = attributes[field].strip unless attributes[field].nil?
+    end
   end
 end
