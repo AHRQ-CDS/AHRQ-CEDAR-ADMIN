@@ -1,22 +1,26 @@
 # Based on some ideas from https://gist.github.com/hopsoft/56ba6f55fe48ad7f8b90
 namespace :db do
 
-  desc "Dump the database to datafiles/<APP_NAME>_<DATE>.dump"
+  LOCATION = File.join(Rails.root, 'datafiles')
+
+  desc "Dump the database to datafiles/<APP_NAME>_<DATETIME>.dump"
   task :dump => :environment do
-    with_config do |app, date, host, db, user|
-      cmd = "pg_dump --host #{host} --username '#{user}' --verbose --clean --no-owner --no-acl --format=c #{db} > #{Rails.root}/datafiles/#{app}_#{date}.dump"
+    with_config do |app, datetime, host, db, user|
+      filename = File.join(LOCATION, "#{app}_#{datetime}.dump")
+      cmd = "pg_dump --host #{host} --username '#{user}' --verbose --clean --no-owner --no-acl --format=c #{db} > #{filename}"
       puts cmd
       exec cmd
     end
   end
 
-  desc "Restore the database from datafiles/<APP_NAME>_<DATE>.dump using the current date or a date from the DATE_STRING environment variable in the format YYYY_MM_DD"
+  desc "Restore the database from datafiles/<APP_NAME>_<DATETIME>.dump using the date from the DATETIME environment variable"
   task :restore => :environment do
-    with_config do |app, date, host, db, user|
-      # Use environment variable for the date if provided otherwise use the current date from the config
-      date = ENV.fetch('DATE_STRING') { date }
+    with_config do |app, datetime, host, db, user|
+      # Use environment variable for the date (just look at the files to find a valid one)
+      datetime = ENV['DATETIME']
+      raise "Datetime must be provided using the DATATIME environment variable (YY_MM_DD__HH_MM_SS)" unless datetime
       # Make sure the file is present before dropping the existing database
-      filename = "#{Rails.root}/datafiles/#{app}_#{date}.dump"
+      filename = "#{Rails.root}/datafiles/#{app}_#{datetime}.dump"
       raise "Database backup file '#{filename}' not found" unless File.exists?(filename)
       Rake::Task["db:drop"].invoke
       Rake::Task["db:create"].invoke
@@ -30,7 +34,7 @@ namespace :db do
 
   def with_config
     yield Rails.application.class.module_parent_name.underscore,
-          Date.today.strftime("%Y_%m_%d"),
+          DateTime.now.strftime("%Y_%m_%d__%H_%M_%S"),
           ActiveRecord::Base.connection_config[:host] || 'localhost',
           ActiveRecord::Base.connection_config[:database],
           ActiveRecord::Base.connection_config[:username]
