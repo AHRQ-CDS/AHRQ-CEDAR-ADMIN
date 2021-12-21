@@ -5,6 +5,9 @@ ENV.each do |key, value|
   env key.to_sym, value
 end
 
+# Set the job template to use sh to work on alpine docker images
+set :job_template, "/bin/sh -l -c ':job'"
+
 # Custom rake task option that logs output
 job_type :rake_log, "cd :path && :environment_variable=:environment :bundle_command rake :task > /proc/1/fd/1 2> /proc/1/fd/2"
 

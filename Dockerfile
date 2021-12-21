@@ -41,4 +41,4 @@ EXPOSE 3000
 # the actual commands are specified in the docker-compose.yml file
 
 # CMD ["bundle", "exec", "rails", "server", "--environment", "production"]
-# CMD bundle exec whenever --update-crontab && cron -f -L15
+# CMD bundle exec whenever --update-crontab && crond -f -l 2
