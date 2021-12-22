@@ -1,0 +1,25 @@
+<h2>Please log in</h2>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div class="form-group">
+    <%= f.label :username, 'Username' %><br />
+    <%= f.text_field :username, autofocus: true, placeholder: "username", class: 'form-control' %>
+    <small id="emailHelp" class="form-text text-muted">AHRQ UMA Account</small>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :password %><br />
+    <%= f.password_field :password, placeholder: "current-password", class: 'form-control' %>
+  </div>
+
+  <% if devise_mapping.rememberable? %>
+    <div class="form-check">
+      <%= f.check_box :remember_me, class: 'form-check-input' %>
+      <%= f.label :remember_me, class: 'form-check-label' %>
+    </div>
+  <% end %>
+
+  <%= f.submit "Log in", class: 'btn btn-primary' %>
+<% end %>
+
+<%= render "users/shared/links" %>

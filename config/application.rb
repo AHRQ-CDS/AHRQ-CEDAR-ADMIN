@@ -39,8 +39,17 @@ module CedarAdmin
     # Settings for the SRDR importer
     config.srdr_base_url = ENV['CEDAR_SRDR_BASE_URL']
     config.srdr_api_key = ENV['CEDAR_SRDR_API_KEY']
-    
+
     # Settings for the NGC importer
     config.ngc_base_url = ENV['CEDAR_NGC_BASE_URL']
+
+    # Authentication bypass setting
+    if Rails.env.development?
+      # In development, default to bypassing LDAP authentication unless explicitly enabled
+      config.ldap_auth_bypass = ENV['CEDAR_DEVELOPMENT_LDAP_AUTH']&.downcase != 'yes'
+    else
+      # In production, always use LDAP authentication
+      config.ldap_auth_bypass = false
+    end
   end
 end

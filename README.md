@@ -56,6 +56,20 @@ To import data from the US Preventative Services Task Force, run
 rake import:uspstf
 ```
 
+## Authenticating Users
+
+Due to the sensitivity of certain data elements (e.g. client IP addresses and search terms), users will need to authenticate. Currently only LDAP authentication is supported.
+
+For convenience, the default in a development environment (`Rails.env.development? == true`) is that any credentials will work and there is no need to create or manage user accounts. This default can be overridden using an environment variable `CEDAR_DEVELOPMENT_LDAP_AUTH=yes`. In a production environment (`Rails.env.production == true`), LDAP authentication is always enabled.
+
+To configure LDAP authentication and authorization details:
+
+```
+cp config/ldap.yml.template config/ldap.yml
+```
+
+Then edit `config/ldap.yml` to reflect your local LDAP server requirements. The `config/ldap.yml.template` illustrates group membership based authorization. Depending on your authorization requirements you may also need to edit `config/initializers/devise.rb`, e.g. to enable attribute base authorization.
+
 ## Docker
 
 Building the docker image for deployment:

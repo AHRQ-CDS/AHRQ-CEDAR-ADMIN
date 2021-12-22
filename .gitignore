@@ -42,3 +42,4 @@ yarn-debug.log*
 *.dump
 MRCONSO.RRF
 desc2021.xml
+config/ldap.yml

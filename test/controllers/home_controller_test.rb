@@ -3,7 +3,10 @@
 require 'test_helper'
 
 class HomeControllerTest < ActionDispatch::IntegrationTest
+  include Devise::Test::IntegrationHelpers
+
   test 'should get index' do
+    sign_in create(:user)
     repository_1 = create_repository_with_artifacts(count: 2)
     repository_2 = create(:repository)
     create(:artifact, repository: repository_2, description: nil, keywords: [], artifact_status: 'draft')
@@ -11,7 +14,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
                         total_count: 2, new_count: 1, update_count: 1, delete_count: 1)
     create(:import_run, repository: repository_1, start_time: Time.current, end_time: Time.current,
                         total_count: 2, new_count: 0, update_count: 1, delete_count: 1)
-    get root_url
+    get home_url
     assert_response :success
     assert_match 'CEDAR Statistics', @response.body
     assert_equal 3, assigns(:artifact_count)
@@ -33,6 +36,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get repository' do
+    sign_in create(:user)
     repository = create_repository_with_artifacts(count: 2)
     create(:artifact, repository: repository, description: nil, keywords: [], artifact_status: 'draft')
     get repository_url(repository)
@@ -49,6 +53,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get artifact' do
+    sign_in create(:user)
     artifact = create :artifact
     get artifact_url(artifact)
     assert_response :success
@@ -57,6 +62,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get keyword' do
+    sign_in create(:user)
     repository = create_repository_with_artifacts(count: 1)
     keyword = repository.artifacts.first.keywords.first
     get keyword_url(keyword)
@@ -68,6 +74,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get keyword_counts' do
+    sign_in create(:user)
     create_repository_with_artifacts(count: 3)
     get keyword_counts_url
     assert_response :success
@@ -76,6 +83,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get import_run' do
+    sign_in create(:user)
     with_versioning do
       repository = create(:repository)
       import_run = create(:import_run, repository: repository, start_time: Time.current, end_time: Time.current, total_count: 2, new_count: 1, update_count: 1)
@@ -89,6 +97,7 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'should get version' do
+    sign_in create(:user)
     with_versioning do
       repository = create(:repository)
       import_run = create(:import_run, repository: repository, start_time: Time.current, end_time: Time.current, total_count: 2, new_count: 1, update_count: 1)
