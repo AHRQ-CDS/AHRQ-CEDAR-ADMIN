@@ -56,6 +56,18 @@ To import data from the US Preventative Services Task Force, run
 rake import:uspstf
 ```
 
+## Authenticating Users
+
+Users will need to authenticate but, by default, any credentials will work and there is no need to create or manage user accounts.
+
+Users can be authenticated against an LDAP server by setting an environment variable `CEDAR_LDAP_AUTH=yes` either directly or in a `.env` file. To configure LDAP authentication and authorization details:
+
+```
+cp config/ldap.yml.template config/ldap.yml
+```
+
+Then edit `config/ldap.yml` to reflect your local LDAP server requirements. The `config/ldap.yml.template` illustrates group membership based authorization. Depending on your authorization requirements you may also need to edit `config/initializers/devise.rb`, e.g. to enable attribute base authorization.
+
 ## Docker
 
 Building the docker image for deployment:

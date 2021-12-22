@@ -1,5 +1,4 @@
 ## Authorizations
-# NOT CURRENTLY USED but preserved for reference
 # Uncomment out the merging for each environment that you'd like to include.
 # You can also just copy and paste the tree (do not include the "authorizations") to each
 # environment if you need something different per environment.
@@ -32,9 +31,9 @@ development:
   host: localhost
   port: 3389
   attribute: uid
-  base: ou=hitrc,dc=ahrq,dc=gov
+  base: ou=people,dc=exmaple,dc=org
   required_groups:
-    - ["member", "cn=dir-users-cds-confluence,ou=hitrc,dc=ahrq,dc=gov"]
+    - ["member", "cn=cedar-users,ou=groups,dc=example,dc=org"]
   ssl: false
   allow_unauthenticated_bind: false
   # <<: *AUTHORIZATIONS
@@ -50,12 +49,12 @@ test:
   # <<: *AUTHORIZATIONS
 
 production:
-  host: nrc-ldap.nrc.local
+  host: ldap.example.org
   port: 389
   attribute: uid
-  base: ou=hitrc,dc=ahrq,dc=gov
+  base: ou=people,dc=ahrq,dc=gov
   required_groups:
-    - ["member", "cn=dir-users-cds-confluence,ou=hitrc,dc=ahrq,dc=gov"]
+    - ["member", "cn=cedar-users,ou=groups,dc=example,dc=org"]
   ssl: false
   allow_unauthenticated_bind: false
   # <<: *AUTHORIZATIONS

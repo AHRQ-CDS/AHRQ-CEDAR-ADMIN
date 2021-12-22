@@ -44,6 +44,6 @@ module CedarAdmin
     config.ngc_base_url = ENV['CEDAR_NGC_BASE_URL']
 
     # Authentication bypass setting
-    config.ldap_auth_bypass = ENV['CEDAR_LDAP_AUTH_BYPASS']&.downcase == 'yes' ? true : false
+    config.ldap_auth_bypass = ENV['CEDAR_LDAP_AUTH']&.downcase != 'yes'
   end
 end
