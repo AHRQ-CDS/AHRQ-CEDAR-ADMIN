@@ -58,9 +58,11 @@ rake import:uspstf
 
 ## Authenticating Users
 
-Users will need to authenticate but, by default, any credentials will work and there is no need to create or manage user accounts.
+Due to the sensitivity of certain data elements (e.g. client IP addresses and search terms), users will need to authenticate. Currently only LDAP authentication is supported.
 
-Users can be authenticated against an LDAP server by setting an environment variable `CEDAR_LDAP_AUTH=yes` either directly or in a `.env` file. To configure LDAP authentication and authorization details:
+For convenience, the default in a development environment (`Rails.env.development? == true`) is that any credentials will work and there is no need to create or manage user accounts. This default can be overridden using an environment variable `CEDAR_DEVELOPMENT_LDAP_AUTH=yes`. In a production environment (`Rails.env.production == true`), LDAP authentication is always enabled.
+
+To configure LDAP authentication and authorization details:
 
 ```
 cp config/ldap.yml.template config/ldap.yml

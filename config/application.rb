@@ -44,6 +44,12 @@ module CedarAdmin
     config.ngc_base_url = ENV['CEDAR_NGC_BASE_URL']
 
     # Authentication bypass setting
-    config.ldap_auth_bypass = ENV['CEDAR_LDAP_AUTH']&.downcase != 'yes'
+    if Rails.env.development?
+      # In development, default to bypassing LDAP authentication unless explicitly enabled
+      config.ldap_auth_bypass = ENV['CEDAR_DEVELOPMENT_LDAP_AUTH']&.downcase != 'yes'
+    else
+      # In production, always use LDAP authentication
+      config.ldap_auth_bypass = false
+    end
   end
 end
