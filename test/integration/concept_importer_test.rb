@@ -15,20 +15,22 @@ class ConceptImporterTest < ActiveSupport::TestCase
 
     concept = Concept.where(umls_cui: 'C0000001').first
     assert_equal('Foo desc', concept.umls_description)
-    assert_equal(2, concept.synonyms_text.size)
+    assert_equal(3, concept.synonyms_text.size)
     assert_equal(2, concept.codes.size)
     assert_equal('Foo', concept.codes[0]['description'])
     assert_equal('Baz', concept.codes[1]['description'])
     assert(concept.synonyms_text.include?('foo'))
+    assert(concept.synonyms_text.include?('foo desc'))
     assert_not(concept.synonyms_text.include?('foo2'))
     assert_not(concept.synonyms_text.include?('bar'))
     assert(concept.synonyms_text.include?('baz'))
 
     concept = Concept.where(umls_cui: 'C0000002').first
     assert_equal('Abc desc', concept.umls_description)
-    assert_equal(2, concept.synonyms_text.size)
+    assert_equal(3, concept.synonyms_text.size)
     assert_equal(2, concept.codes.size)
     assert(concept.synonyms_text.include?('abc'))
+    assert(concept.synonyms_text.include?('abc desc'))
     assert_not(concept.synonyms_text.include?('abc2'))
     assert_not(concept.synonyms_text.include?('def'))
     assert(concept.synonyms_text.include?('ghi'))

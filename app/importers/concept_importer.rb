@@ -26,6 +26,7 @@ class ConceptImporter
 
   def self.create_or_update_concept(umls_cui, description, synonyms, codes)
     description = synonyms[0] if description.blank? && synonyms.present?
+    synonyms << description
     synonyms = synonyms.map { |s| I18n.transliterate(s).downcase }.uniq
     Concept.find_or_initialize_by(umls_cui: umls_cui).update!(umls_description: description, synonyms_text: synonyms, codes: codes)
   end
