@@ -16,9 +16,7 @@ module SearchLogHelper
 
   def human_readable_search_params(search_log)
     search_log.each_with_object({}) do |(key, value), hash|
-      if HUMAN_READABLE_PARAMS.key?(key) && !value.kind_of?(Array)
-        value = value.delete('()')
-      end
+      value = value.delete('()') if HUMAN_READABLE_PARAMS.key?(key) && !value.is_a?(Array)
       hash[HUMAN_READABLE_PARAMS[key]] = value
     end
   end
