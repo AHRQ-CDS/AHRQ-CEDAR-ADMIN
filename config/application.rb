@@ -43,6 +43,8 @@ module CedarAdmin
     # Settings for the NGC importer
     config.ngc_base_url = ENV['CEDAR_NGC_BASE_URL']
 
+    config.time_zone = 'Eastern Time (US & Canada)'
+
     # Authentication bypass setting
     if Rails.env.development?
       # In development, default to bypassing LDAP authentication unless explicitly enabled

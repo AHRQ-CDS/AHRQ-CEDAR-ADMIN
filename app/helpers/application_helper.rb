@@ -13,4 +13,12 @@ module ApplicationHelper
       link_to text, path, class: 'nav-link'
     end
   end
+
+  def format_datetime_with_tz(datetime)
+    datetime&.strftime '%Y-%m-%d %H:%M %Z'
+  end
+
+  def format_date(date)
+    date&.strftime '%Y-%m-%d'
+  end
 end

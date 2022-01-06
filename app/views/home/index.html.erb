@@ -32,7 +32,7 @@
       <tbody>
         <% @import_run_summaries.each do |date, irs| %>
         <tr>
-          <th><%= date.to_formatted_s(:long) %></th>
+          <th><%= format_date(date) %></th>
           <th></th>
           <th></th>
           <th></th>
@@ -45,7 +45,7 @@
         </tr>
         <% @import_runs[date].sort_by(&:start_time).each do |ir| %>
         <tr>
-          <td><%= link_to ir.start_time.to_formatted_s(:long), ir %></td>
+          <td><%= link_to format_datetime_with_tz(ir.start_time), ir %></td>
           <td><%= link_to ir.repository.name, ir.repository %></td>
           <td>
             <% if ir.start_time && ir.end_time %>

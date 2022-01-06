@@ -17,13 +17,12 @@
     <p><strong>Type:</strong> <%= @artifact.artifact_type || '<not specified>' %></p>
     <p><strong>Status:</strong> <%= @artifact.artifact_status || '<not specified>' %></p>
     <p><strong>DOI:</strong> <%= @artifact.doi || '<not specified>'%></p>
-    <p><strong>Published On:</strong> <%= @artifact.published_on&.to_s(:long) || '<not specified>' %></p>
-    <p><strong>Indexed At:</strong> <%= @artifact.created_at&.to_s(:long) || '<not specified>' %></p>
+    <p><strong>Published On:</strong> <%= format_date(@artifact.published_on) || '<not specified>' %></p>
+    <p><strong>Indexed At:</strong> <%= format_datetime_with_tz(@artifact.created_at) || '<not specified>' %></p>
     <h4>Version History</h4>
     <ul>
       <% @artifact.versions.order(:id).reverse_order.each do |v| %>
-        <%# TODO: display times using a local timezone (CEDAR-219) %>
-        <li><%= link_to "#{v.event} [#{v.created_at.to_formatted_s(:long)}]", v %></li>
+        <li><%= link_to "#{v.event} [#{format_datetime_with_tz(v.created_at)}]", v %></li>
       <% end %>
     </ul>
   </div>
