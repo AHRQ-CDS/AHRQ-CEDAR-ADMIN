@@ -22,7 +22,7 @@
   <tbody>
   <% @search_logs.each_with_index do |sl, index| %>
     <tr>
-      <td><%= sl.start_time %></td>
+      <td><%= format_datetime_with_tz(sl.start_time) %></td>
       <td>
         <ul class="bare-list">
           <% human_readable_search_params(sl.search_params).each do |param, param_value| %>

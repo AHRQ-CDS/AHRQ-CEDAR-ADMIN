@@ -3,8 +3,7 @@
 </style>
 <div class="row">
   <div class="col-sm">
-    <%# TODO: display times using a local timezone (CEDAR-219) %>
-    <h1><%= @version.item&.title || @version.object&.[]('title') || '[Title Unknown]' %> [<%= @version.created_at.to_formatted_s(:long) %>]</h1>
+    <h1><%= @version.item&.title || @version.object&.[]('title') || '[Title Unknown]' %> [<%= format_datetime_with_tz(@version.created_at) %>]</h1>
     <% @version.object_changes.each do |field, change| %>
       <h4><%= field.titleize %></h4>
       <p><%= Diffy::Diff.new(change[0], change[1]).to_s(:html).html_safe %></p>

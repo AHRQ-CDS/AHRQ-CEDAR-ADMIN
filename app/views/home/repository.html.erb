@@ -56,8 +56,7 @@
       <tbody>
         <% @repository.import_runs.order(:id).reverse_order.each do |import| %>
           <tr>
-            <%# TODO: display times using a local timezone (CEDAR-219) %>
-            <td><%= link_to import.start_time.to_formatted_s(:long), import %></td>
+            <td><%= link_to format_datetime_with_tz(import.start_time), import %></td>
             <td>
               <% if import.start_time && import.end_time %>
                 <%= distance_of_time_in_words(import.end_time, import.start_time) %>

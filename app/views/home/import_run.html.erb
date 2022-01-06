@@ -1,7 +1,6 @@
 <div class="row">
   <div class="col-sm">
-    <%# TODO: display times using a local timezone (CEDAR-219) %>
-    <h1>Import Run: <%= @import_run.repository.name %> [<%= @import_run.start_time.to_formatted_s(:long) %>]</h1>
+    <h1>Import Run: <%= @import_run.repository.name %> [<%= format_datetime_with_tz(@import_run.start_time) %>]</h1>
     <% if @import_run.status == 'failure' %>
     <h4>Failed: <%= @import_run.error_message %></h4>
     <% end %>
