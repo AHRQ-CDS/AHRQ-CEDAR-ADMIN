@@ -8,7 +8,7 @@ module SearchLogHelper
     'classification:text' => 'Keyword Search',
     'title:contains' => 'Title Free-text Search',
     '_content' => 'Content Search',
-    'classification' => 'MeSH Code Search',
+    'classification' => 'Code Search',
     '_lastUpdated' => 'Last Updated Search',
     'page' => 'Current Page',
     '_count' => 'Count Per Page'
