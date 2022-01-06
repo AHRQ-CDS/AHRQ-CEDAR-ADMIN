@@ -15,14 +15,14 @@ module ApplicationHelper
   end
 
   def format_datetime_with_tz(datetime)
-    datetime.strftime "%Y-%m-%d %H:%M %Z" unless datetime.nil?
+    datetime&.strftime '%Y-%m-%d %H:%M %Z'
   end
 
   def format_date_with_tz(date)
-    date.in_time_zone(Rails.application.config.time_zone).strftime "%Y-%m-%d %Z" unless date.nil?
+    date&.in_time_zone(Rails.application.config.time_zone)&.strftime '%Y-%m-%d %Z'
   end
 
   def format_date(date)
-    date.strftime "%Y-%m-%d" unless date.nil?
+    date&.strftime '%Y-%m-%d'
   end
 end
