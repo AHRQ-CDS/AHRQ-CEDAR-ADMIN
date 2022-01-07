@@ -26,11 +26,16 @@
       <td>
         <ul class="bare-list">
           <% human_readable_search_params(sl.search_params).each do |param, param_value| %>
-            <% if param_value.kind_of?(Array) %>
-              <li><%= param %></li>
-              <% param_value.each do |item| %>
+            <% if param_value.kind_of?(Array) && param == 'Code Search' %>
+              <li>Code Search</li>
+              <% seperate_code_systems(param_value).each do |code_system, code_search| %>
                 <ul>
-                  <li><%= item %></li>
+                  <li><%= code_system %></li>
+                  <% code_search.each do |item| %>
+                    <ul>
+                      <li><%= item %></li>
+                    </ul>
+                  <% end %>
                 </ul>
               <% end %>
             <% else %>
