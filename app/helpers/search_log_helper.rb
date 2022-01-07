@@ -8,7 +8,7 @@ module SearchLogHelper
     'classification:text' => 'Keyword Search',
     'title:contains' => 'Title Free-text Search',
     '_content' => 'Content Search',
-    'classification' => 'MeSH Code Search',
+    'classification' => 'Code Search',
     '_lastUpdated' => 'Last Updated Search',
     'page' => 'Current Page',
     '_count' => 'Count Per Page'
@@ -16,7 +16,8 @@ module SearchLogHelper
 
   def human_readable_search_params(search_log)
     search_log.each_with_object({}) do |(key, value), hash|
-      hash[HUMAN_READABLE_PARAMS[key]] = value.delete('()') if HUMAN_READABLE_PARAMS.key?(key)
+      value = value.delete('()') if HUMAN_READABLE_PARAMS.key?(key) && !value.is_a?(Array)
+      hash[HUMAN_READABLE_PARAMS[key]] = value
     end
   end
 end

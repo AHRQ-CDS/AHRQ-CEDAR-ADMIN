@@ -26,7 +26,16 @@
       <td>
         <ul class="bare-list">
           <% human_readable_search_params(sl.search_params).each do |param, param_value| %>
-            <li><%= param %>: <%= param_value %></li>
+            <% if param_value.kind_of?(Array) %>
+              <li><%= param %></li>
+              <% param_value.each do |item| %>
+                <ul>
+                  <li><%= item %></li>
+                </ul>
+              <% end %>
+            <% else %>
+              <li><%= param %>: <%= param_value %></li>
+            <% end %>
           <% end %>
         </ul>
         <a class="show-raw-json" id=<%= index %>>Show Raw JSON</a>
