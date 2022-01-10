@@ -19,7 +19,7 @@ namespace :db do
     with_config do |app, host, db, user|
       # Use environment variable for the date (just look at the files to find a valid one)
       datetime = ENV['DATETIME']
-      raise "Datetime must be provided using the DATATIME environment variable (YY_MM_DD__HH_MM_SS)" unless datetime
+      raise "Datetime must be provided using the DATETIME environment variable (YY_MM_DD__HH_MM_SS)" unless datetime
       filename = File.join(LOCATION, "#{app}_#{datetime}.dump")
       # Make sure the file is present before dropping the existing database
       raise "Database backup file '#{filename}' not found" unless File.exists?(filename)
