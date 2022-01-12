@@ -12,5 +12,7 @@ set :job_template, "/bin/sh -l -c ':job'"
 job_type :rake_log, "cd :path && :environment_variable=:environment :bundle_command rake :task > /proc/1/fd/1 2> /proc/1/fd/2"
 
 every 1.day, at: '4:30 am' do
-  rake_log "import:all"
+  # TODO: This gives us an initial backup schedule that aligns with the biggest database change; if we move to
+  # weekly imports we should probably add a separate task for daily backups
+  rake_log "import:all db:dump"
 end
