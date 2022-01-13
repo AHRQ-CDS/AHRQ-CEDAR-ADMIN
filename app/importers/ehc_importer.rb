@@ -30,7 +30,7 @@ class EhcImporter < CedarImporter
         url: artifact_uri.to_s.presence,
         published_on: artifact.at_xpath('Publish-Date').content.presence,
         artifact_status: to_artifact_status(artifact.at_xpath('Status').content),
-        artifact_type: artifact.at_xpath('Product-Type').content.presence,
+        artifact_type: artifact.at_xpath('Product-Type').content.strip.presence,
         keywords: extract_keywords(artifact),
         doi: doi,
         warnings: warnings

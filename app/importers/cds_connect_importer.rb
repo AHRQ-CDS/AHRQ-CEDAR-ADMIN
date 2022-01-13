@@ -43,13 +43,14 @@ class CdsConnectImporter < CedarImporter
           cds_connect_status = artifact['status'].downcase
           keywords = artifact['creation_and_usage']['keywords'] || []
           keywords.concat(artifact['organization']['mesh_topics'] || [])
+
           attributes.merge!(
             remote_identifier: artifact_id.to_s,
             title: artifact['title'],
             description_html: artifact['description'],
             url: "#{Rails.configuration.cds_connect_base_url}node/#{artifact_id}",
             published_on: artifact['repository_information']['publication_date'],
-            artifact_type: artifact['artifact_type'],
+            artifact_type: artifact['artifact_type']&.strip.presence,
             artifact_status: Artifact.artifact_statuses[cds_connect_status] || 'unknown',
             keywords: keywords
           )
