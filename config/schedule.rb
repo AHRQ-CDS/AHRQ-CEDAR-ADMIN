@@ -13,7 +13,12 @@ job_type :rake_log, "cd :path && :environment_variable=:environment :bundle_comm
 
 # Schedule for imports: daily, scheduled to run during off-peak hours in the US
 # NOTE: This assumes the CEDAR server is set to UTC; 9am UTC is 4am EST and 1am PST
-every 1.day, at: '9:00 am' do
+#every 1.day, at: '9:00 am' do
+#  rake_log "import:all"
+#end
+
+# TODO: TEMPORARILY SETTING TO HOURLY IMPORTS FOR DEBUGGING SOME IMPORTER ODDNESS
+every 1.hour do
   rake_log "import:all"
 end
 
