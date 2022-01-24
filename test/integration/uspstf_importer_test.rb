@@ -31,6 +31,10 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal('Cervical Cancer: Screening --Women aged 21 to 65 years', artifact.title)
     assert_equal('USPSTF', artifact.repository.alias)
     assert_equal('Specific Recommendation', artifact.artifact_type)
+    assert_equal(2, artifact.strength_of_recommendation_score)
+    assert(artifact.strength_of_recommendation_statement.start_with?('The USPSTF recommends'))
+    assert_equal(2, artifact.quality_of_evidence_score)
+    assert(artifact.quality_of_evidence_statement.start_with?('The USPSTF strongly recommends'))
 
     # Check example general recommendation
     artifact = artifacts.where(cedar_identifier: 'USPSTF-GR-199').first

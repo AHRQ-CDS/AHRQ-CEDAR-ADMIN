@@ -49,9 +49,13 @@ class UspstfImporter < CedarImporter
     # Extract specific recommendations
     # TODO: consider whether specific recommendations should be standalone entries; alternately, we may wish
     # to only have entries for the specific recommendations because of the metadata
+    grade_statements = @json_data['grades']
     @json_data['specificRecommendations'].each do |recommendation|
       cedar_id = "USPSTF-SR-#{recommendation['id']}"
       url = general_rec_urls[recommendation['general'].to_s]
+      grade = recommendation['grade']
+      strength_score = compute_strength_of_evidence_score(grade)
+      strength_statements = grade_statements[grade]
 
       # TODO: publish date and url are not explicit fields in the JSON
       update_or_create_artifact!(
@@ -61,7 +65,11 @@ class UspstfImporter < CedarImporter
         description_html: recommendation['text'],
         url: url,
         artifact_type: 'Specific Recommendation',
-        artifact_status: 'active'
+        artifact_status: 'active',
+        strength_of_recommendation_statement: strength_statements[1],
+        strength_of_recommendation_score: strength_score,
+        quality_of_evidence_statement: strength_statements[0],
+        quality_of_evidence_score: strength_score
       )
     end
 
@@ -77,6 +85,17 @@ class UspstfImporter < CedarImporter
       }
       metadata.merge!(extract_metadata(url))
       update_or_create_artifact!(cedar_id, metadata)
+    end
+  end
+
+  def compute_strength_of_evidence_score(uspstf_grade)
+    case uspstf_grade
+    when 'A'
+      2
+    when 'B', 'D'
+      1
+    else
+      0
     end
   end
 end

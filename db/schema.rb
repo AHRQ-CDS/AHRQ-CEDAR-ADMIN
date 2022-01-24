@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_12_14_201854) do
+ActiveRecord::Schema.define(version: 2022_01_24_153500) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,6 +33,10 @@ ActiveRecord::Schema.define(version: 2021_12_14_201854) do
     t.tsvector "content_search"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "strength_of_recommendation_statement"
+    t.integer "strength_of_recommendation_score", default: 0
+    t.string "quality_of_evidence_statement"
+    t.integer "quality_of_evidence_score", default: 0
     t.index "to_tsvector('english'::regconfig, COALESCE(keyword_text, ''::text))", name: "index_artifacts_on_keyword_text", using: :gin
     t.index ["content_search"], name: "index_artifacts_on_content_search", using: :gin
     t.index ["keywords"], name: "index_artifacts_on_keywords", using: :gin

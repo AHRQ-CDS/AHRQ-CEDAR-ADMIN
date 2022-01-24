@@ -69,8 +69,8 @@
     "recommendation_statement": [
       {
         "recommendation": null,
-        "strength_of_recommendation": null,
-        "quality_of_evidence": null,
+        "strength_of_recommendation": "strength",
+        "quality_of_evidence": "quality",
         "decision_notes": null
       }
     ]
