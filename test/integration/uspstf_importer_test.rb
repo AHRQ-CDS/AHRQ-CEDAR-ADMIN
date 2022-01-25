@@ -41,6 +41,8 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal('Screening for Cervical Cancer', artifact.title)
     assert_equal('USPSTF', artifact.repository.alias)
     assert_equal('General Recommendation', artifact.artifact_type)
+    assert_equal(1, artifact.strength_of_recommendation_score)
+    assert_equal(1, artifact.quality_of_evidence_score)
 
     # Check example PDF tool
     artifact = artifacts.where(cedar_identifier: 'USPSTF-TOOL-323').first
