@@ -11,6 +11,14 @@ set :job_template, "/bin/sh -l -c ':job'"
 # Custom rake task option that logs output
 job_type :rake_log, "cd :path && :environment_variable=:environment :bundle_command rake :task > /proc/1/fd/1 2> /proc/1/fd/2"
 
-every 1.day, at: '4:30 am' do
+# Schedule for imports: daily, scheduled to run during off-peak hours in the US
+# NOTE: This assumes the CEDAR server is set to UTC; 9am UTC is 4am EST and 1am PST
+every 1.day, at: '9:00 am' do
   rake_log "import:all"
+end
+
+# Schedule for database backups: daily, scheduled to run when the most recent import should have completed
+# NOTE: This assumes the CEDAR server is set to UTC; 9:40am UTC is 4:40am EST and 1:40am PST
+every 1.day, at: '9:40 am' do
+  rake_log "db:dump"
 end

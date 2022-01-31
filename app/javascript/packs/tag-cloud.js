@@ -49,7 +49,7 @@ function tagCloud(id, size, words) {
         return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
       })
       .on("click", function (d) {
-        location.href = `/keyword/${this.textContent}`;
+        location.href = `keyword/${this.textContent}`;
       })
       .text(function(d) { return d.text; });
   }

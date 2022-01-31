@@ -71,7 +71,7 @@ class EpcImporter < CedarImporter
         artifact_url = artifact_uri.to_s
       end
       cedar_id = "EPC-#{Digest::MD5.hexdigest(artifact_url)}"
-      artifact_type = artifact.at_css('div.views-field-field-epc-type span.field-content')&.content
+      artifact_type = artifact.at_css('div.views-field-field-epc-type span.field-content')&.content&.strip.presence
       artifact_status = to_artifact_status(artifact_uri)
       artifact_date_str = artifact.at_css('div.views-field-field-timestamp  span.field-content')&.content
       begin
