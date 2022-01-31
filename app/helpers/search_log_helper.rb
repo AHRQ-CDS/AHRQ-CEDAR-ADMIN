@@ -15,14 +15,14 @@ module SearchLogHelper
   }.freeze
 
   CODE_SYSTEMS = {
-    'Metathesaurus' => 'http://www.nlm.nih.gov/research/umls/mth',
-    'MeSH' => 'http://terminology.hl7.org/CodeSystem/MSH',
-    'Medline Plus' => 'http://www.nlm.nih.gov/research/umls/medlineplus',
-    'SNOMED-CT' => 'http://snomed.info/sct',
-    'SNOMED-CT (ESP)' => 'http://snomed.info/sct/449081005',
-    'MeSH (ESP)' => 'http://www.nlm.nih.gov/research/umls/mshspa',
-    'ICD-10-CM' => 'http://hl7.org/fhir/sid/icd-10-cm',
-    'RxNorm' => 'http://www.nlm.nih.gov/research/umls/rxnorm'
+    'http://www.nlm.nih.gov/research/umls/mth' => 'UMLS MTH',
+    'http://hl7.org/fhir/sid/icd-10-cm' => 'ICD-10-CM',
+    'http://www.nlm.nih.gov/research/umls/medlineplus' => 'Medline Plus',
+    'http://terminology.hl7.org/CodeSystem/MSH' => 'MeSH',
+    'http://www.nlm.nih.gov/research/umls/mshspa' => 'MeSH (ESP)',
+    'http://snomed.info/sct' => 'SNOMED-CT',
+    'http://snomed.info/sct/449081005' => 'SNOMED-CT (ESP)',
+    'http://www.nlm.nih.gov/research/umls/rxnorm' => 'RxNorm'
   }.freeze
 
   def human_readable_search_params(search_log)
@@ -32,14 +32,24 @@ module SearchLogHelper
     end
   end
 
-  def seperate_code_systems(code_searches)
-    hash = Hash.new { |k, v| k[v] = [] }
-    # For each search, sort it intro the above bucket based off system's url id
-    code_searches.each do |item|
-      CODE_SYSTEMS.each do |key, value|
-        hash[key].push(item) if item.include? value
-      end
+  # Converts selected concept codings in search log to a human readable version
+  #
+  # @param string of code system references for single concept delimited by
+  # comma. Format for a each is "<code system url>|<code>|<display>."
+  #
+  # @return array of human readable codes corresponding to selected concept
+  def human_readable_code_search(code_search)
+    readable_codes = []
+    code_search = code_search[0...-1] # remove trailing .
+    references = code_search.split('.,')
+    references.each do |ref|
+      readable_coding = ''
+      coding = ref.split('|')
+      readable_coding += CODE_SYSTEMS[coding[0]] + ': ' + coding[1]
+      display = coding[2].nil? ? '' : coding[2]
+      readable_coding += ' (' + display + ')'
+      readable_codes.push(readable_coding)
     end
-    hash
+    readable_codes
   end
 end

@@ -28,15 +28,13 @@
           <% human_readable_search_params(sl.search_params).each do |param, param_value| %>
             <% if param_value.kind_of?(Array) && param == 'Code Search' %>
               <li>Code Search</li>
-              <% seperate_code_systems(param_value).each do |code_system, code_search| %>
-                <ul>
-                  <li><%= code_system %></li>
-                  <% code_search.each do |item| %>
-                    <ul>
-                      <li><%= item %></li>
-                    </ul>
-                  <% end %>
+              <% param_value.each do |code_search| %>
+                <ul class="list-horizontal">
+                <% human_readable_code_search(code_search).each do |code_system_reference| %>
+                  <li><small><%= code_system_reference %></small></li>
+                <% end %>
                 </ul>
+                <br>
               <% end %>
             <% else %>
               <li><%= param %>: <%= param_value %></li>
