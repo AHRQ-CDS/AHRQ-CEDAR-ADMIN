@@ -43,11 +43,9 @@ module SearchLogHelper
     code_search = code_search[0...-1] # remove trailing .
     references = code_search.split('.,')
     references.each do |ref|
-      readable_coding = ''
       coding = ref.split('|')
-      readable_coding += CODE_SYSTEMS[coding[0]] + ': ' + coding[1]
       display = coding[2].nil? ? '' : coding[2]
-      readable_coding += ' (' + display + ')'
+      readable_coding = "#{CODE_SYSTEMS[coding[0]]}: #{coding[1]} (#{display})"
       readable_codes.push(readable_coding)
     end
     readable_codes
