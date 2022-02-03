@@ -32,22 +32,20 @@ module SearchLogHelper
     end
   end
 
-  # Converts selected concept codings in search log to a human readable version
+  # Parses selected concept codings in search log to systems + codes
   #
   # @param string of code system references for single concept delimited by
-  # comma. Format for a each is "<code system url>|<code>|<display>."
+  # comma. Format for a each is "<code system url>|<code>"
   #
-  # @return array of human readable codes corresponding to selected concept
-  def human_readable_code_search(code_search)
-    readable_codes = []
-    code_search = code_search[0...-1] # remove trailing .
-    references = code_search.split('.,')
+  # @return array of parsed codes corresponding to selected concept
+  def parse_code_search(code_search)
+    parsed_codes = []
+    references = code_search.split(',')
     references.each do |ref|
       coding = ref.split('|')
-      display = coding[2].nil? ? '' : coding[2]
-      readable_coding = "#{CODE_SYSTEMS[coding[0]]}: #{coding[1]} (#{display})"
-      readable_codes.push(readable_coding)
+      parsed_coding = "#{CODE_SYSTEMS[coding[0]]}: #{coding[1]}"
+      parsed_codes.push(parsed_coding)
     end
-    readable_codes
+    parsed_codes
   end
 end
