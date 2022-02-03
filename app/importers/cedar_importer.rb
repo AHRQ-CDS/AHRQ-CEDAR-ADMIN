@@ -109,7 +109,8 @@ class CedarImporter
   end
 
   def self.normalize_attribute_values(attributes)
-    text_fields = %i[title description description_html description_markdown url doi artifact_type artifact_status]
+    text_fields = %i[title description description_html description_markdown url doi artifact_type artifact_status
+                     quality_of_evidence_statement strength_of_recommendation_statement]
     text_fields.each do |field|
       # Strip whitespace if the attribute has a value. Don't use present? or blank? since these ignore whitespace
       attributes[field] = attributes[field].strip unless attributes[field].nil?

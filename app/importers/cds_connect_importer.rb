@@ -45,8 +45,12 @@ class CdsConnectImporter < CedarImporter
           keywords.concat(artifact['organization']['mesh_topics'] || [])
           recommendation_statements = artifact.dig('supporting_evidence', 'recommendation_statement')
           if recommendation_statements.present?
-            strength = recommendation_statements[0]['strength_of_recommendation']
-            quality = recommendation_statements[0]['quality_of_evidence']
+            strength = ActionView::Base.full_sanitizer.sanitize(
+              recommendation_statements[0]['strength_of_recommendation']
+            )&.gsub(/\s+/, ' ')
+            quality = ActionView::Base.full_sanitizer.sanitize(
+              recommendation_statements[0]['quality_of_evidence']
+            )&.gsub(/\s+/, ' ')
           end
 
           attributes.merge!(
