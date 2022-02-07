@@ -33,15 +33,15 @@ class UspstfImporter < CedarImporter
     # TODO: consider whether specific recommendations should be standalone entries; alternately, we may wish
     # to only have entries for the specific recommendations because of the metadata
     grade_statements = @json_data['grades']
-    specific_rec_scores = {}
+    specific_rec_sorts = {}
     @json_data['specificRecommendations'].each do |recommendation|
       remote_id = recommendation['id']
       cedar_id = "USPSTF-SR-#{remote_id}"
       url = general_rec_urls[recommendation['general'].to_s]
-      grade = recommendation['grade']
-      strength_score = compute_strength_of_evidence_score(grade)
-      specific_rec_scores[remote_id] = strength_score
-      strength_statements = grade_statements[grade]
+      strength_score = recommendation['grade']
+      strength_sort = compute_strength_of_evidence_score(strength_score)
+      specific_rec_sorts[remote_id] = strength_sort
+      strength_statements = grade_statements[strength_score]
 
       # TODO: publish date and url are not explicit fields in the JSON
       update_or_create_artifact!(
@@ -54,8 +54,10 @@ class UspstfImporter < CedarImporter
         artifact_status: 'active',
         strength_of_recommendation_statement: strength_statements[1],
         strength_of_recommendation_score: strength_score,
+        strength_of_recommendation_sort: strength_sort,
         quality_of_evidence_statement: strength_statements[0],
-        quality_of_evidence_score: strength_score
+        quality_of_evidence_score: strength_score,
+        quality_of_evidence_sort: strength_sort
       )
     end
 
@@ -67,9 +69,8 @@ class UspstfImporter < CedarImporter
       end
       cedar_id = "USPSTF-GR-#{id}"
       related_specific_recs = recommendation['specific'] || []
-      related_specific_rec_scores = related_specific_recs.map { |specific_rec| specific_rec_scores[specific_rec] }
-      strength_score = related_specific_rec_scores.reduce { |sum, specific_score| sum + specific_score } || 0
-      strength_score /= related_specific_rec_scores.size if related_specific_rec_scores.present?
+      related_specific_rec_sorts = related_specific_recs.map { |specific_rec| specific_rec_sorts[specific_rec] }
+      strength_sort = related_specific_rec_sorts.max || 0
 
       update_or_create_artifact!(
         cedar_id,
@@ -81,8 +82,8 @@ class UspstfImporter < CedarImporter
         artifact_type: 'General Recommendation',
         artifact_status: 'active',
         keywords: keywords,
-        strength_of_recommendation_score: strength_score,
-        quality_of_evidence_score: strength_score
+        strength_of_recommendation_sort: strength_sort,
+        quality_of_evidence_sort: strength_sort
       )
     end
 

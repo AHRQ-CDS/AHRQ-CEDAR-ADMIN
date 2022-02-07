@@ -34,9 +34,11 @@ ActiveRecord::Schema.define(version: 2022_01_24_153500) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "strength_of_recommendation_statement"
-    t.integer "strength_of_recommendation_score", default: 0
+    t.string "strength_of_recommendation_score"
+    t.integer "strength_of_recommendation_sort", default: 0
     t.string "quality_of_evidence_statement"
-    t.integer "quality_of_evidence_score", default: 0
+    t.string "quality_of_evidence_score"
+    t.integer "quality_of_evidence_sort", default: 0
     t.index "to_tsvector('english'::regconfig, COALESCE(keyword_text, ''::text))", name: "index_artifacts_on_keyword_text", using: :gin
     t.index ["content_search"], name: "index_artifacts_on_content_search", using: :gin
     t.index ["keywords"], name: "index_artifacts_on_keywords", using: :gin
