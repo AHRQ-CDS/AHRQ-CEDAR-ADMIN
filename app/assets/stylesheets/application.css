@@ -23,6 +23,13 @@
     padding-left: 0
 }
 
+.list-horizontal li {
+    display:inline-block;
+}
+.list-horizontal li:first-child:before {
+    content: '';
+}
+
 .float-heading {
     float: left;
     font-size: x-large;

@@ -14,10 +14,37 @@ module SearchLogHelper
     '_count' => 'Count Per Page'
   }.freeze
 
+  CODE_SYSTEMS = {
+    'http://www.nlm.nih.gov/research/umls/mth' => 'UMLS MTH',
+    'http://hl7.org/fhir/sid/icd-10-cm' => 'ICD-10-CM',
+    'http://www.nlm.nih.gov/research/umls/medlineplus' => 'Medline Plus',
+    'http://terminology.hl7.org/CodeSystem/MSH' => 'MeSH',
+    'http://www.nlm.nih.gov/research/umls/mshspa' => 'MeSH (ESP)',
+    'http://snomed.info/sct' => 'SNOMED-CT',
+    'http://snomed.info/sct/449081005' => 'SNOMED-CT (ESP)',
+    'http://www.nlm.nih.gov/research/umls/rxnorm' => 'RxNorm'
+  }.freeze
+
   def human_readable_search_params(search_log)
     search_log.each_with_object({}) do |(key, value), hash|
       value = value.delete('()') if HUMAN_READABLE_PARAMS.key?(key) && !value.is_a?(Array)
       hash[HUMAN_READABLE_PARAMS[key]] = value
     end
+  end
+
+  # Parses selected concept codings in search log to systems + codes
+  #
+  # @param string of code system references for single concept delimited by
+  # comma. Format for a each is "<code system url>|<code>"
+  #
+  # @return array of parsed codes corresponding to selected concept
+  def parse_code_search(code_search)
+    parsed_codes = []
+    references = code_search.split(',')
+    references.each do |ref|
+      coding = ref.split('|')
+      parsed_codes.push([CODE_SYSTEMS[coding[0]] || 'Unknown Code System', coding[1]])
+    end
+    parsed_codes
   end
 end
