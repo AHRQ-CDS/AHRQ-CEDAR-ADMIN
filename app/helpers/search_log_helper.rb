@@ -43,8 +43,7 @@ module SearchLogHelper
     references = code_search.split(',')
     references.each do |ref|
       coding = ref.split('|')
-      parsed_coding = "#{CODE_SYSTEMS[coding[0]] || 'Unknown Code System'}: #{coding[1]}"
-      parsed_codes.push(parsed_coding)
+      parsed_codes.push([CODE_SYSTEMS[coding[0]] || 'Unknown Code System', coding[1]])
     end
     parsed_codes
   end

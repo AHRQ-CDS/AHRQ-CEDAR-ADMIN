@@ -30,8 +30,8 @@
               <li>Code Search</li>
               <% param_value.each do |code_search| %>
                 <ul class="list-horizontal">
-                <% parse_code_search(code_search).each do |code_system_reference| %>
-                  <li><small><%= code_system_reference %>,</small></li>
+                <% parse_code_search(code_search).each do |code_system, code| %>
+                  <li><small><b><%= code_system %>:</b> <%= code %></small></li>
                 <% end %>
                 </ul>
                 <br>
