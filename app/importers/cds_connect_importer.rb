@@ -43,6 +43,15 @@ class CdsConnectImporter < CedarImporter
           cds_connect_status = artifact['status'].downcase
           keywords = artifact['creation_and_usage']['keywords'] || []
           keywords.concat(artifact['organization']['mesh_topics'] || [])
+          recommendation_statements = artifact.dig('supporting_evidence', 'recommendation_statement')
+          if recommendation_statements.present?
+            strength = ActionView::Base.full_sanitizer.sanitize(
+              recommendation_statements[0]['strength_of_recommendation']
+            )&.gsub(/\s+/, ' ')
+            quality = ActionView::Base.full_sanitizer.sanitize(
+              recommendation_statements[0]['quality_of_evidence']
+            )&.gsub(/\s+/, ' ')
+          end
 
           attributes.merge!(
             remote_identifier: artifact_id.to_s,
@@ -52,7 +61,9 @@ class CdsConnectImporter < CedarImporter
             published_on: artifact['repository_information']['publication_date'],
             artifact_type: artifact['artifact_type']&.strip.presence,
             artifact_status: Artifact.artifact_statuses[cds_connect_status] || 'unknown',
-            keywords: keywords
+            keywords: keywords,
+            strength_of_recommendation_statement: strength,
+            quality_of_evidence_statement: quality
           )
         else
           error_msg = "CDS Connect artifact retrieval failed for #{artifact_path} with status #{response.status}"

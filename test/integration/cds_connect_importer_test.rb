@@ -39,6 +39,12 @@ class CdsConnectImporterTest < ActiveSupport::TestCase
     assert_equal(Date.parse('Thu, 16 Jul 2020'), artifact_1186.published_on)
     assert_equal('Data Summary', artifact_1186.artifact_type)
     assert_equal('draft', artifact_1186.artifact_status)
+    assert_equal(0, artifact_1186.strength_of_recommendation_sort)
+    assert_nil(artifact_1186.strength_of_recommendation_statement)
+    assert_nil(artifact_1186.strength_of_recommendation_score)
+    assert_equal(0, artifact_1186.quality_of_evidence_sort)
+    assert_nil(artifact_1186.quality_of_evidence_statement)
+    assert_nil(artifact_1186.quality_of_evidence_score)
 
     artifact_1221 = artifacts.where(title: 'Managing chronic pain with Prescription Drug Monitoring Program (PDMP) medication dispense data').first
     assert(artifact_1221.present?)
@@ -51,6 +57,12 @@ class CdsConnectImporterTest < ActiveSupport::TestCase
     assert_nil(artifact_1221.published_on)
     assert_equal('Data Summary', artifact_1221.artifact_type)
     assert_equal('unknown', artifact_1221.artifact_status)
+    assert_equal(0, artifact_1221.strength_of_recommendation_sort)
+    assert_nil(artifact_1221.strength_of_recommendation_score)
+    assert_equal('strength', artifact_1221.strength_of_recommendation_statement)
+    assert_equal(0, artifact_1221.quality_of_evidence_sort)
+    assert_nil(artifact_1221.quality_of_evidence_score)
+    assert_equal('quality', artifact_1221.quality_of_evidence_statement)
 
     # Check tracking
     assert_equal(1, repository.import_runs.count)
