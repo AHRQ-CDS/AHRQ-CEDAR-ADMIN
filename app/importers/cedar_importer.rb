@@ -57,11 +57,14 @@ class CedarImporter
       # Run the individually defined importer
       download_and_update!
 
-      # Remove any entries that were not found in the completed index run; this is needed because e.g. USPSTF
-      # JSON identifiers are not persistent so this step is needed to clean up the database
-      # TODO: Just mark these as deleted? By adding an artifact status?
-      deleted_artifacts = repository.artifacts.where.not(id: @imported_artifact_ids).destroy_all
+      # Mark any entries that were not found in the completed index run as deleted
+      deleted_artifacts = repository.artifacts.where.not(id: @imported_artifact_ids).where.not(artifact_status: 'retracted').all
       @import_statistics[:delete_count] = deleted_artifacts.length
+      deleted_artifacts.each do |artifact|
+        artifact.artifact_status = 'retracted'
+        artifact.paper_trail_event = 'retract'
+        artifact.save!
+      end
 
       # TODO: consider if we want to store statistics per-artifact rather than per-run
       import_run.update(@import_statistics.merge(end_time: Time.current, status: 'success'))

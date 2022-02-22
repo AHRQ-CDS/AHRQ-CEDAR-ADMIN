@@ -15,6 +15,7 @@ class Artifact < ApplicationRecord
     active: 'active',
     archived: 'archived',
     unknown: 'unknown'
+    retracted: 'retracted'
   }
 
   # Validate URLs to ensure that they begin with "http"; this allows "http://" and "https://" but prevents
