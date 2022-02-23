@@ -13,7 +13,7 @@ class Artifact < ApplicationRecord
   enum artifact_status: {
     draft: 'draft',
     active: 'active',
-    retired: 'retired',
+    archived: 'archived',
     unknown: 'unknown'
   }
 

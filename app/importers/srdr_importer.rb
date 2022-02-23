@@ -23,7 +23,7 @@ class SrdrImporter < CedarImporter
       # has additional data and, if so, 2) updating SRDR to allow read access to anyone with an API key
       keywords = artifact['mesh_descriptors']&.collect { |descriptor| descriptor['name'] }
       status = if artifact['deleted_at'].present?
-                 'retired'
+                 'archived'
                elsif artifact['published_at'].blank?
                  'draft'
                else

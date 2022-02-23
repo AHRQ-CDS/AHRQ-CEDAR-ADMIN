@@ -51,7 +51,7 @@ class EhcImporter < CedarImporter
     when 'Draft'
       'draft'
     when 'Archived'
-      'retired'
+      'archived'
     else
       'active'
     end

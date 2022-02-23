@@ -41,6 +41,7 @@ class CdsConnectImporter < CedarImporter
           # Extract artifact metadata
           artifact = JSON.parse(response.body)
           cds_connect_status = artifact['status'].downcase
+          cds_connect_status = 'archived' if cds_connect_status == 'retired'
           keywords = artifact['creation_and_usage']['keywords'] || []
           keywords.concat(artifact['organization']['mesh_topics'] || [])
           recommendation_statements = artifact.dig('supporting_evidence', 'recommendation_statement')

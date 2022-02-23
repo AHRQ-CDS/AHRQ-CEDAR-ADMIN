@@ -105,6 +105,6 @@ class EpcImporter < CedarImporter
   def to_artifact_status(artifact_uri)
     return 'unknown' if artifact_uri.host.nil?
 
-    artifact_uri.host.start_with?('archive') ? 'retired' : 'active'
+    artifact_uri.host.start_with?('archive') ? 'archived' : 'active'
   end
 end
