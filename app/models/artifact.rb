@@ -14,7 +14,7 @@ class Artifact < ApplicationRecord
     draft: 'draft',
     active: 'active',
     archived: 'archived',
-    unknown: 'unknown'
+    unknown: 'unknown',
     retracted: 'retracted'
   }
 

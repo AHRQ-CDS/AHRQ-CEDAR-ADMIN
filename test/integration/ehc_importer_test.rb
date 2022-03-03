@@ -32,7 +32,7 @@ class EhcImporterTest < ActiveSupport::TestCase
       artifact = artifacts.where(title: 'Treatments for Seasonal Allergic Rhinitis').first
       assert(artifact.present?)
       assert(artifact.keywords.include?('hay fever'))
-      assert_equal(artifact.artifact_status, 'retired')
+      assert_equal(artifact.artifact_status, 'archived')
       assert_equal(1, artifact.versions.length)
       assert_equal('create', artifact.versions.last.event)
 
