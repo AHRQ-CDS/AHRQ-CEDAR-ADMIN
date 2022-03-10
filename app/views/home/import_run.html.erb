@@ -18,11 +18,15 @@
         <li><%= link_to v.item.title, v.item %></li>
       <% end %>
     </ul>
-    <% deleted = @versions.select { |v| v.event == 'destroy' } %>
+    <% deleted = @versions.select { |v| v.event == 'destroy' || v.event == 'retract' } %>
     <h4>Deleted [<%= deleted.length %>]</h4>
     <ul>
       <% deleted.each do |v| %>
-        <li><%= v.object['title'] %></li>
+        <% if v.item.present? %>
+          <li><%= link_to v.item.title, v.item %></li>
+        <% else %>
+          <li><%= v.object['title'] %></li>
+        <% end %>
       <% end %>
     </ul>
     <% if @import_run.error_msgs.present? %>
