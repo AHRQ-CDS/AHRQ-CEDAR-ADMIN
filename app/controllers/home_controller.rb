@@ -32,9 +32,19 @@ class HomeController < ApplicationController
     search_last_10_days = SearchLog.last_ten_days
     @search_per_day = SearchLog.last_ten_days.order('DATE(start_time) DESC').group('DATE(start_time)').count
 
-    search_parameter_last_10_days = SearchParameterLog.joins(:search_log).where(search_log_id: search_last_10_days.map(&:id))
-    @search_per_parameter_name = search_parameter_last_10_days.group(:name).order(count_all: :desc).count
-    @search_per_parameter_value = search_parameter_last_10_days.group(:value).order(count_all: :desc).limit(20).count
+    @search_per_parameter_name = {}
+    @search_per_parameter_value = {}
+    search_last_10_days.each do |search_log|
+      search_log.search_params.each_pair do |param, value|
+        next unless %w[_content classification classification:text title title:contains].include? param
+
+        @search_per_parameter_name[param] ||= 0
+        @search_per_parameter_name[param] += 1
+        value = value.join(',') if value.respond_to? :join
+        @search_per_parameter_value[value] ||= 0
+        @search_per_parameter_value[value] += 1
+      end
+    end
 
     @search_logs = SearchLog.last_searches(10)
     @subnavigation = ['Artifacts', 'Imports', 'Tags', 'Searches', 'Back to Top']
