@@ -13,7 +13,17 @@ Devise.setup do |config|
   # config.ldap_logger = true
   config.ldap_create_user = true
   config.ldap_update_password = false
-  # config.ldap_config = "#{Rails.root}/config/ldap.yml"
+  config.ldap_config = proc do
+    {
+      'host' => ENV['CEDAR_ADMIN_LDAP_HOST'],
+      'port' => ENV['CEDAR_ADMIN_LDAP_PORT'] || 389,
+      'attribute' => ENV['CEDAR_ADMIN_LDAP_ATTRIBUTE'] || 'uid',
+      'base' => ENV['CEDAR_ADMIN_LDAP_BASE'],
+      'required_groups' => [['member', ENV['CEDAR_ADMIN_LDAP_GROUP']]],
+      'ssl' => ENV['CEDAR_ADMIN_LDAP_SSL'] == 'true',
+      'allow_unauthenticated_bind' => false
+    }
+  end
   config.ldap_check_group_membership = true
   config.ldap_check_group_membership_without_admin = true
   # config.ldap_check_attributes = false
