@@ -80,19 +80,17 @@ For production deployments:
   * `CEDAR_ADMIN_LDAP_GROUP` - LDAP group allowed to access CEDAR Admin
   * `CEDAR_ADMIN_LDAP_SSL` - Connect to LDAP via SSL (true or false, defaults to false)
 
+For use in development:
+
+  * `CEDAR_DEVELOPMENT_LDAP_AUTH` - Authenticate via an LDAP server while in development mode (yes or no, defaults to no)
+
 ## Authenticating Users
 
 Due to the sensitivity of certain data elements (e.g. client IP addresses and search terms), users will need to authenticate. Currently only LDAP authentication is supported.
 
 For convenience, the default in a development environment (`Rails.env.development? == true`) is that any credentials will work and there is no need to create or manage user accounts. This default can be overridden using an environment variable `CEDAR_DEVELOPMENT_LDAP_AUTH=yes`. In a production environment (`Rails.env.production == true`), LDAP authentication is always enabled.
 
-To configure LDAP authentication and authorization details:
-
-```
-cp config/ldap.yml.template config/ldap.yml
-```
-
-Then edit `config/ldap.yml` to reflect your local LDAP server requirements. The `config/ldap.yml.template` illustrates group membership based authorization. Depending on your authorization requirements you may also need to edit `config/initializers/devise.rb`, e.g. to enable attribute base authorization.
+To configure LDAP authentication and authorization details provide the various `CEDAR_ADMIN_LDAP_*` environment variables described above as part of your deployment environment.
 
 ## Docker
 
