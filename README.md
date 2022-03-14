@@ -9,7 +9,7 @@
 * PostgreSQL Database
 * Docker (if building Docker image)
 
-## Install
+## Install Dependencies
 
 After cloning this repository, run
 
@@ -55,6 +55,30 @@ To import data from the US Preventative Services Task Force, run
 ```
 rake import:uspstf
 ```
+
+## Environment Variables
+
+CEDAR respects the following environment variables:
+
+  * `CEDAR_USPSTF_API_KEY` - API key for accessing USPSTF for indexing
+  * `CEDAR_CDS_CONNECT_BASE_URL` - URL for accessing CDS Connect for indexing
+  * `CEDAR_CDS_CONNECT_USERNAME` - Username for accessing CDS Connect for indexing
+  * `CEDAR_CDS_CONNECT_PASSWORD` - Password for accessing CDS Connect for indexing
+  * `CEDAR_SRDR_BASE_URL` - URL for accessing SRDR for indexing
+  * `CEDAR_SRDR_API_KEY` - API key for accessing SRDR for indexing
+  * `CEDAR_EHC_FEED_URL` - URL (with embedded token) for accessing EHC for indexing
+
+For production deployments:
+
+  * `CEDAR_ADMIN_DATABASE` - Name of the postgres database to connect to
+  * `CEDAR_ADMIN_DATABASE_USERNAME` - Postgres database username
+  * `CEDAR_ADMIN_DATABASE_PASSWORD` - Postgres database password
+  * `CEDAR_ADMIN_LDAP_HOST` - Hostname of LDAP server
+  * `CEDAR_ADMIN_LDAP_PORT` - Port of LDAP serer (defaults to 389)
+  * `CEDAR_ADMIN_LDAP_ATTRIBUTE` - LDAP attribute (defaults to uid)
+  * `CEDAR_ADMIN_LDAP_BASE` - Base from which LDAP server will search for users
+  * `CEDAR_ADMIN_LDAP_GROUP` - LDAP group allowed to access CEDAR Admin
+  * `CEDAR_ADMIN_LDAP_SSL` - Connect to LDAP via SSL (true or false, defaults to false)
 
 ## Authenticating Users
 
