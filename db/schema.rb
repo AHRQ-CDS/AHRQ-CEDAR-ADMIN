@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_24_153500) do
+ActiveRecord::Schema.define(version: 2022_03_11_133400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -117,13 +117,7 @@ ActiveRecord::Schema.define(version: 2022_01_24_153500) do
     t.datetime "end_time"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-  end
-
-  create_table "search_parameter_logs", force: :cascade do |t|
-    t.bigint "search_log_id", null: false
-    t.string "name"
-    t.string "value"
-    t.index ["search_log_id"], name: "index_search_parameter_logs_on_search_log_id"
+    t.jsonb "repository_results", default: {}
   end
 
   create_table "users", force: :cascade do |t|
@@ -153,6 +147,5 @@ ActiveRecord::Schema.define(version: 2022_01_24_153500) do
 
   add_foreign_key "artifacts", "repositories"
   add_foreign_key "import_runs", "repositories"
-  add_foreign_key "search_parameter_logs", "search_logs"
   add_foreign_key "versions", "import_runs"
 end
