@@ -36,6 +36,14 @@
         </ul>
       </nav>
     <% end %>
+    <% flash.each do |key, message| %>
+      <div class="alert <%= flash_class(key) %> alert-dismissible fade show text-center" role="alert">
+        <%= message %>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    <% end %>
     <div class="container mt-4">
       <%= yield %>
     </div>

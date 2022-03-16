@@ -21,4 +21,15 @@ module ApplicationHelper
   def format_date(date)
     date&.strftime '%Y-%m-%d'
   end
+
+  def flash_class(level)
+    bootstrap_alert_class = {
+      'alert' => 'alert-danger',
+      'notice' => 'alert-info',
+      'success' => 'alert-success',
+      'error' => 'alert-danger',
+      'warn' => 'alert-warning'
+    }
+    bootstrap_alert_class[level]
+  end
 end
