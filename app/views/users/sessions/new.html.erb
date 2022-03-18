@@ -3,13 +3,13 @@
 <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div class="form-group">
     <%= f.label :username, 'Username' %><br />
-    <%= f.text_field :username, autofocus: true, placeholder: "username", class: 'form-control' %>
+    <%= f.text_field :username, autofocus: true, required: true, placeholder: "username", class: 'form-control' %>
     <small id="emailHelp" class="form-text text-muted">AHRQ UMA Account</small>
   </div>
 
   <div class="form-group">
     <%= f.label :password %><br />
-    <%= f.password_field :password, placeholder: "current-password", class: 'form-control' %>
+    <%= f.password_field :password, required: true, placeholder: "current-password", class: 'form-control' %>
   </div>
 
   <% if devise_mapping.rememberable? %>

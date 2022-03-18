@@ -4,8 +4,14 @@
 class ApplicationController < ActionController::Base
   before_action :authenticate_user!
 
+  rescue_from Errno::ECONNREFUSED, ArgumentError do
+    flash[:error] = 'Unable to reach LDAP authentication service. Please contact your admin.'
+    redirect_to(request.referer || root_path)
+  end
+
   rescue_from DeviseLdapAuthenticatable::LdapException do |exception|
-    render text: exception, status: :internal_server_error
+    flash[:error] = exception.message
+    redirect_to(request.referer || root_path)
   end
 
   def after_sign_in_path_for(_resource)
