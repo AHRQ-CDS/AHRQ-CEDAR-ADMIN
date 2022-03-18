@@ -23,13 +23,12 @@ module ApplicationHelper
   end
 
   def flash_class(level)
-    bootstrap_alert_class = {
+    {
       'alert' => 'alert-danger',
       'notice' => 'alert-info',
       'success' => 'alert-success',
       'error' => 'alert-danger',
       'warn' => 'alert-warning'
-    }
-    bootstrap_alert_class[level]
+    }[level]
   end
 end
