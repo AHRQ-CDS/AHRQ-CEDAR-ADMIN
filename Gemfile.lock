@@ -61,6 +61,13 @@ GEM
       public_suffix (>= 2.0.2, < 5.0)
     afm (0.2.2)
     ast (2.4.2)
+    axe-core-api (4.4.0)
+      dumb_delegator
+      virtus
+    axiom-types (0.1.1)
+      descendants_tracker (~> 0.0.4)
+      ice_nine (~> 0.11.0)
+      thread_safe (~> 0.3, >= 0.3.1)
     bcrypt (3.1.16)
     bindex (0.8.1)
     bootsnap (1.5.1)
@@ -79,12 +86,16 @@ GEM
     chartkick (3.4.2)
     childprocess (3.0.0)
     chronic (0.10.2)
+    coercible (1.0.0)
+      descendants_tracker (~> 0.0.1)
     commonmarker (0.21.2)
       ruby-enum (~> 0.5)
     concurrent-ruby (1.1.7)
     crack (0.4.5)
       rexml
     crass (1.0.6)
+    descendants_tracker (0.0.4)
+      thread_safe (~> 0.3, >= 0.3.1)
     devise (4.8.0)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -101,6 +112,7 @@ GEM
     dotenv-rails (2.7.6)
       dotenv (= 2.7.6)
       railties (>= 3.2)
+    dumb_delegator (1.0.0)
     erubi (1.10.0)
     factory_bot (6.1.0)
       activesupport (>= 5.0.0)
@@ -128,6 +140,7 @@ GEM
       domain_name (~> 0.5)
     i18n (1.8.5)
       concurrent-ruby (~> 1.0)
+    ice_nine (0.11.2)
     jbuilder (2.10.1)
       activesupport (>= 5.0.0)
     kaminari (1.2.1)
@@ -289,6 +302,10 @@ GEM
       unf_ext
     unf_ext (0.0.7.7)
     unicode-display_width (2.1.0)
+    virtus (2.0.0)
+      axiom-types (~> 0.1)
+      coercible (~> 1.0)
+      descendants_tracker (~> 0.0, >= 0.0.3)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.1.0)
@@ -321,6 +338,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  axe-core-api
   bootsnap (>= 1.4.2)
   brakeman
   byebug

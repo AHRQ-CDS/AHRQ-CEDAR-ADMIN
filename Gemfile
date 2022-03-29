@@ -84,17 +84,19 @@ group :development do
 end
 
 group :test do
-  # Adds support for Capybara system testing and selenium driver
+  gem 'rubocop', require: false
+  gem 'rubocop-rails', require: false
+  gem 'brakeman', require: false
+  # Support Capybara system testing and selenium driver
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
-  gem 'rubocop', require: false
-  gem 'rubocop-rails', require: false
-  gem 'brakeman', require: false
   gem 'webmock'
   # Allow testing of controller assignments
   gem 'rails-controller-testing'
+  # Support some level of automated testing for accessibility compliance
+  gem 'axe-core-api'
 end
 
 # Windows does not include zoneinfo files; this will bundle the tzinfo-data gem if running on Windows is required
