@@ -16,7 +16,7 @@ job_type :rake_log, "cd :path && :environment_variable=:environment :bundle_comm
 # NOTE: This assumes the CEDAR server is set to UTC; 9am UTC is 4am EST and 1am PST
 
 # We can specify the start time via an environment variable, otherwise we use a default of 9am (running on a server set to UTC)
-import_time = Time.parse(ENV['IMPORT_TIME'] || '9:00 am') rescue Time.parse('9:00 am')
+import_time = Time.parse(ENV['IMPORT_TIME']) rescue Time.parse('9:00 am')
 backup_time = import_time + 45.minutes
 
 every 1.day, at: import_time.strftime('%I:%M %P') do
