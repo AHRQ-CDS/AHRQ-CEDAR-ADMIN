@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 # Functionality for populating the concepts table
+# UMLS MRCONSO file format: https://www.ncbi.nlm.nih.gov/books/NBK9685/table/ch03.T.concept_names_and_sources_file_mr/
 class ConceptImporter
   # TODO: (if desired) make these configurable
   SYNONYM_LANGAUGES = ['ENG', 'SPA'].freeze
   SYNONYM_CODE_SYSTEMS = ['MSH', 'MEDLINEPLUS', 'SNOMEDCT_US', 'SCTSPA', 'MSHSPA', 'ICD10CM', 'RXNORM'].freeze
   SYNONYM_SUPPRESSION_FLAGS = ['N'].freeze
   INCLUDED_TERM_TYPES = {
-    'MSH' => ['MH', 'ET'],
-    'MSHSPA' => ['MH'],
+    'MSH' => ['MH', 'ET', 'PM'],
+    'MSHSPA' => ['MH', 'ET', 'PM'],
     'SNOMEDCT_US' => ['PT'],
     'SCTSPA' => ['PT'],
     'ICD10CM' => ['PT'],
