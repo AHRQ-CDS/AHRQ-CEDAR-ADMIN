@@ -3,6 +3,7 @@
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'rails/test_help'
+require 'webmock/minitest'
 
 # Set up some dummy importer configuration settings for testing
 Rails.configuration.cds_connect_basic_auth_username = 'DUMMY-KEY'
@@ -32,11 +33,9 @@ end
 # Force pack compilation before forking to prevent race condition; see https://github.com/rails/webpacker/issues/2860
 Webpacker.manifest.lookup('missing.js')
 
-# https://stackoverflow.com/a/9608546/3850442
-selenium_requests = %r{/((__.+__)|(hub/session.*))$}
-WebMock.disable_net_connect! allow: selenium_requests
-
 class ActiveSupport::TestCase
+  WebMock.disable_net_connect!
+
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors)
 
