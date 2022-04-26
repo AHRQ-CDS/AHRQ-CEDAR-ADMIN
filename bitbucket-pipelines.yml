@@ -13,10 +13,13 @@ pipelines:
           services:
             - postgres
           script:
-            - apt-get update && apt-get install -y nodejs npm && npm install -g yarn \
-                && apt-get install -y fonts-liberation libasound2 libatk-bridge2.0-0 libatspi2.0-0 libdrm2 libgbm1 libgtk-3-0 libnspr4 libnss3 libxkbcommon0 xdg-utils
-            - wget "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" \
-                && dpkg -i google-chrome*.deb
+            - |
+              apt-get update && apt-get install -y nodejs npm && npm install -g yarn \
+              && apt-get install -y fonts-liberation libasound2 libatk-bridge2.0-0 \
+              libatspi2.0-0 libdrm2 libgbm1 libgtk-3-0 libnspr4 libnss3 libxkbcommon0 xdg-utils
+            - |
+              wget "https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb" \
+              && dpkg -i google-chrome*.deb
             - cp config/database.ci.yml config/database.yml
             - bundle config set path vendor
             - bundle install
