@@ -3,7 +3,9 @@
 ENV['RAILS_ENV'] ||= 'test'
 require_relative '../config/environment'
 require 'rails/test_help'
+
 require 'webmock/minitest'
+WebMock.disable_net_connect!(allow_localhost: true)
 
 # Set up some dummy importer configuration settings for testing
 Rails.configuration.cds_connect_basic_auth_username = 'DUMMY-KEY'
@@ -34,8 +36,6 @@ end
 Webpacker.manifest.lookup('missing.js')
 
 class ActiveSupport::TestCase
-  WebMock.disable_net_connect!
-
   # Run tests in parallel with specified workers
   parallelize(workers: :number_of_processors)
 
