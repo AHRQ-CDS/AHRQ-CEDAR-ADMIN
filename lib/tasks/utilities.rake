@@ -23,4 +23,14 @@ namespace :utilities do
       end
     end
   end
+
+  desc 'Update SRDR links'
+  task update_srdr_links: :environment do
+    PaperTrail.request(enabled: false) do
+      Artifact.joins(:repository).where(repositories: { alias: 'SRDR' }).each do |artifact|
+        artifact.url = "#{Rails.configuration.srdr_base_url}public_data?id=#{artifact.remote_identifier}&type=project"
+        artifact.save!
+      end
+    end
+  end
 end

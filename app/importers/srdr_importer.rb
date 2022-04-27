@@ -34,7 +34,7 @@ class SrdrImporter < CedarImporter
         remote_identifier: artifact['id'].to_s,
         title: artifact['name'],
         description_html: artifact['description'],
-        url: "#{Rails.configuration.srdr_base_url}projects/#{artifact['id']}",
+        url: "#{Rails.configuration.srdr_base_url}public_data?id=#{artifact['id']}&type=project",
         doi: artifact['doi'],
         published_on: artifact['published_at'],
         keywords: keywords,
