@@ -42,7 +42,11 @@ module PageScraper
     keywords_node =
       html.at_css('meta[name="keywords"]') ||
       html.at_css('meta[name="Keywords"]')
-    metadata[:keywords].concat(keywords_node['content'].split(KEYWORD_SEPARATOR).collect(&:strip)) if keywords_node.present?
+    if keywords_node.present?
+      metadata[:keywords].concat(keywords_node['content'].split(KEYWORD_SEPARATOR).collect do |keyword|
+                                   keyword.strip.gsub(/^and /, '')
+                                 end)
+    end
     if html.at_css('meta[name="citation_keyword"]').present?
       metadata[:keywords].concat(html.css('meta[name="citation_keyword"]').collect { |keyword_node| keyword_node['content'] })
     end
