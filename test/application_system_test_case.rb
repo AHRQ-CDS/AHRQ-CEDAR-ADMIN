@@ -4,10 +4,9 @@ require 'test_helper'
 require 'axe/matchers/be_axe_clean'
 
 class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
-  # Sandbox cannot be used inside unprivileged Docker container (bitbucket pipeline)
-  chrome_options = ::Selenium::WebDriver::Chrome::Options.new
-  chrome_options.add_argument('--no-sandbox')
-  driven_by :selenium, using: :headless_chrome, screen_size: [1400, 1400], options: { options: chrome_options }
+  driven_by :selenium, using: :chrome, screen_size: [1400, 1400], options: {
+    args: ['--headless', '--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage']
+  }
 
   include Devise::Test::IntegrationHelpers
 
