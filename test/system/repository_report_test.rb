@@ -8,14 +8,14 @@ class RepositoryReportTest < ApplicationSystemTestCase
     @repository = create_repository_with_artifacts(count: 2)
   end
 
-  test 'repository functions as expected' do
+  test 'repository_report functions as expected' do
     visit '/repository_report'
     assert_selector 'h1', text: 'Repository Report'
     assert_selector 'table', count: 1
     assert_selector 'td', text: @repository.name
   end
 
-  test 'repository is accessible' do
+  test 'repository_report is accessible' do
     visit '/repository_report'
     assert_axe_accessible(page)
   end
