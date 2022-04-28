@@ -32,6 +32,7 @@ class EpcImporterTest < ActiveSupport::TestCase
     assert(artifact.present?)
     assert_equal('A sample HTML EPC product', artifact.description)
     assert(artifact.keywords.include?('epc'))
+    assert(artifact.keywords.include?('a and b'))
 
     artifact = artifacts.where(title: 'Screening for Asymptomatic Carotid Artery Stenosis in the General Population').first
     assert(artifact.present?)

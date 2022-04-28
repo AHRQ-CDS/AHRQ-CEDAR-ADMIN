@@ -15,7 +15,6 @@ class EhcImporter < CedarImporter
     response_xml = Nokogiri::XML(response.body)
     response_xml.xpath('/response/item').each do |artifact|
       artifact_uri = URI.parse(artifact.at_xpath('Link').content.strip)
-      artifact_path = artifact_uri.path
       cedar_id = "EHC-#{Digest::MD5.hexdigest(artifact_uri.to_s)}"
       doi = Regexp.last_match(1) if artifact.at_xpath('Citation').content =~ %r{(10.\d{4,9}/[-._;()/:A-Z0-9]+)}
       artifact_title = artifact.at_xpath('Title').content.presence
@@ -24,7 +23,7 @@ class EhcImporter < CedarImporter
       # Store artifact metadata
       update_or_create_artifact!(
         cedar_id,
-        remote_identifier: artifact_path.to_s,
+        remote_identifier: artifact_uri.to_s.presence,
         title: artifact_title,
         description: artifact.at_xpath('Description').content.presence,
         url: artifact_uri.to_s.presence,
