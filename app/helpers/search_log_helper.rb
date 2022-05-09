@@ -47,4 +47,17 @@ module SearchLogHelper
     end
     parsed_codes
   end
+
+  # @param Choose 1st code from (code system, code) pair of concept search param
+  #
+  # @return umls_description for first result (should only be 1)
+  def get_code_description(code_search)
+    target = code_search.split(',')[0].split('|')[1]
+    concepts = Concept.where("(codes::text) LIKE (?)", "%#{target}%").to_ary()
+    if concepts.length >= 1
+      concepts.first.umls_description
+    else
+      ""
+    end
+  end
 end

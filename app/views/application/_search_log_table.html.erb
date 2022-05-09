@@ -27,14 +27,14 @@
         <ul class="bare-list">
           <% human_readable_search_params(sl.search_params).each do |param, param_value| %>
             <% if param_value.kind_of?(Array) && param == 'Code Search' %>
-              <li>Code Search</li>
+              <li>Code Search:</li>
               <% param_value.each do |code_search| %>
+                <span>• <%= get_code_description(code_search) %></span>
                 <ul class="list-horizontal">
                 <% parse_code_search(code_search).each do |code_system, code| %>
                   <li><small><b><%= code_system %>:</b> <%= code %></small></li>
                 <% end %>
                 </ul>
-                <br>
               <% end %>
             <% else %>
               <li><%= param %>: <%= param_value %></li>
