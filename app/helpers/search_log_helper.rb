@@ -3,6 +3,7 @@
 # Search helper that maps search params to a human-readable format and returns the search back as a hash
 module SearchLogHelper
   HUMAN_READABLE_PARAMS = {
+    'artifact-type' => 'Artifact Type',
     'artifact-current-state' => 'Artifact Status',
     'artifact-publisher' => 'Artifact Publisher',
     'classification:text' => 'Keyword Search',
@@ -46,5 +47,18 @@ module SearchLogHelper
       parsed_codes.push([CODE_SYSTEMS[coding[0]] || 'Unknown Code System', coding[1]])
     end
     parsed_codes
+  end
+
+  # @param Choose 1st code from (code system, code) pair of concept search param
+  #
+  # @return umls_description for first result (should only be 1)
+  def get_code_description(code_search)
+    target = code_search.split(',')[0].split('|')[1]
+    concepts = Concept.where('(codes::text) LIKE (?)', "%#{target}%").to_ary
+    if concepts.length >= 1
+      concepts.first.umls_description
+    else
+      '[Missing UMLS Description]'
+    end
   end
 end
