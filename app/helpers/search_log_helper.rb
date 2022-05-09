@@ -3,6 +3,7 @@
 # Search helper that maps search params to a human-readable format and returns the search back as a hash
 module SearchLogHelper
   HUMAN_READABLE_PARAMS = {
+    'artifact-type' => 'Artifact Type',
     'artifact-current-state' => 'Artifact Status',
     'artifact-publisher' => 'Artifact Publisher',
     'classification:text' => 'Keyword Search',
@@ -57,7 +58,7 @@ module SearchLogHelper
     if concepts.length >= 1
       concepts.first.umls_description
     else
-      ''
+      '[Missing UMLS Description]'
     end
   end
 end
