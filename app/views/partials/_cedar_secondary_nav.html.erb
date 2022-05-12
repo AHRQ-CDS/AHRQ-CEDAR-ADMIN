@@ -1,0 +1,17 @@
+<header class="navbar col-md-12 hidden-sm hidden-xs navbar-default container navbar-secondary col-sm-12" id="navbar2" aria-label="application nav menu">
+  <div class="navbar-header">
+    <div class="region region-navigation-secondary">
+      <nav role="navigation" aria-labelledby="block-cdsconnectglobal-menu" id="block-cdsconnectglobal">
+      <% if current_user.present? %>
+        <%= nav_bar do %>
+          <%= nav_link 'Home', home_path %>
+          <%= nav_link 'Repository Reports', repository_report_path %>
+          <%= nav_link 'Search Logs', search_logs_path %>
+          <%= nav_link 'Logout', destroy_user_session_path %>
+        <% end %>
+      <% end %>
+      <a id="back to top"></a>
+      </nav>
+    </div>
+  </div>
+</header>

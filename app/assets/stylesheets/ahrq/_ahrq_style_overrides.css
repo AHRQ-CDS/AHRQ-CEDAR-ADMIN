@@ -1,0 +1,82 @@
+@media (min-width: 1200px) {
+  .topbar__mobile-hhs hidden-md hidden-lg clearfix {
+    display: none !important;
+  }
+}
+
+.header__banner.row {
+  display: block !important;
+}
+
+.header__banner-text-top {
+  line-height: 22.8571px;
+}
+
+.header__banner-text-middle {
+  line-height: 54.2857px;
+}
+
+.header .header__banner {
+  width: 100% !important;
+  padding-left: 0.5vw !important;
+  padding-right: 0.5vw !important;
+}
+
+@media only screen and (min-width: 1200px) {
+  .header .header__banner {
+    width: 100%;
+    padding-left: 0.5vw;
+    padding-right: 0.5vw;
+  }
+}
+
+.ahrq #primary-header .primary-header-wrapper {
+    padding-left: 1vw;
+    padding-right: 1vw;
+}
+
+@media (min-width: 992px) {
+   .col-md-offset-0p5 {
+    margin-left: 1vw;
+  } 
+}
+
+.footer.cds-footer {
+  margin-top: 10px !important;
+  margin-bottom: -10px !important;
+}
+
+.utility-envelope {
+  margin-right: 5px;
+}
+
+a.nav-button-custom {
+  float: right !important;
+  color: white;
+  font-size: 20px;
+  font-weight: 400;
+  margin-right: 20px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 15px;
+}
+
+a:hover.nav-button {
+  color: white;
+}
+
+.navbar-nav {
+  flex-direction: row;
+}
+
+.nav-logo {
+  display: inline-block;
+}
+
+.navbar.col-md-12.hidden-sm.hidden-xs.navbar-default.container.navbar-secondary.col-sm-12 {
+  padding-top: 0em;
+  padding-left: 0em;
+  padding-right: 0em;
+  padding-bottom: 0.5em;
+}

@@ -1,0 +1,61 @@
+/**
+ * Navbar styling.
+ */
+body {
+  position: relative;
+}
+body.navbar-is-static-top {
+  margin-top: 0;
+}
+body.navbar-is-fixed-top {
+  margin-top: 95px;
+}
+body.navbar-is-fixed-bottom {
+  padding-bottom: 95px;
+}
+/*@media screen and (min-width: 768px) {
+  body {
+    margin-top: 15px;
+  }
+}*/
+@media screen and (max-width: 767px) {
+  body.toolbar-vertical.navbar-is-fixed-top .toolbar-bar, body.toolbar-vertical.navbar-is-fixed-bottom .toolbar-bar {
+    position: fixed;
+  }
+  body.toolbar-vertical.navbar-is-fixed-top header, body.toolbar-vertical.navbar-is-fixed-bottom header {
+    z-index: 500;
+  }
+  body.toolbar-vertical.navbar-is-fixed-top header {
+    top: 39px;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .navbar.container {
+    max-width: 738px;
+  }
+}
+@media screen and (min-width: 992px) {
+  .navbar.container {
+    max-width: 962px;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .navbar.container {
+    max-width: 1170px;
+  }
+}
+
+.navbar .logo {
+  margin-right: -15px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+@media screen and (min-width: 992px) {
+  .navbar .logo {
+    margin-right: 0;
+    padding-left: 0;
+  }
+}
+
+/*# sourceMappingURL=_navbar.css.map */

@@ -1,0 +1,55 @@
+/* Header styles */
+#ATLink_Column1 .btn.btn-link.btn-primary {
+  background-color: inherit;
+  border: none;
+  min-width: auto;
+  height: 35px;
+}
+
+#spacerRowContent {
+  height: 14px;
+}
+
+/*#LoginDropDown_Column3 .btn-group > .btn:first-child {
+  margin-left: 0;
+  border-color: white;
+  background-color: inherit;
+}*/
+/*#LoginDropDown_Column3 .btn.btn-secondary {
+	border-color: white;
+	background-color: inherit;
+}*/
+#LoginDropDown_Column3 .btn-info {
+  color: #fff;
+  background-color: inherit;
+  border-color: white;
+}
+
+#LoginDropDown_Column3 .btn-group > .btn:first-child {
+  margin-left: 0;
+  background-color: inherit;
+  border-color: white;
+}
+
+#LoginDropDown_Column3 .btn-group > .btn:focus {
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+#LoginDropDown_Column3 .dropdown-menu > li > a {
+  display: block;
+  padding: 3px 20px;
+  clear: both;
+  font-weight: normal;
+  line-height: 1.42857;
+  color: #333333;
+  white-space: nowrap;
+}
+
+#LoginDropDown_Column3 .glyphicon {
+  color: white;
+  font-family: Glyphicons Halflings, "Arial", "Helvetica Neue", Helvetica, sans-serif;
+  font-weight: bold;
+}
+
+/*# sourceMappingURL=_header.css.map */

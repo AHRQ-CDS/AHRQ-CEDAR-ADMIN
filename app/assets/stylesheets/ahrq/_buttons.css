@@ -1,0 +1,88 @@
+.btn.btn-primary {
+  min-width: 200px;
+  height: 50px;
+  color: #FFF;
+  background-color: #0D36A5;
+  border: none;
+}
+
+.simple-button {
+  background-color: #0D36A5;
+  color: #FFF;
+  padding-top: 14px;
+  padding-right: 40px;
+  padding-bottom: 16px;
+  padding-left: 40px;
+  border-radius: 4px;
+  display: inline-block;
+  margin: 0 15px;
+}
+.simple-button:hover {
+  color: #FFF;
+  text-decoration: none;
+}
+
+.cds-button {
+  background-color: #224DBB;
+  color: #FFF;
+  font-weight: bold;
+  padding: 10px 40px;
+  border-radius: 4px;
+  display: inline-block;
+  margin: 0 15px;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+}
+.cds-button:hover {
+  color: white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  text-decoration: none;
+}
+.cds-button:active {
+  color: #FFF;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  background-color: #4b75de;
+}
+.cds-button:visited {
+  color: #FFF;
+}
+.cds-button:focus {
+  color: #FFF;
+  outline-width: 2px;
+  outline-style: dotted;
+  outline-color: #000;
+  outline-offset: 1px;
+}
+.cds-button.cds-button--large {
+  font-size: 1.66em;
+  padding: 15px 80px;
+}
+.cds-button.cds-button__icon {
+  color: #FFF;
+  height: 130px;
+  text-transform: uppercase;
+  padding-top: 95px;
+  font-size: 0.9em;
+}
+.cds-button.cds-button__icon:focus {
+  outline-width: 2px;
+  outline-style: dotted;
+  outline-color: #000;
+  outline-offset: 1px;
+}
+/*.cds-button.cds-button--grow {
+  background: #224dbb url(/themes/custom/cds_connect/images/icon_growRepository.png) 50% 30% no-repeat;
+}
+.cds-button.cds-button--join {
+  background: #224dbb url(/themes/custom/cds_connect/images/icon_joinWorkgroup.png) 50% 30% no-repeat;
+}
+.cds-button.cds-button--register {
+  background: #224dbb url(/themes/custom/cds_connect/images/icon-circle-logo-register.png) 50% 30% no-repeat;
+}
+.cds-button.cds-button.cds-button--jandg {
+  background-color: #224dbb;
+  background-repeat: no-repeat;
+  background-position: 20% 25%, 80% 25%;
+  background-image: url(/themes/custom/cds_connect/images/icon_joinWorkgroup.png), url(/themes/custom/cds_connect/images/icon_growRepository.png);
+}*/
+
+/*# sourceMappingURL=_buttons.css.map */
