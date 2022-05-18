@@ -13,7 +13,7 @@
       </tbody>
     </table>
   </div>
-  <div class="col-sm">
+  <figure class="col-sm" aria-label="<%= defined?(alt_text) ? alt_text : "" %>">
     <%= pie_chart data.map { |k, v| [k.to_s, v] } %>
-  </div>
+  </figure>
 </div>

@@ -3,9 +3,9 @@
 
     <h1>Keyword: <%= @keyword %></h1>
 
-    <%= render 'data_with_pie_chart', title: 'Artifacts By Repository', data: @artifacts_per_repository, path_method: :repository_path %>
+    <%= render 'data_with_pie_chart', title: 'Artifacts By Repository', data: @artifacts_per_repository, path_method: :repository_path, alt_text: 'A pie chart displaying the table data for this keyword\'s Artifacts By Repository' %>
 
-    <%= render 'data_with_pie_chart', title: 'Top Related Keywords', data: @top_artifacts_per_keyword, path_method: :keyword_path, count_term: 'occurrence' %>
+    <%= render 'data_with_pie_chart', title: 'Top Related Keywords', data: @top_artifacts_per_keyword, path_method: :keyword_path, count_term: 'occurrence', alt_text: 'A pie chart displaying the table data for this keyword\'s Top Related Keywords' %>
 
     <h3><%= @artifacts.count %> Artifacts</h3>
     <ul>

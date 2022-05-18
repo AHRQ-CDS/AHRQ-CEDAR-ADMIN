@@ -1,8 +1,8 @@
 <%= render 'general_statistics', title: "#{@repository.name} Repository Statistics" %>
 
-<%= render 'data_with_pie_chart', title: 'Artifacts By Status', data: @artifacts_by_status %>
+<%= render 'data_with_pie_chart', title: 'Artifacts By Status', data: @artifacts_by_status, alt_text: 'A pie chart displaying the table data for this repository\'s Artifacts By Status' %>
 
-<%= render 'data_with_pie_chart', title: 'Top 10 Keywords', data: @top_artifacts_per_keyword, path_method: :keyword_path %>
+<%= render 'data_with_pie_chart', title: 'Top 10 Keywords', data: @top_artifacts_per_keyword, path_method: :keyword_path, alt_text: 'A pie chart displaying the table data for this repository\'s Top 10 Keywords' %>
 
 <div class="row mt-5">
   <div class="col-sm">

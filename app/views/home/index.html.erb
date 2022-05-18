@@ -1,13 +1,13 @@
 <%= render 'general_statistics', title: 'CEDAR Statistics' %>
 
 <a id="artifacts" class="mt-5 mb-5"></a>
-<%= render 'data_with_pie_chart', title: 'Artifacts Per Repository', data: @artifacts_per_repository, path_method: :repository_path %>
+<%= render 'data_with_pie_chart', title: 'Artifacts Per Repository', data: @artifacts_per_repository, path_method: :repository_path, alt_text: 'A pie chart displaying the table data for Artifacts Per Repository' %>
 
-<%= render 'data_with_pie_chart', title: 'Artifacts By Status', data: @artifacts_by_status %>
+<%= render 'data_with_pie_chart', title: 'Artifacts By Status', data: @artifacts_by_status, alt_text: 'A pie chart displaying the table data for Artifacts By Status' %>
 
-<%= render 'data_with_pie_chart', title: 'Top 10 Artifacts By Type', data: @top_artifacts_by_type %>
+<%= render 'data_with_pie_chart', title: 'Top 10 Artifacts By Type', data: @top_artifacts_by_type, alt_text: 'A pie chart displaying the table data for Top 10 Artifacts By Type' %>
 
-<%= render 'data_with_pie_chart', title: 'Top 10 Keywords', data: @top_artifacts_per_keyword, path_method: :keyword_path %>
+<%= render 'data_with_pie_chart', title: 'Top 10 Keywords', data: @top_artifacts_per_keyword, path_method: :keyword_path, alt_text: 'A pie chart displaying the table data for Top 10 Keywords' %>
 
 <hr class="mt-5 mb-5"/>
 <a id="imports" class="mt-5 mb-5"></a>
@@ -75,7 +75,8 @@
   <div class="col-sm">
     <h3>Tag Cloud</h3>
     <%# The code for the tag cloud is in app/javascript/packs/tag-cloud.js %>
-    <div id='tag-cloud'></div>
+    <a class="a11y-nav" href="#searches" data-turbolinks="false">Skip Tag Cloud</a>
+    <div id="tag-cloud"></div>
   </div>
 </div>
 
@@ -87,8 +88,8 @@
   </div>
 </div>
 
-<%= render 'data_with_pie_chart', title: 'Search Counts for the Last 10 Days', data: @search_per_day, count_term: 'searches' %>
+<%= render 'data_with_pie_chart', title: 'Search Counts for the Last 10 Days', data: @search_per_day, count_term: 'searches', alt_text: 'A pie chart displaying the table data for Search Counts for the Last 10 Days' %>
 
-<%= render 'data_with_pie_chart', title: 'Search Counts by Parameter for the Last 10 Days', data: @search_per_parameter_name, count_term: 'searches' %>
+<%= render 'data_with_pie_chart', title: 'Search Counts by Parameter for the Last 10 Days', data: @search_per_parameter_name, count_term: 'searches', alt_text: 'A pie chart displaying the table data for Search Counts by Parameter for the Last 10 Days' %>
 
-<%= render 'data_with_pie_chart', title: 'Top 20 Search Terms for the Last 10 Days', data: @search_per_parameter_value, count_term: 'searches' %>
+<%= render 'data_with_pie_chart', title: 'Top 20 Search Terms for the Last 10 Days', data: @search_per_parameter_value, count_term: 'searches', alt_text: 'A pie chart displaying the table data for Top 20 Search Terms for the Last 10 Days' %>

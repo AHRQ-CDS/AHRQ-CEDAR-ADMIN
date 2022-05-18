@@ -18,6 +18,13 @@
     display: none;
 }
 
+.a11y-nav {
+    position: absolute;
+    opacity: 0%;
+    width: 100%;
+    z-index: 1000;
+}
+
 .bare-list {
     list-style-type:none;
     padding-left: 0

@@ -5,7 +5,11 @@ require_relative '../config/environment'
 require 'rails/test_help'
 
 require 'webmock/minitest'
-WebMock.disable_net_connect!
+# Specifically allow calls by test drivers, e.g. -
+# GET "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_XX.X.XXX"
+# See: https://github.com/titusfortner/webdrivers/issues/109
+driver_urls = Webdrivers::Common.subclasses.map(&:base_url)
+WebMock.disable_net_connect!(allow_localhost: true, allow: driver_urls)
 
 # Set up some dummy importer configuration settings for testing
 Rails.configuration.cds_connect_basic_auth_username = 'DUMMY-KEY'

@@ -10,3 +10,30 @@
 .mt-10 {
   margin-top: 140px !important;
 }
+
+// Accessibility Tweaks & Overrides
+
+// Color contrast checking: https://webaim.org/resources/contrastchecker/
+// must have contrast ratio >=4.5:1
+.btn-primary {
+  background-color: #0071EB !important;
+  border-color: #0071EB !important;
+}
+a:not(.navbar-brand, .btn) {
+  color: #0071EB !important;
+}
+.navbar-dark .navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.55)  !important;
+  &:hover {
+    color: rgba(255, 255, 255, 0.75) !important;
+  }
+}
+.navbar-light .navbar-nav .nav-link {
+  color: rgba(0, 0, 0, 0.55) !important;
+  &:hover {
+    color: rgba(0, 0, 0, 0.75) !important;
+  }
+}
+.diff li.ins, ins {
+  color: #007A00;
+}
