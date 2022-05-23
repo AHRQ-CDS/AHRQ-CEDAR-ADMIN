@@ -15,31 +15,31 @@
  */
 
 .hidden {
-    display: none;
+  display: none;
 }
 
 .a11y-nav {
-    position: absolute;
-    opacity: 0%;
-    width: 100%;
-    z-index: 1000;
+  position: absolute;
+  opacity: 0%;
+  width: 100%;
+  z-index: 1000;
 }
 
 .bare-list {
-    list-style-type:none;
-    padding-left: 0
+  list-style-type:none;
+  padding-left: 0
 }
 
 .list-horizontal li {
-    display:inline-block;
+  display: inline-block;
 }
 .list-horizontal li:first-child:before {
-    content: '';
+  content: '';
 }
 
 .float-heading {
-    float: left;
-    font-size: x-large;
+  float: left;
+  font-size: x-large;
 }
 
 .show-raw-json {
@@ -47,8 +47,25 @@
 }
 
 #tag-cloud {
-    height: 1200px;
-    width: 1200px;
-    display:block;
-    overflow: hidden;
+  height: 1200px;
+  width: 1200px;
+  display:block;
+  overflow: hidden;
+}
+
+.navbar.navbar-expand-lg.navbar-light.bg-light.sticky-top {
+  margin: 0 auto !important;
+  width: 1170px;
+}
+
+.subnav-wrapper {
+  background-color: #f8f9fa;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+}
+
+.btn-primary {
+  background-color: #224DBA !important;
 }
