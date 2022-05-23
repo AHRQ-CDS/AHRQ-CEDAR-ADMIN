@@ -4,6 +4,7 @@
       <nav role="navigation" aria-labelledby="block-cdsconnectglobal-menu" id="block-cdsconnectglobal">
       <% if current_user.present? %>
         <%= nav_bar do %>
+          <%= image_tag("cedar_logo_small.png", alt: "CEDAR Logo", class: "nav-logo") %>
           <%= nav_link 'Home', home_path %>
           <%= nav_link 'Repository Reports', repository_report_path %>
           <%= nav_link 'Search Logs', search_logs_path %>
