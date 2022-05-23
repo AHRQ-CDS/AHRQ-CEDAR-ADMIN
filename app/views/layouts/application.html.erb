@@ -21,16 +21,18 @@
     <%= render "partials/ahrq_header" %>
     <%= render "partials/cedar_secondary_nav" %>
     <% if defined?(@subnavigation) %>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top" aria-label="page nav menu">
-        <span class="navbar-brand">Jump to: </span>
-        <ul class="navbar-nav">
-          <% @subnavigation.each do |item| %>
-            <li class="nav-item">
-              <a class="nav-link" href="#<%= item.downcase %>" data-turbolinks="false"><%= item %></a>
-            </li>
-          <% end %>
-        </ul>
-      </nav>
+      <div class="subnav-wrapper">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top" aria-label="page nav menu">
+          <span class="navbar-brand">Jump to: </span>
+          <ul class="navbar-nav">
+            <% @subnavigation.each do |item| %>
+              <li class="nav-item">
+                <a class="nav-link" href="#<%= item.downcase %>" data-turbolinks="false"><%= item %></a>
+              </li>
+            <% end %>
+          </ul>
+        </nav>
+      </div>
     <% end %>
     <% flash.each do |key, message| %>
       <div class="alert <%= flash_class(key) %> alert-dismissible fade show text-center" role="alert">
@@ -45,5 +47,6 @@
         <%= yield %>
       </section>
     </div>
+    <%= render "partials/ahrq_footer" %>
   </body>
 </html>
