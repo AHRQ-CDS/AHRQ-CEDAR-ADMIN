@@ -25,9 +25,10 @@
   background-color: #224DBA !important;
   border-color: #224DBA !important;
 }
-a:not(.navbar-brand, .btn, .navbar-secondary.navbar.container .menu.nav li a, .ahrq a, .header .header__banner-text a, .page-item.active .page-link, footer.cds-footer a) {
+#main-content a:not(.navbar-brand, .btn, .page-link) {
   color: #224DBA !important;
 }
+
 .navbar-dark .navbar-nav .nav-link {
   color: rgba(255, 255, 255, 0.55)  !important;
   &:hover {
