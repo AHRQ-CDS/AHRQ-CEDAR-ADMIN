@@ -1,0 +1,70 @@
+@media (min-width: 1200px) {
+  .topbar__mobile-hhs hidden-md hidden-lg clearfix {
+    display: none !important;
+  }
+}
+
+.header__banner.row {
+  display: block !important;
+}
+
+.header__banner-text-top {
+  line-height: 22.8571px;
+}
+
+.header__banner-text-middle {
+  line-height: 54.2857px;
+}
+
+.ahrq #primary-header .primary-header-wrapper {
+    padding-left: 1vw;
+    padding-right: 1vw;
+    min-height: 72px;
+}
+
+@media (min-width: 992px) {
+   .col-md-offset-0p5 {
+    margin-left: 1vw;
+  } 
+}
+
+.footer.cds-footer {
+  margin-top: 10px !important;
+  margin-bottom: -10px !important;
+}
+
+.utility-envelope {
+  margin-right: 5px;
+}
+
+a.nav-button-custom {
+  float: right !important;
+  color: white;
+  font-size: 20px;
+  font-weight: 400;
+  margin-right: 20px;
+  padding-bottom: 10px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 15px;
+}
+
+a:hover.nav-button-custom {
+  color: white;
+}
+
+.navbar-nav {
+  flex-direction: row;
+}
+
+.navbar.col-md-12.hidden-sm.hidden-xs.navbar-default.container.navbar-secondary.col-sm-12 {
+  padding: 0em;
+}
+
+.navbar.container .menu.navbar-nav {
+  width: 93% !important;
+}
+
+.navbar-secondary.navbar.container .menu.nav.cds-connect-nav > li > a:hover {
+  text-decoration: none;
+}

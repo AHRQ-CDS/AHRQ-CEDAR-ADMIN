@@ -11,17 +11,24 @@
   margin-top: 140px !important;
 }
 
+.page-item.active .page-link {
+  background-color: #224DBA !important;
+  color: white !important;
+  border-color: #224DBA !important;
+}
+
 // Accessibility Tweaks & Overrides
 
 // Color contrast checking: https://webaim.org/resources/contrastchecker/
 // must have contrast ratio >=4.5:1
 .btn-primary {
-  background-color: #0071EB !important;
-  border-color: #0071EB !important;
+  background-color: #224DBA !important;
+  border-color: #224DBA !important;
 }
-a:not(.navbar-brand, .btn) {
-  color: #0071EB !important;
+#main-content a:not(.navbar-brand, .btn, .page-link) {
+  color: #224DBA !important;
 }
+
 .navbar-dark .navbar-nav .nav-link {
   color: rgba(255, 255, 255, 0.55)  !important;
   &:hover {
@@ -37,3 +44,4 @@ a:not(.navbar-brand, .btn) {
 .diff li.ins, ins {
   color: #007A00;
 }
+

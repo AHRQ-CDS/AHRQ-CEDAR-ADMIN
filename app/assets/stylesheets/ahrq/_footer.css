@@ -1,0 +1,95 @@
+footer.cds-footer {
+  color: white;
+  margin: 0 -9999rem;
+  padding: 0.25rem 9999rem;
+  background: linear-gradient(to bottom, #006aaa 0%, #0079c1 3%, #1986c7 100%);
+}
+@media (min-width: 768px) {
+  footer.cds-footer {
+    padding: 0 calc((100vw - 768px + 30px * 2) / 2);
+    margin: 0 calc(-1 * ((100vw - 768px) / 2 + 30px));
+  }
+}
+@media (min-width: 992px) {
+  footer.cds-footer {
+    padding: 0 calc((100vw - 992px + 30px * 2) / 2);
+    margin: 0 calc(-1 * ((100vw - 992px) / 2 + 30px));
+  }
+}
+@media (min-width: 1200px) {
+  footer.cds-footer {
+    padding: 0 calc((100vw - 1200px + 30px * 2) / 2);
+    margin: 0 calc(-1 * ((100vw - 1200px) / 2 + 30px));
+  }
+}
+footer.cds-footer div.cds-footer__container {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1em 4em;
+}
+footer.cds-footer div.cds-footer__container div.cds-footer__header {
+  text-align: center;
+  margin-bottom: 10px;
+  font-weight: bold;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+footer.cds-footer .cds-footer__links {
+  display: flex;
+  font-size: 0.9em;
+}
+footer.cds-footer a {
+  display: block;
+  color: white;
+  box-sizing: border-box;
+  margin: 0 20px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+footer.cds-footer a:focus {
+  text-decoration: none;
+}
+@media only screen and (max-width: 767px) {
+  footer.cds-footer .footer-wide {
+    display: none;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  footer.cds-footer .footer-wide {
+    display: flex;
+    font-size: 0.9em;
+  }
+}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  footer.cds-footer .footer-wide {
+    display: flex;
+    font-size: 0.9em;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  footer.cds-footer .footer-wide {
+    display: flex;
+  }
+}
+@media only screen and (max-width: 767px) {
+  footer.cds-footer .footer-mobile {
+    display: flex;
+    font-size: 0.9em;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  footer.cds-footer .footer-mobile {
+    display: none;
+  }
+}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  footer.cds-footer .footer-mobile {
+    display: none;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  footer.cds-footer .footer-mobile {
+    display: none;
+  }
+}

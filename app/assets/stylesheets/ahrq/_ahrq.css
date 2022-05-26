@@ -1,0 +1,59 @@
+.ahrq {
+  font-size: 18px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  font-feature-settings: "kern" 1;
+  font-kerning: normal;
+}
+.ahrq footer {
+  margin-top: 0;
+}
+.ahrq #top-button-container {
+  margin-top: 10px;
+}
+.ahrq .img-spacing {
+  margin-left: 20px;
+}
+.ahrq .row {
+  align-items: center;
+}
+.ahrq .row .row-tweak {
+  display: flex;
+  flex-wrap: wrap;
+}
+.ahrq img {
+  font-size: 16px;
+}
+.ahrq input.email-input {
+  font-size: 16px;
+}
+.ahrq input.email-update-button {
+  font-size: 16px;
+  height: auto;
+}
+
+img.usa-banner-flag-tweak {
+  position: relative;
+  top: 2px;
+}
+
+img.usa-banner-logo-tweak {
+  position: relative;
+  bottom: 1px;
+}
+
+div.div-col-tweak {
+  padding-left: 0px;
+}
+
+div > div.col-sm-8.col-lg-8.txt-gov-banner > p > a {
+  position: relative;
+  top: 3px;
+}
+
+@media (min-width: 992px) {
+  .col-md-offset-0p5 {
+    margin-left: 5vw;
+  }
+}
+
+/*# sourceMappingURL=_ahrq.css.map */

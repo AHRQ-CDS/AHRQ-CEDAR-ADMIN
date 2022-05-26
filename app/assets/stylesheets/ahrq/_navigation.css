@@ -1,0 +1,160 @@
+.navbar {
+  margin-bottom: 0;
+}
+.navbar .navbar-header {
+  float: none;
+  padding: 10px 0;
+  margin: 0 auto;
+}
+@media only screen and (min-width: 1200px) {
+  .navbar .navbar-header {
+    width: 1170px;
+  }
+}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  .navbar .navbar-header {
+    width: 970px;
+  }
+}
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  .navbar .navbar-header {
+    width: 750px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .navbar .navbar-header {
+    width: 100%;
+  }
+}
+
+.navigation__main .nav > li {
+  margin-right: 15px;
+}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  .navigation__main .nav > li {
+    margin-right: 10px;
+  }
+}
+
+.navbar.container {
+  max-width: 100%;
+  background-color: #1e2f40;
+  border: 0;
+  border-radius: 0;
+}
+.navbar.container .menu.navbar-nav {
+  margin: 10px;
+  width: 95%;
+  margin: 0 auto;
+}
+.navbar.container .menu.navbar-nav li a.is-active {
+  background-color: #4A5968;
+}
+.navbar.container .menu.navbar-nav li.active a {
+  background-color: #4A5968;
+}
+.navbar.container .menu.navbar-nav a {
+  color: #FFF;
+  border-radius: 5px;
+  padding: 10px;
+}
+.navbar.container .menu.navbar-nav a:hover, .navbar.container .menu.navbar-nav a:active, .navbar.container .menu.navbar-nav a:visited {
+  background-color: #4A5968;
+}
+
+.region-content nav.tabs {
+  margin-bottom: 20px;
+}
+
+.navbar.navbar-secondary .navbar-header {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.navbar-secondary.navbar.container {
+  background-color: #224DBB;
+}
+.navbar-secondary.navbar.container .menu.nav.cds-connect-nav > li > a {
+  display: inline-block;
+}
+.navbar-secondary.navbar.container .menu.nav.cds-connect-nav2 {
+  display: flex;
+  float: none;
+  background-color: #F7F7F7;
+  margin: 70px -9999rem 0 -9999rem;
+  padding: 1rem 9999rem 0 calc(9999rem + 15px);
+  border-bottom: 1px solid #ddd;
+}
+.navbar-secondary.navbar.container .menu.nav.cds-connect-nav2 li {
+  margin-bottom: -1px;
+}
+.navbar-secondary.navbar.container .menu.nav.cds-connect-nav2 li a {
+  color: #4D4D4D;
+  border-top: 3px solid #F7F7F7;
+  white-space: nowrap;
+  font-size: 1.2em;
+  padding: 25px 30px;
+}
+.navbar-secondary.navbar.container .menu.nav.cds-connect-nav2 li a.is-active {
+  background-color: #fff;
+  border-top: 3px solid #006AAA;
+  font-weight: 600;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+}
+.navbar-secondary.navbar.container .menu.nav.cds-connect-nav2 li a:not(.is-active):hover {
+  background-color: #eee;
+  border-top: 3px solid #eee;
+  border-bottom: 1px solid #ddd;
+}
+.navbar-secondary.navbar.container .menu.nav.cds-connect-nav2:empty {
+  display: none;
+}
+.navbar-secondary.navbar.container .nav-title {
+  color: #FFF;
+  font-size: 1.5em;
+  padding-right: 50px;
+}
+.navbar-secondary.navbar.container .nav-title img {
+  width: 50px;
+  margin: 10px;
+}
+.navbar-secondary.navbar.container img.nav-logo {
+  width: 50px;
+  margin: 10px;
+  float: left;
+}
+.navbar-secondary.navbar.container .menu.nav li {
+  display: inline-block;
+}
+.navbar-secondary.navbar.container .menu.nav li a {
+  color: #FFF;
+  padding: 25px 20px;
+  height: 70px;
+  border-radius: 0;
+}
+.navbar-secondary.navbar.container .menu.nav li a:hover {
+  background-color: #0D36A5;
+}
+.navbar-secondary.navbar.container .menu.nav li a.is-active {
+  background-color: #0D36A5;
+}
+
+/**
+ * Hide elements visually, but keep them available for screen-readers.
+ *
+ * Used for information required for screen-reader users to understand and use
+ * the site where visual display is undesirable. Information provided in this
+ * manner should be kept concise, to avoid unnecessary burden on the user.
+ * "!important" is used to prevent unintentional overrides.
+ */
+.element-invisible {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px);
+  /* IE6, IE7 */
+  clip: rect(1px, 1px, 1px, 1px);
+  overflow: hidden;
+  height: 1px;
+}
+
+/*# sourceMappingURL=_navigation.css.map */
