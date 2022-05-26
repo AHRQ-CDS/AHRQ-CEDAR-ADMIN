@@ -1,5 +1,16 @@
 # CEDAR Admin
 
+The CEDAR Admin repository provides:
+
+1. A web application for CEDAR administrators
+2. Functionality to index the contents of external evidence repositories and map artifact metadata to the CEDAR data model
+
+See also:
+
+- [Contribution Guide](CONTRIBUTING.md)
+- [Code of Conduct](CODE-OF-CONDUCT.md)
+- [Terms and Conditions](TERMS-AND-CONDITIONS.md)
+
 ## Prerequisites
 
 * Ruby 2.7.1 or later
