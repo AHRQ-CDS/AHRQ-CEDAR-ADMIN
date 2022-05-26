@@ -66,7 +66,7 @@ V. Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may
 be reported by contacting the project team at
-cedaR-feedback\@lists.mitre.org. All complaints will be reviewed and
+cedar-feedback\@lists.mitre.org. All complaints will be reviewed and
 investigated and will result in a response that is deemed necessary and
 appropriate to the circumstances. The project team shall maintain the
 confidentiality of the reporter of an incident. Further details of
