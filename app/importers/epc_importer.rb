@@ -2,12 +2,12 @@
 
 # Functionality for importing data from the EPC repository
 class EpcImporter < CedarImporter
-  extend Utilities
   repository_name 'Evidence-based Practice Center Program'
   repository_alias 'EPC'
   repository_home_page Rails.configuration.epc_home_page
 
   include PageScraper
+  include Utilities
 
   def self.download_and_update!
     importer = EpcImporter.new
@@ -75,7 +75,7 @@ class EpcImporter < CedarImporter
       artifact_type = artifact.at_css('div.views-field-field-epc-type span.field-content')&.content&.strip.presence
       artifact_status = to_artifact_status(artifact_uri)
       error_context = "Encountered EPC entry '#{artifact_title}' with invalid date"
-      published_date = parse_date_string(artifact.at_css('div.views-field-field-timestamp  span.field-content')&.content, error_context)
+      published_date = parse_date_string(artifact.at_css('div.views-field-field-timestamp span.field-content')&.content, error_context)
       metadata = {
         remote_identifier: artifact_url,
         title: artifact_title,

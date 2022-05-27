@@ -2,10 +2,11 @@
 
 # Functionality for importing data from the CDS Connect repository
 class CdsConnectImporter < CedarImporter
-  extend Utilities
   repository_name 'CDS Connect'
   repository_alias 'CDS Connect'
   repository_home_page Rails.configuration.cds_connect_home_page
+
+  extend Utilities
 
   def self.download_and_update!
     # Set up our connection object to manage cookies and basic auth if needed

@@ -2,11 +2,11 @@
 
 # Functionality for importing data from the NGC repository
 class NgcImporter < CedarImporter
-  extend Utilities
   repository_name 'National Guideline Clearinghouse'
   repository_alias 'NGC'
   repository_home_page Rails.configuration.ngc_base_url
 
+  extend Utilities
   extend PageScraper
 
   CACHE_DIR = File.join('tmp', 'cache', 'ngc')
