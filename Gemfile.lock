@@ -94,6 +94,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
+    date_time_precision (0.8.1)
     descendants_tracker (0.0.4)
       thread_safe (~> 0.3, >= 0.3.1)
     devise (4.8.0)
@@ -345,6 +346,7 @@ DEPENDENCIES
   capybara (>= 2.15)
   chartkick
   commonmarker
+  date_time_precision
   devise
   devise_ldap_authenticatable
   diffy

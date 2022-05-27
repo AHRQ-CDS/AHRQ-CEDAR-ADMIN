@@ -33,6 +33,7 @@ class SrdrImporterTest < ActiveSupport::TestCase
     assert_match('http://DUMMY-URL/public_data?id=1343&type=project', artifact_1343.url)
     assert_equal('10.7301/Z08G8HMP', artifact_1343.doi)
     assert_equal(Date.parse('23 Jul 2015'), artifact_1343.published_on)
+    assert_equal(3, artifact_1343.published_on_precision) # DAY PRECISION = 3
     assert_equal('active', artifact_1343.artifact_status)
 
     # Check tracking

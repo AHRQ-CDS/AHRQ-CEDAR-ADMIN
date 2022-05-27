@@ -37,6 +37,7 @@ class CdsConnectImporterTest < ActiveSupport::TestCase
                   'alcohol drinking', 'risk assessment', 'substance abuse detection'], artifact_1186.keywords)
     assert_match(/node.1186/, artifact_1186.url)
     assert_equal(Date.parse('Thu, 16 Jul 2020'), artifact_1186.published_on)
+    assert_equal(3, artifact_1186.published_on_precision) # DAY PRECISION = 3
     assert_equal('Data Summary', artifact_1186.artifact_type)
     assert_equal('draft', artifact_1186.artifact_status)
     assert_equal(0, artifact_1186.strength_of_recommendation_sort)
@@ -55,6 +56,7 @@ class CdsConnectImporterTest < ActiveSupport::TestCase
                   'opioid-related disorders', 'pain management'], artifact_1221.keywords)
     assert_match(/node.1221/, artifact_1221.url)
     assert_nil(artifact_1221.published_on)
+    assert_equal(0, artifact_1221.published_on_precision) # NONE PRECISION = 0
     assert_equal('Data Summary', artifact_1221.artifact_type)
     assert_equal('unknown', artifact_1221.artifact_status)
     assert_equal(0, artifact_1221.strength_of_recommendation_sort)

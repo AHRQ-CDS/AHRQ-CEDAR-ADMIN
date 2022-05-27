@@ -2,6 +2,7 @@
 
 # Functionality for importing data from the SRDR repository
 class SrdrImporter < CedarImporter
+  include Utilities
   repository_name 'Systematic Review Data Repository'
   repository_alias 'SRDR'
   repository_home_page Rails.configuration.srdr_base_url
@@ -29,6 +30,11 @@ class SrdrImporter < CedarImporter
                else
                  'active'
                end
+
+      error_context = "Encountered SRDR search entry '#{artifact['name']}' with invalid date"
+      # SRDR published dates have a precision of DateTime, but we only store Date in the db
+      published_date = parse_date_string(artifact['published_at'], error_context)
+
       update_or_create_artifact!(
         "SRDR-PLUS-#{artifact['id']}",
         remote_identifier: artifact['id'].to_s,
@@ -36,7 +42,8 @@ class SrdrImporter < CedarImporter
         description_html: artifact['description'],
         url: "#{Rails.configuration.srdr_base_url}public_data?id=#{artifact['id']}&type=project",
         doi: artifact['doi'],
-        published_on: artifact['published_at'],
+        published_on: published_date,
+        published_on_precision: published_date.precision,
         keywords: keywords,
         artifact_status: status,
         artifact_type: 'Systematic Review'

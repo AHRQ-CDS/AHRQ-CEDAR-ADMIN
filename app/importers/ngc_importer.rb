@@ -2,6 +2,7 @@
 
 # Functionality for importing data from the NGC repository
 class NgcImporter < CedarImporter
+  include Utilities
   repository_name 'National Guideline Clearinghouse'
   repository_alias 'NGC'
   repository_home_page Rails.configuration.ngc_base_url
@@ -40,20 +41,17 @@ class NgcImporter < CedarImporter
       xml_file = File.join(CACHE_DIR, "#{artifact_id}.xml")
       if File.exist?(xml_file)
         xml_dom = Nokogiri::XML(File.read(xml_file))
-        begin
-          artifact_date_str = xml_dom.at_xpath('//Field[@FieldID="128"]/FieldValue/@Value').value
-          artifact_date = Date.parse(artifact_date_str)
-        rescue Date::Error
-          message = "Unable to parse date (#{artifact_date_str}) for NGC artifact #{artifact_id}"
-          warnings << message
-        end
+
+        error_context = "Encountered NGC search entry '#{cached_data['title']}' with invalid date"
+        published_date = parse_date_string(xml_dom.at_xpath('//Field[@FieldID="128"]/FieldValue/@Value').value, error_context)
         artifact_description_html = xml_dom.at_xpath('//Field[@FieldID="151"]/FieldValue/@Value').value
         metadata.merge!(
           remote_identifier: artifact_id,
           title: cached_data['title'],
           description_html: artifact_description_html,
           url: artifact_url,
-          published_on: artifact_date,
+          published_on: published_date,
+          published_on_precision: published_date.precision,
           artifact_type: 'Guideline',
           artifact_status: 'active',
           keywords: []

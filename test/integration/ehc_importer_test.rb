@@ -25,6 +25,8 @@ class EhcImporterTest < ActiveSupport::TestCase
       artifact = artifacts.where(title: 'Living Systematic Review on Cannabis and Other Plant-Based Treatments for Chronic Pain').first
       assert(artifact.present?)
       assert(artifact.keywords.include?('chronic pain'))
+      assert_equal(Date.parse('March 24, 2021'), artifact.published_on)
+      assert_equal(3, artifact.published_on_precision) # DAY PRECISION = 3
       assert_equal(artifact.artifact_status, 'active')
       assert_equal(1, artifact.versions.length)
       assert_equal('create', artifact.versions.last.event)
@@ -32,6 +34,8 @@ class EhcImporterTest < ActiveSupport::TestCase
       artifact = artifacts.where(title: 'Treatments for Seasonal Allergic Rhinitis').first
       assert(artifact.present?)
       assert(artifact.keywords.include?('hay fever'))
+      assert_equal(Date.parse('July 16, 2013'), artifact.published_on)
+      assert_equal(3, artifact.published_on_precision) # DAY PRECISION = 3
       assert_equal(artifact.artifact_status, 'archived')
       assert_equal(1, artifact.versions.length)
       assert_equal('create', artifact.versions.last.event)

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'date_time_precision'
+
 # Functionality for importing data from the USPSTF repository
 class UspstfImporter < CedarImporter
   repository_name 'United States Preventive Services Taskforce'
@@ -84,6 +86,7 @@ class UspstfImporter < CedarImporter
       related_specific_recs = recommendation['specific'] || []
       related_specific_rec_sorts = related_specific_recs.map { |specific_rec| specific_rec_sorts[specific_rec] }
       strength_sort = related_specific_rec_sorts.max || 0
+      published_date = Date.new(recommendation['topicYear'].to_i)
 
       update_or_create_artifact!(
         cedar_id,
@@ -91,7 +94,8 @@ class UspstfImporter < CedarImporter
         title: recommendation['title'],
         description_html: recommendation['clinical'],
         url: general_rec_urls[id],
-        published_on: Date.new(recommendation['topicYear'].to_i),
+        published_on: published_date,
+        published_on_precision: published_date.precision,
         artifact_type: 'General Recommendation',
         artifact_status: 'active',
         keywords: general_rec_keywords[id],

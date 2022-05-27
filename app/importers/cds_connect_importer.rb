@@ -2,6 +2,7 @@
 
 # Functionality for importing data from the CDS Connect repository
 class CdsConnectImporter < CedarImporter
+  include Utilities
   repository_name 'CDS Connect'
   repository_alias 'CDS Connect'
   repository_home_page Rails.configuration.cds_connect_home_page
@@ -53,13 +54,16 @@ class CdsConnectImporter < CedarImporter
               recommendation_statements[0]['quality_of_evidence']
             )&.gsub(/\s+/, ' ')
           end
+          error_context = "Encountered CDS Connect entry '#{artifact['title']}' with invalid date"
+          published_date = parse_date_string(artifact['repository_information']['publication_date'], error_context)
 
           attributes.merge!(
             remote_identifier: artifact_id.to_s,
             title: artifact['title'],
             description_html: artifact['description'],
             url: "#{Rails.configuration.cds_connect_base_url}node/#{artifact_id}",
-            published_on: artifact['repository_information']['publication_date'],
+            published_on: published_date,
+            published_on_precision: published_date.precision,
             artifact_type: artifact['artifact_type']&.strip.presence,
             artifact_status: Artifact.artifact_statuses[cds_connect_status] || 'unknown',
             keywords: keywords,

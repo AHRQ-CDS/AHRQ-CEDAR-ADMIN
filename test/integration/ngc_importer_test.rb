@@ -24,6 +24,8 @@ class NgcImporterTest < ActiveSupport::TestCase
     assert_equal('Guideline', artifact.artifact_type)
     assert(artifact.keywords.include?('asthma'))
     assert(artifact.keywords.include?('counseling'))
+    assert_equal(Date.parse('2005 Aug (reaffirmed 2013)'), artifact.published_on)
+    assert_equal(2, artifact.published_on_precision) # MONTH PRECISION = 2
 
     # Check tracking
     assert_equal(1, repository.import_runs.count)

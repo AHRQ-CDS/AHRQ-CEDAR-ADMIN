@@ -2,6 +2,7 @@
 
 # Functionality for importing data from the EHC repository
 class EhcImporter < CedarImporter
+  include Utilities
   repository_name 'Effective Health Care Program'
   repository_alias 'EHC'
   repository_home_page Rails.configuration.ehc_home_page
@@ -19,6 +20,8 @@ class EhcImporter < CedarImporter
       doi = Regexp.last_match(1) if artifact.at_xpath('Citation').content =~ %r{(10.\d{4,9}/[-._;()/:A-Z0-9]+)}
       artifact_title = artifact.at_xpath('Title').content.presence
       warnings = ["Missing URL for #{cedar_id} (#{artifact_title})"] if artifact_uri.to_s.empty?
+      error_context = "Encountered EHC entry '#{artifact_title}' with invalid date"
+      published_date = parse_date_string(artifact.at_xpath('Publish-Date').content.presence, error_context)
 
       # Store artifact metadata
       update_or_create_artifact!(
@@ -27,7 +30,8 @@ class EhcImporter < CedarImporter
         title: artifact_title,
         description: artifact.at_xpath('Description').content.presence,
         url: artifact_uri.to_s.presence,
-        published_on: artifact.at_xpath('Publish-Date').content.presence,
+        published_on: published_date,
+        published_on_precision: published_date.precision,
         artifact_status: to_artifact_status(artifact.at_xpath('Status').content),
         artifact_type: artifact.at_xpath('Product-Type')&.content&.strip.presence,
         keywords: extract_keywords(artifact),

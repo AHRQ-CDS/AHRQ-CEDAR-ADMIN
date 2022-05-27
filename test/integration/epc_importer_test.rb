@@ -33,16 +33,22 @@ class EpcImporterTest < ActiveSupport::TestCase
     assert_equal('A sample HTML EPC product', artifact.description)
     assert(artifact.keywords.include?('epc'))
     assert(artifact.keywords.include?('a and b'))
+    assert_equal(Date.parse('February 2021'), artifact.published_on)
+    assert_equal(2, artifact.published_on_precision) # MONTH PRECISION = 2
 
     artifact = artifacts.where(title: 'Screening for Asymptomatic Carotid Artery Stenosis in the General Population').first
     assert(artifact.present?)
     assert_equal('A sample HTML EPC product', artifact.description)
     assert(artifact.keywords.include?('epc'))
+    assert_equal(Date.parse('February 2021'), artifact.published_on)
+    assert_equal(2, artifact.published_on_precision) # MONTH PRECISION = 2
 
     artifact = artifacts.where(title: 'Management of Infantile Epilepsy').first
     assert(artifact.present?)
     assert_equal('A sample HTML EPC product', artifact.description)
     assert(artifact.keywords.include?('epc'))
+    assert_equal(Date.parse('February 2021'), artifact.published_on)
+    assert_equal(2, artifact.published_on_precision) # MONTH PRECISION = 2
 
     # Check tracking
     assert_equal(1, repository.import_runs.count)
