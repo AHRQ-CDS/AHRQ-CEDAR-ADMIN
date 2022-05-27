@@ -62,7 +62,6 @@ class EpcImporter < CedarImporter
         next # skip products that are hosted on other indexed repositories
       end
 
-      warnings = []
       artifact_uri = URI.parse(artifact_url)
       if artifact_uri.host.nil?
         page_uri = URI.parse(url)
