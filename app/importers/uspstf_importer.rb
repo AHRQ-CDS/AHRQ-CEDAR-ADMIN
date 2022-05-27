@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'date_time_precision'
-
 # Functionality for importing data from the USPSTF repository
 class UspstfImporter < CedarImporter
   repository_name 'United States Preventive Services Taskforce'

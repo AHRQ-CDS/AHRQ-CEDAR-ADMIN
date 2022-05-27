@@ -2,7 +2,7 @@
 
 # Functionality for importing data from the EHC repository
 class EhcImporter < CedarImporter
-  include Utilities
+  extend Utilities
   repository_name 'Effective Health Care Program'
   repository_alias 'EHC'
   repository_home_page Rails.configuration.ehc_home_page

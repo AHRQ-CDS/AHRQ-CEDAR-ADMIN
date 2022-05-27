@@ -2,7 +2,7 @@
 
 # Functionality for importing data from the EPC repository
 class EpcImporter < CedarImporter
-  include Utilities
+  extend Utilities
   repository_name 'Evidence-based Practice Center Program'
   repository_alias 'EPC'
   repository_home_page Rails.configuration.epc_home_page
