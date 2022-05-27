@@ -43,7 +43,10 @@ class NgcImporter < CedarImporter
         xml_dom = Nokogiri::XML(File.read(xml_file))
 
         error_context = "Encountered NGC search entry '#{cached_data['title']}' with invalid date"
-        published_date = parse_date_string(xml_dom.at_xpath('//Field[@FieldID="128"]/FieldValue/@Value').value, error_context)
+        # NGC artifact dates have the following format: 2005 Aug (reaffirmed 2013)
+        # Remove the parentheses and any text between them -- otherwise, the date has greater precision than it should
+        date_string = xml_dom.at_xpath('//Field[@FieldID="128"]/FieldValue/@Value').value.sub(/\s*\(.+\)$/, '')
+        published_date = parse_date_string(date_string, error_context)
         artifact_description_html = xml_dom.at_xpath('//Field[@FieldID="151"]/FieldValue/@Value').value
         metadata.merge!(
           remote_identifier: artifact_id,
