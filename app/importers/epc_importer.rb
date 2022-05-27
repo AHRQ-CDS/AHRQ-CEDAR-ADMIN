@@ -7,7 +7,6 @@ class EpcImporter < CedarImporter
   repository_home_page Rails.configuration.epc_home_page
 
   include PageScraper
-  include Utilities
 
   def self.download_and_update!
     importer = EpcImporter.new
@@ -74,8 +73,8 @@ class EpcImporter < CedarImporter
       cedar_id = "EPC-#{Digest::MD5.hexdigest(artifact_url)}"
       artifact_type = artifact.at_css('div.views-field-field-epc-type span.field-content')&.content&.strip.presence
       artifact_status = to_artifact_status(artifact_uri)
-      error_context = "Encountered EPC entry '#{artifact_title}' with invalid date"
-      published_date = parse_date_string(artifact.at_css('div.views-field-field-timestamp span.field-content')&.content, error_context)
+      warning_context = "Encountered EPC entry '#{artifact_title}' with invalid date"
+      published_date = self.class.parse_date_string(artifact.at_css('div.views-field-field-timestamp span.field-content')&.content, warning_context)
       metadata = {
         remote_identifier: artifact_url,
         title: artifact_title,
@@ -84,11 +83,9 @@ class EpcImporter < CedarImporter
         published_on_precision: published_date.precision,
         artifact_type: artifact_type,
         artifact_status: artifact_status,
-        warnings: [],
         keywords: []
       }
       metadata.merge!(extract_metadata(artifact_url))
-      metadata[:warnings].concat warnings
       update_or_create_artifact!(cedar_id, metadata)
       Rails.logger.info "Processed EPC artifact #{artifact_url}"
     end

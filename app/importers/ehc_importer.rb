@@ -6,8 +6,6 @@ class EhcImporter < CedarImporter
   repository_alias 'EHC'
   repository_home_page Rails.configuration.ehc_home_page
 
-  extend Utilities
-
   def self.download_and_update!
     # Retrieve all the artifacts
     response = Faraday.get(Rails.configuration.ehc_feed_url)
@@ -20,9 +18,9 @@ class EhcImporter < CedarImporter
       cedar_id = "EHC-#{Digest::MD5.hexdigest(artifact_uri.to_s)}"
       doi = Regexp.last_match(1) if artifact.at_xpath('Citation').content =~ %r{(10.\d{4,9}/[-._;()/:A-Z0-9]+)}
       artifact_title = artifact.at_xpath('Title').content.presence
-      warnings = ["Missing URL for #{cedar_id} (#{artifact_title})"] if artifact_uri.to_s.empty?
-      error_context = "Encountered EHC entry '#{artifact_title}' with invalid date"
-      published_date = parse_date_string(artifact.at_xpath('Publish-Date').content.presence, error_context)
+      @import_statistics[:warning_msgs] << ("Missing URL for #{cedar_id} (#{artifact_title})") if artifact_uri.to_s.empty?
+      warning_context = "Encountered EHC entry '#{artifact_title}' with invalid date"
+      published_date = parse_date_string(artifact.at_xpath('Publish-Date').content.presence, warning_context)
 
       # Store artifact metadata
       update_or_create_artifact!(
@@ -36,8 +34,7 @@ class EhcImporter < CedarImporter
         artifact_status: to_artifact_status(artifact.at_xpath('Status').content),
         artifact_type: artifact.at_xpath('Product-Type')&.content&.strip.presence,
         keywords: extract_keywords(artifact),
-        doi: doi,
-        warnings: warnings
+        doi: doi
       )
     end
   end

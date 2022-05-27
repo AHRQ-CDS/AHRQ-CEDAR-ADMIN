@@ -6,8 +6,6 @@ class CdsConnectImporter < CedarImporter
   repository_alias 'CDS Connect'
   repository_home_page Rails.configuration.cds_connect_home_page
 
-  extend Utilities
-
   def self.download_and_update!
     # Set up our connection object to manage cookies and basic auth if needed
     connection = Faraday.new(url: Rails.configuration.cds_connect_base_url) do |builder|
@@ -55,8 +53,8 @@ class CdsConnectImporter < CedarImporter
               recommendation_statements[0]['quality_of_evidence']
             )&.gsub(/\s+/, ' ')
           end
-          error_context = "Encountered CDS Connect entry '#{artifact['title']}' with invalid date"
-          published_date = parse_date_string(artifact['repository_information']['publication_date'], error_context)
+          warning_context = "Encountered CDS Connect entry '#{artifact['title']}' with invalid date"
+          published_date = parse_date_string(artifact['repository_information']['publication_date'], warning_context)
 
           attributes.merge!(
             remote_identifier: artifact_id.to_s,

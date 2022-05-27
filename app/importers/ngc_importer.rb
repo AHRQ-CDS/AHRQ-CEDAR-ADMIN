@@ -6,7 +6,6 @@ class NgcImporter < CedarImporter
   repository_alias 'NGC'
   repository_home_page Rails.configuration.ngc_base_url
 
-  extend Utilities
   extend PageScraper
 
   CACHE_DIR = File.join('tmp', 'cache', 'ngc')
@@ -36,17 +35,16 @@ class NgcImporter < CedarImporter
     index = JSON.parse(File.read(index_file))
     index.each_pair do |artifact_id, cached_data|
       metadata = {}
-      warnings = []
       artifact_url = "#{Rails.configuration.ngc_base_url}#{cached_data['html_path']}"
       xml_file = File.join(CACHE_DIR, "#{artifact_id}.xml")
       if File.exist?(xml_file)
         xml_dom = Nokogiri::XML(File.read(xml_file))
 
-        error_context = "Encountered NGC search entry '#{cached_data['title']}' with invalid date"
+        warning_context = "Encountered NGC search entry '#{cached_data['title']}' with invalid date"
         # NGC artifact dates have the following format: 2005 Aug (reaffirmed 2013)
         # Remove the parentheses and any text between them -- otherwise, the date has greater precision than it should
         date_string = xml_dom.at_xpath('//Field[@FieldID="128"]/FieldValue/@Value').value.sub(/\s*\(.+\)$/, '')
-        published_date = parse_date_string(date_string, error_context)
+        published_date = parse_date_string(date_string, warning_context)
         artifact_description_html = xml_dom.at_xpath('//Field[@FieldID="151"]/FieldValue/@Value').value
         metadata.merge!(
           remote_identifier: artifact_id,
@@ -70,8 +68,6 @@ class NgcImporter < CedarImporter
       else
         metadata[:error] = "Failed to retrieve #{artifact_id}.html"
       end
-      metadata[:warnings] ||= []
-      metadata[:warnings].concat warnings
       cedar_id = "NGC-#{Digest::MD5.hexdigest(artifact_url)}"
       update_or_create_artifact!(cedar_id, metadata)
       Rails.logger.info "Processed NGC artifact #{artifact_url}"

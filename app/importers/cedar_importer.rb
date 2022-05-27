@@ -119,4 +119,10 @@ class CedarImporter
       attributes[field] = attributes[field].strip unless attributes[field].nil?
     end
   end
+
+  def self.parse_date_string(date_string, warning_context)
+    Date.parse(date_string) unless date_string.nil?
+  rescue Date::Error
+    @import_statistics[:warning_msgs] << "#{warning_context}, #{date_string}"
+  end
 end

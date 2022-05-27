@@ -6,8 +6,6 @@ class SrdrImporter < CedarImporter
   repository_alias 'SRDR'
   repository_home_page Rails.configuration.srdr_base_url
 
-  extend Utilities
-
   def self.download_and_update!
     # Set up our connection object with our API key
     connection = Faraday.new(url: Rails.configuration.srdr_base_url, params: { api_key: Rails.configuration.srdr_api_key })
@@ -32,9 +30,9 @@ class SrdrImporter < CedarImporter
                  'active'
                end
 
-      error_context = "Encountered SRDR search entry '#{artifact['name']}' with invalid date"
+      warning_context = "Encountered SRDR search entry '#{artifact['name']}' with invalid date"
       # SRDR published dates have a precision of DateTime, but we only store Date in the db
-      published_date = parse_date_string(artifact['published_at'], error_context)
+      published_date = parse_date_string(artifact['published_at'], warning_context)
 
       update_or_create_artifact!(
         "SRDR-PLUS-#{artifact['id']}",
