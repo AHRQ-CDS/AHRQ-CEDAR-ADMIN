@@ -21,23 +21,39 @@ class UspstfImporter < CedarImporter
   end
 
   def update_db!
-    # Capture URLs for general recommendations
+    # Some metadata is only present at the general recommendation level, capture it here
     general_rec_urls = {}
+    general_rec_keywords = {}
     @json_data['generalRecommendations'].each_pair do |id, recommendation|
       # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
       url = "#{Rails.configuration.uspstf_home_page}recommendation/#{recommendation['uspstfAlias']}"
       general_rec_urls[id] = url
+      keywords = recommendation['keywords']&.split('|') || []
+      recommendation['categories'].each do |cat|
+        keywords << @json_data['categories'][cat.to_s]['name']
+      end
+      general_rec_keywords[id] = keywords
     end
 
     # Extract specific recommendations
     # TODO: consider whether specific recommendations should be standalone entries; alternately, we may wish
-    # to only have entries for the specific recommendations because of the metadata
+    # to only have entries for the general recommendations because of the metadata
+    tool_keywords = {}
     grade_statements = @json_data['grades']
     specific_rec_sorts = {}
     @json_data['specificRecommendations'].each do |recommendation|
       remote_id = recommendation['id']
       cedar_id = "USPSTF-SR-#{remote_id}"
-      url = general_rec_urls[recommendation['general'].to_s]
+      general_rec_id = recommendation['general'].to_s
+      url = general_rec_urls[general_rec_id]
+      # Keywords are only specified at the general recommendation level so we propogate them to the specific
+      # recommendations here. We also save the keywords for later use with tools that are linked from the
+      # specific recommendation.
+      keywords = general_rec_keywords[general_rec_id]
+      recommendation['tool'].each do |tool_id|
+        tool_keywords[tool_id.to_s] ||= []
+        tool_keywords[tool_id.to_s].concat(keywords).uniq!
+      end
       strength_score = recommendation['grade']
       strength_sort = compute_strength_of_evidence_score(strength_score)
       specific_rec_sorts[remote_id] = strength_sort
@@ -50,6 +66,7 @@ class UspstfImporter < CedarImporter
         title: recommendation['title'],
         description_html: recommendation['text'],
         url: url,
+        keywords: keywords,
         artifact_type: 'Specific Recommendation',
         artifact_status: 'active',
         strength_of_recommendation_statement: strength_statements[1],
@@ -63,10 +80,6 @@ class UspstfImporter < CedarImporter
 
     # Extract general recommendations
     @json_data['generalRecommendations'].each_pair do |id, recommendation|
-      keywords = recommendation['keywords']&.split('|') || []
-      recommendation['categories'].each do |cat|
-        keywords << @json_data['categories'][cat.to_s]['name']
-      end
       cedar_id = "USPSTF-GR-#{id}"
       related_specific_recs = recommendation['specific'] || []
       related_specific_rec_sorts = related_specific_recs.map { |specific_rec| specific_rec_sorts[specific_rec] }
@@ -81,7 +94,7 @@ class UspstfImporter < CedarImporter
         published_on: Date.new(recommendation['topicYear'].to_i),
         artifact_type: 'General Recommendation',
         artifact_status: 'active',
-        keywords: keywords,
+        keywords: general_rec_keywords[id],
         strength_of_recommendation_sort: strength_sort,
         quality_of_evidence_sort: strength_sort
       )
@@ -98,6 +111,10 @@ class UspstfImporter < CedarImporter
         artifact_status: 'active'
       }
       metadata.merge!(extract_metadata(url))
+      if tool_keywords[id].present?
+        metadata[:keywords] ||= []
+        metadata[:keywords].concat(tool_keywords[id]).uniq! # maerge/deep_merge don't concat.uniq arrays
+      end
       update_or_create_artifact!(cedar_id, metadata)
     end
   end
