@@ -56,8 +56,7 @@ class NgcImporter < CedarImporter
           published_on_precision: published_on_precision,
           artifact_type: 'Guideline',
           artifact_status: 'active',
-          keywords: [],
-          warnings: []
+          keywords: []
         )
       else
         metadata[:error] = "Failed to retrieve #{artifact_id}.xml"
