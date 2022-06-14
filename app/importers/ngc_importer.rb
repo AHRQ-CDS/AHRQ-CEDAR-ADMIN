@@ -70,6 +70,7 @@ class NgcImporter < CedarImporter
       else
         metadata[:error] = "Failed to retrieve #{artifact_id}.html"
       end
+      metadata[:warnings] ||= []
       metadata[:warnings].concat warnings
       cedar_id = "NGC-#{Digest::MD5.hexdigest(artifact_url)}"
       update_or_create_artifact!(cedar_id, metadata)
