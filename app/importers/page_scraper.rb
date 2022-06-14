@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'date_time_precision/lib'
+
 # Functionality for importing metadata from web pages
 module PageScraper
   KEYWORD_SEPARATOR = /[,;]/.freeze
@@ -33,6 +35,7 @@ module PageScraper
 
   def extract_html_metadata(html, page_url)
     metadata = {}
+    warnings = []
     html = Nokogiri::HTML(html)
     description_node =
       html.at_css('meta[name="description"]') ||
@@ -67,13 +70,15 @@ module PageScraper
       html.at_css('meta[name="DC.date"]') ||
       html.at_css('meta[name="citation_publication_date"]') ||
       html.at_css('meta[name="citation_date"]')
-    begin
-      metadata[:published_on] = Date.parse(date_node['content']) unless date_node.nil?
-    rescue Date::Error
-      # ignore malformed dates
-      metadata[:warnings] ||= []
-      metadata[:warnings] << "Unable to parse '#{date_node['content']}' as date from #{page_url}"
+
+    date = parse_by_core_format(date_node['content']) unless date_node.nil?
+    if date.nil?
+      warnings << "Encountered #{page_url} with invalid date"
+    else
+      metadata[:published_on] = date
+      metadata[:published_on_precision] = DateTimePrecision.precision(date_node['content'].split(/[-, :T]/).map(&:to_i))
     end
+    metadata[:warnings] = warnings
     metadata
   end
 
@@ -84,7 +89,35 @@ module PageScraper
     metadata[:keywords] = reader.info[:Keywords].split(KEYWORD_SEPARATOR).collect(&:strip) unless reader.info[:Keywords].nil?
     pdf_date_str = reader.info[:ModDate] || reader.info[:CreationDate]
     # PDF date format is "D:20150630104759-04'00'"
-    metadata[:published_on] = Date.parse(pdf_date_str[2..9]) unless pdf_date_str.nil?
+    warning_context = 'Encountered pdf with invalid date'
+    metadata[:published_on], metadata[:warnings], metadata[:published_on_precision] = parse_and_precision(pdf_date_str[2..9], warning_context, [])
     metadata
   end
+
+  def parse_and_precision(input, warning_context, messages)
+    case input
+    when String
+      begin
+        date = Date.parse(input)
+        precision = DateTimePrecision.precision(Date._parse(input))
+      rescue Date::Error
+        messages << "#{warning_context}, #{input}"
+      end
+    when nil
+      date = nil
+      precision = 0
+    end
+    [date, messages, precision]
+  end
+
+  # See for formats: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/date/
+  def parse_by_core_format(input)
+    ['%Y-%m-%d', '%Y-%m', '%Y', '%F %T', '%FT%H:%M:%S', '%Y-%m-%dT%H:%M:%S%z'].each do |date_format|
+      return Date.strptime(input, date_format)
+    rescue Date::Error
+      next
+    end
+  end
+
+  module_function :parse_and_precision
 end

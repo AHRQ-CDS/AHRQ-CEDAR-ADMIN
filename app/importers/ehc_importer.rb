@@ -18,10 +18,11 @@ class EhcImporter < CedarImporter
       cedar_id = "EHC-#{Digest::MD5.hexdigest(artifact_uri.to_s)}"
       doi = Regexp.last_match(1) if artifact.at_xpath('Citation').content =~ %r{(10.\d{4,9}/[-._;()/:A-Z0-9]+)}
       artifact_title = artifact.at_xpath('Title').content.presence
-      @import_statistics[:warning_msgs] << ("Missing URL for #{cedar_id} (#{artifact_title})") if artifact_uri.to_s.empty?
-      warning_context = "Encountered EHC entry '#{artifact_title}' with invalid date"
-      published_date = parse_date_string(artifact.at_xpath('Publish-Date').content.presence, warning_context)
-
+      warning_context = "Encountered #{@repository_alias} search entry '#{artifact_title}' with invalid date"
+      published_date, warnings, published_on_precision = PageScraper.parse_and_precision(
+        artifact.at_xpath('Publish-Date').content.presence, warning_context, []
+      )
+      warnings << ("Missing URL for #{cedar_id} (#{artifact_title})") if artifact_uri.to_s.empty?
       # Store artifact metadata
       update_or_create_artifact!(
         cedar_id,
@@ -30,11 +31,12 @@ class EhcImporter < CedarImporter
         description: artifact.at_xpath('Description').content.presence,
         url: artifact_uri.to_s.presence,
         published_on: published_date,
-        published_on_precision: published_date.precision,
+        published_on_precision: published_on_precision,
         artifact_status: to_artifact_status(artifact.at_xpath('Status').content),
         artifact_type: artifact.at_xpath('Product-Type')&.content&.strip.presence,
         keywords: extract_keywords(artifact),
-        doi: doi
+        doi: doi,
+        warnings: warnings
       )
     end
   end

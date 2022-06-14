@@ -73,15 +73,18 @@ class EpcImporter < CedarImporter
       artifact_type = artifact.at_css('div.views-field-field-epc-type span.field-content')&.content&.strip.presence
       artifact_status = to_artifact_status(artifact_uri)
       warning_context = "Encountered EPC entry '#{artifact_title}' with invalid date"
-      published_date = self.class.parse_date_string(artifact.at_css('div.views-field-field-timestamp span.field-content')&.content, warning_context)
+      published_date, warnings, published_on_precision = PageScraper.parse_and_precision(
+        artifact.at_css('div.views-field-field-timestamp span.field-content')&.content, warning_context, []
+      )
       metadata = {
         remote_identifier: artifact_url,
         title: artifact_title,
         url: artifact_url,
         published_on: published_date,
-        published_on_precision: published_date.precision,
+        published_on_precision: published_on_precision,
         artifact_type: artifact_type,
         artifact_status: artifact_status,
+        warnings: warnings,
         keywords: []
       }
       metadata.merge!(extract_metadata(artifact_url))

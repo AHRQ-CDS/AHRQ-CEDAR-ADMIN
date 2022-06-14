@@ -29,11 +29,9 @@ class SrdrImporter < CedarImporter
                else
                  'active'
                end
-
-      warning_context = "Encountered SRDR search entry '#{artifact['name']}' with invalid date"
+      warning_context = "Encountered #{@repository_alias} search entry '#{artifact['name']}' with invalid date"
       # SRDR published dates have a precision of DateTime, but we only store Date in the db
-      published_date = parse_date_string(artifact['published_at'], warning_context)
-
+      published_date, warnings, published_on_precision = PageScraper.parse_and_precision(artifact['published_at'], warning_context, [])
       update_or_create_artifact!(
         "SRDR-PLUS-#{artifact['id']}",
         remote_identifier: artifact['id'].to_s,
@@ -42,10 +40,11 @@ class SrdrImporter < CedarImporter
         url: "#{Rails.configuration.srdr_base_url}public_data?id=#{artifact['id']}&type=project",
         doi: artifact['doi'],
         published_on: published_date,
-        published_on_precision: published_date.precision,
+        published_on_precision: published_on_precision,
         keywords: keywords,
         artifact_status: status,
-        artifact_type: 'Systematic Review'
+        artifact_type: 'Systematic Review',
+        warnings: warnings
       )
     end
   end

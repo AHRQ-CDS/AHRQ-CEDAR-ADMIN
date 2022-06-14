@@ -84,7 +84,13 @@ class UspstfImporter < CedarImporter
       related_specific_recs = recommendation['specific'] || []
       related_specific_rec_sorts = related_specific_recs.map { |specific_rec| specific_rec_sorts[specific_rec] }
       strength_sort = related_specific_rec_sorts.max || 0
-      published_date = Date.new(recommendation['topicYear'].to_i)
+
+      date = parse_by_core_format(recommendation['topicYear']) unless recommendation['topicYear'].nil?
+      if date.nil?
+        warnings << "Encountered #{url} with invalid date"
+      else
+        published_on_precision = DateTimePrecision.precision(recommendation['topicYear'].split(/[-, :T]/).map(&:to_i))
+      end
 
       update_or_create_artifact!(
         cedar_id,
@@ -92,8 +98,8 @@ class UspstfImporter < CedarImporter
         title: recommendation['title'],
         description_html: recommendation['clinical'],
         url: general_rec_urls[id],
-        published_on: published_date,
-        published_on_precision: published_date.precision,
+        published_on: date,
+        published_on_precision: published_on_precision,
         artifact_type: 'General Recommendation',
         artifact_status: 'active',
         keywords: general_rec_keywords[id],

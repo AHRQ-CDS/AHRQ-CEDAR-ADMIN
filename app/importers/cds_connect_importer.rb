@@ -18,7 +18,7 @@ class CdsConnectImporter < CedarImporter
 
     # Retrieve all the artifact IDs before we login (this ensures only the latest artifacts are listed and avoids duplicates)
     response = connection.get('rest/views/artifacts?_format=json')
-    raise "CDS Connect ID retrieval failed with status #{response.status}" unless response.status == 200
+    raise "#{@repository_alias} ID retrieval failed with status #{response.status}" unless response.status == 200
 
     artifact_list = JSON.parse(response.body)
     artifact_ids = artifact_list.map { |a| a['nid'] }
@@ -29,7 +29,7 @@ class CdsConnectImporter < CedarImporter
       pass: Rails.configuration.cds_connect_password
     }
     response = connection.post('user/login?_format=json', credentials.to_json, 'Content-Type' => 'application/json')
-    raise "CDS Connect login failed with status #{response.status}" unless response.status == 200
+    raise "#{@repository_alias} login failed with status #{response.status}" unless response.status == 200
 
     # Retrieve and process each artifact based on the ID
     artifact_ids.each do |artifact_id|
@@ -53,29 +53,31 @@ class CdsConnectImporter < CedarImporter
               recommendation_statements[0]['quality_of_evidence']
             )&.gsub(/\s+/, ' ')
           end
-          warning_context = "Encountered CDS Connect entry '#{artifact['title']}' with invalid date"
-          published_date = parse_date_string(artifact['repository_information']['publication_date'], warning_context)
-
+          warning_context = "Encountered #{@repository_alias} search entry '#{artifact['title']}' with invalid date"
+          published_date, warnings, published_on_precision = PageScraper.parse_and_precision(
+            artifact['repository_information']['publication_date'], warning_context, []
+          )
           attributes.merge!(
             remote_identifier: artifact_id.to_s,
             title: artifact['title'],
             description_html: artifact['description'],
             url: "#{Rails.configuration.cds_connect_base_url}node/#{artifact_id}",
             published_on: published_date,
-            published_on_precision: published_date.precision,
+            published_on_precision: published_on_precision,
             artifact_type: artifact['artifact_type']&.strip.presence,
             artifact_status: Artifact.artifact_statuses[cds_connect_status] || 'unknown',
             keywords: keywords,
             strength_of_recommendation_statement: strength,
-            quality_of_evidence_statement: quality
+            quality_of_evidence_statement: quality,
+            warnings: warnings
           )
         else
-          error_msg = "CDS Connect artifact retrieval failed for #{artifact_path} with status #{response.status}"
+          error_msg = "#{@repository_alias} artifact retrieval failed for #{artifact_path} with status #{response.status}"
           Rails.logger.warn error_msg
           attributes[:error] = error_msg
         end
       rescue Faraday::ConnectionFailed => e
-        error_msg = "CDS Connect artifact retrieval failed for #{artifact_path}: #{e.message}"
+        error_msg = "#{@repository_alias} artifact retrieval failed for #{artifact_path}: #{e.message}"
         Rails.logger.warn error_msg
         attributes[:error] = error_msg
       end

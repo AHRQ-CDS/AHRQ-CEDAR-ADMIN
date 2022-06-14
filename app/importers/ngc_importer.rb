@@ -40,11 +40,11 @@ class NgcImporter < CedarImporter
       if File.exist?(xml_file)
         xml_dom = Nokogiri::XML(File.read(xml_file))
 
-        warning_context = "Encountered NGC search entry '#{cached_data['title']}' with invalid date"
         # NGC artifact dates have the following format: 2005 Aug (reaffirmed 2013)
         # Remove the parentheses and any text between them -- otherwise, the date has greater precision than it should
         date_string = xml_dom.at_xpath('//Field[@FieldID="128"]/FieldValue/@Value').value.sub(/\s*\(.+\)$/, '')
-        published_date = parse_date_string(date_string, warning_context)
+        warning_context = "Encountered #{@repository_alias} search entry '#{cached_data['title']}' with invalid date"
+        published_date, warnings, published_on_precision = PageScraper.parse_and_precision(date_string, warning_context, [])
         artifact_description_html = xml_dom.at_xpath('//Field[@FieldID="151"]/FieldValue/@Value').value
         metadata.merge!(
           remote_identifier: artifact_id,
@@ -52,10 +52,11 @@ class NgcImporter < CedarImporter
           description_html: artifact_description_html,
           url: artifact_url,
           published_on: published_date,
-          published_on_precision: published_date.precision,
+          published_on_precision: published_on_precision,
           artifact_type: 'Guideline',
           artifact_status: 'active',
-          keywords: []
+          keywords: [],
+          warnings: warnings
         )
       else
         metadata[:error] = "Failed to retrieve #{artifact_id}.xml"
@@ -111,7 +112,7 @@ class NgcImporter < CedarImporter
     )
     response = connection.get(url_path)
     if response.status != 200
-      Rails.logger.warn "NGC retrieval failed with status #{response.status}: #{Rails.configuration.ngc_base_url}#{url_path}"
+      Rails.logger.warn "#{@repository_alias} retrieval failed with status #{response.status}: #{Rails.configuration.ngc_base_url}#{url_path}"
       return
     end
 
@@ -122,7 +123,7 @@ class NgcImporter < CedarImporter
     index = {}
     connection = Faraday.new Rails.configuration.ngc_base_url, ssl: { verify: false }
     response = connection.get '/search?q=&pageSize=10000&page=1'
-    raise "NGC index retrieval failed with status #{response.status}" unless response.status == 200
+    raise "#{@repository_alias} index retrieval failed with status #{response.status}" unless response.status == 200
 
     html = Nokogiri::HTML(response.body)
     html.css('div.results-list div.results-list-item').each do |artifact|

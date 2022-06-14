@@ -32,8 +32,8 @@ class SrdrImporterTest < ActiveSupport::TestCase
     assert_match(/Systematic review of diagnostic accuracy and clinical impact of PET and PET-CT/, artifact_1343.description_markdown)
     assert_match('http://DUMMY-URL/public_data?id=1343&type=project', artifact_1343.url)
     assert_equal('10.7301/Z08G8HMP', artifact_1343.doi)
-    assert_equal(Date.parse('23 Jul 2015'), artifact_1343.published_on)
-    assert_equal(3, artifact_1343.published_on_precision) # DAY PRECISION = 3
+    assert_equal(Date.parse('2015-07-23T21:39:39.000Z'), artifact_1343.published_on)
+    assert_equal(6, artifact_1343.published_on_precision) # SECOND PRECISION = 6
     assert_equal('active', artifact_1343.artifact_status)
 
     # Check tracking
