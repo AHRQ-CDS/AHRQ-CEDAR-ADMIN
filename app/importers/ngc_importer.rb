@@ -67,10 +67,10 @@ class NgcImporter < CedarImporter
         html = File.read(html_file)
         metadata.merge!(extract_html_metadata(html, html_file))
         metadata.merge!(keywords: extract_keywords(html))
-        metadata[:warnings].concat warnings
       else
         metadata[:error] = "Failed to retrieve #{artifact_id}.html"
       end
+      metadata[:warnings].concat warnings
       cedar_id = "NGC-#{Digest::MD5.hexdigest(artifact_url)}"
       update_or_create_artifact!(cedar_id, metadata)
       Rails.logger.info "Processed NGC artifact #{artifact_url}"
