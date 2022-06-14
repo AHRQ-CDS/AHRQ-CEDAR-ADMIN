@@ -84,8 +84,8 @@ class EpcImporter < CedarImporter
         published_on_precision: published_on_precision,
         artifact_type: artifact_type,
         artifact_status: artifact_status,
-        keywords: [],
-        warnings: []
+        warnings: [],
+        keywords: []
       }
       metadata.merge!(extract_metadata(artifact_url))
       metadata[:warnings].concat warnings
