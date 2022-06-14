@@ -105,7 +105,7 @@ class UspstfImporter < CedarImporter
         artifact_status: 'active',
         keywords: general_rec_keywords[id],
         strength_of_recommendation_sort: strength_sort,
-        quality_of_evidence_sort: strength_sort.
+        quality_of_evidence_sort: strength_sort,
         warnings: warnings
       )
     end
