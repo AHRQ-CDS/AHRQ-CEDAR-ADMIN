@@ -74,6 +74,8 @@ module PageScraper
     date = parse_by_core_format(date_node['content']) unless date_node.nil?
     if date.nil?
       warnings << "Encountered #{page_url} with invalid date"
+    elsif date_node.nil?
+      warnings << "Encountered #{page_url} with missing date"
     else
       metadata[:published_on] = date
       metadata[:published_on_precision] = DateTimePrecision.precision(date_node['content'].split(/[-, :T]/).map(&:to_i))
