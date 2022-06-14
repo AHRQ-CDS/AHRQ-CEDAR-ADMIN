@@ -35,6 +35,7 @@ class NgcImporter < CedarImporter
     index = JSON.parse(File.read(index_file))
     index.each_pair do |artifact_id, cached_data|
       metadata = {}
+      warnings = []
       artifact_url = "#{Rails.configuration.ngc_base_url}#{cached_data['html_path']}"
       xml_file = File.join(CACHE_DIR, "#{artifact_id}.xml")
       if File.exist?(xml_file)
@@ -44,7 +45,7 @@ class NgcImporter < CedarImporter
         # Remove the parentheses and any text between them -- otherwise, the date has greater precision than it should
         date_string = xml_dom.at_xpath('//Field[@FieldID="128"]/FieldValue/@Value').value.sub(/\s*\(.+\)$/, '')
         warning_context = "Encountered #{@repository_alias} search entry '#{cached_data['title']}' with invalid date"
-        published_date, warnings, published_on_precision = PageScraper.parse_and_precision(date_string, warning_context, [])
+        published_date, warnings, published_on_precision = PageScraper.parse_and_precision(date_string, warning_context, warnings)
         artifact_description_html = xml_dom.at_xpath('//Field[@FieldID="151"]/FieldValue/@Value').value
         metadata.merge!(
           remote_identifier: artifact_id,
@@ -56,7 +57,7 @@ class NgcImporter < CedarImporter
           artifact_type: 'Guideline',
           artifact_status: 'active',
           keywords: [],
-          warnings: warnings
+          warnings: []
         )
       else
         metadata[:error] = "Failed to retrieve #{artifact_id}.xml"
@@ -66,6 +67,7 @@ class NgcImporter < CedarImporter
         html = File.read(html_file)
         metadata.merge!(extract_html_metadata(html, html_file))
         metadata.merge!(keywords: extract_keywords(html))
+        metadata[:warnings].concat warnings
       else
         metadata[:error] = "Failed to retrieve #{artifact_id}.html"
       end

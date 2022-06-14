@@ -94,6 +94,7 @@ module PageScraper
     metadata
   end
 
+  # DateTimePrecision is from date_time_precision/lib
   def parse_and_precision(input, warning_context, messages)
     case input
     when String

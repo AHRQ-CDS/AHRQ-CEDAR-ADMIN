@@ -84,10 +84,11 @@ class EpcImporter < CedarImporter
         published_on_precision: published_on_precision,
         artifact_type: artifact_type,
         artifact_status: artifact_status,
-        warnings: warnings,
-        keywords: []
+        keywords: [],
+        warnings: []
       }
       metadata.merge!(extract_metadata(artifact_url))
+      metadata[:warnings].concat warnings
       update_or_create_artifact!(cedar_id, metadata)
       Rails.logger.info "Processed EPC artifact #{artifact_url}"
     end

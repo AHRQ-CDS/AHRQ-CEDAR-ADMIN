@@ -80,6 +80,7 @@ class UspstfImporter < CedarImporter
 
     # Extract general recommendations
     @json_data['generalRecommendations'].each_pair do |id, recommendation|
+      warnings = []
       cedar_id = "USPSTF-GR-#{id}"
       related_specific_recs = recommendation['specific'] || []
       related_specific_rec_sorts = related_specific_recs.map { |specific_rec| specific_rec_sorts[specific_rec] }
@@ -104,7 +105,8 @@ class UspstfImporter < CedarImporter
         artifact_status: 'active',
         keywords: general_rec_keywords[id],
         strength_of_recommendation_sort: strength_sort,
-        quality_of_evidence_sort: strength_sort
+        quality_of_evidence_sort: strength_sort.
+        warnings: warnings
       )
     end
 
