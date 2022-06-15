@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_11_133400) do
+ActiveRecord::Schema.define(version: 2022_06_15_160600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -118,6 +118,7 @@ ActiveRecord::Schema.define(version: 2022_03_11_133400) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.jsonb "repository_results", default: {}
+    t.jsonb "link_clicks", default: []
   end
 
   create_table "users", force: :cascade do |t|

@@ -12,8 +12,8 @@
   <thead>
   <tr>
     <th style="width: 16.66%">Date Time</th>
-    <th style="width: 44%">Search Params</th>
-    <th style="width: 11.33%">Results Returned</th>
+    <th style="width: 40%">Search Params</th>
+    <th style="width: 15.33%">Results Returned / Clicked</th>
     <th style="width: 11.33%">Total Results</th>
     <th style="width: 8.33%">Client IP</th>
     <th style="width: 8.33%">Time (ms)</th>
@@ -45,11 +45,11 @@
         <pre class="hidden" id="raw-json-<%= index %>" ><%= JSON.pretty_generate(sl.search_params) %></pre>
       </td>
       <td>
-        <%= sl.count %>
+        <%= sl.count %> / <%= sl.link_clicks&.size&.to_i %>
         <ul class="bare-list">
           <% sl.repository_results.values.sort_by { |e| e['alias'] }.each do |repo| %>
             <% next if repo['count'].nil? %>
-          <li><small><%= "#{repo['count']} #{repo['alias']}" %></small></li>
+          <li><small><%= "#{repo['count']} / #{repo['clicked'].to_i} #{repo['alias']}" %></small></li>
           <% end %>
         </ul>
       </td>
