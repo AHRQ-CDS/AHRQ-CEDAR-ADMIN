@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2022_06_15_160600) do
-=======
-ActiveRecord::Schema.define(version: 2022_05_24_235926) do
->>>>>>> dfd94fb (Add published_on_precision to Artifact.)
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
