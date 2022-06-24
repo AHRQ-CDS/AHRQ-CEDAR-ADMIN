@@ -30,6 +30,7 @@ class UspstfImporterTest < ActiveSupport::TestCase
     artifact = artifacts.where(cedar_identifier: 'USPSTF-SR-358').first
     assert_equal('Cervical Cancer: Screening --Women aged 21 to 65 years', artifact.title)
     assert_equal('USPSTF', artifact.repository.alias)
+    assert(artifact.keywords.include?('hpv'))
     assert_equal('Specific Recommendation', artifact.artifact_type)
     assert_equal(2, artifact.strength_of_recommendation_sort)
     assert_equal('A', artifact.strength_of_recommendation_score)
@@ -49,6 +50,7 @@ class UspstfImporterTest < ActiveSupport::TestCase
     # Check example PDF tool
     artifact = artifacts.where(cedar_identifier: 'USPSTF-TOOL-323').first
     assert_equal('Cervical Cancer Screening - Clinical Summary (PDF)', artifact.title)
+    assert(artifact.keywords.include?('hpv'))
     assert_equal('USPSTF', artifact.repository.alias)
     assert_equal('Tool', artifact.artifact_type)
     assert_equal('This is a sample tool for the USPSTF importer.', artifact.description)
@@ -68,6 +70,7 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert(artifact.keywords.include?('five'))
     assert(artifact.keywords.include?('six'))
     assert(artifact.keywords.include?('seven'))
+    assert(artifact.keywords.include?('hpv'))
 
     # Check tracking
     assert_equal(1, repository.import_runs.count)
