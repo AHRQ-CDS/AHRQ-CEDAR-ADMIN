@@ -86,11 +86,11 @@ class UspstfImporter < CedarImporter
       related_specific_rec_sorts = related_specific_recs.map { |specific_rec| specific_rec_sorts[specific_rec] }
       strength_sort = related_specific_rec_sorts.max || 0
 
-      date = parse_by_core_format(recommendation['topicYear']) unless recommendation['topicYear'].nil?
+      date = parse_by_core_format(recommendation['topicYear'].to_s) unless recommendation['topicYear'].nil?
       if date.nil?
         warnings << "Encountered #{url} with invalid date"
       else
-        published_on_precision = DateTimePrecision.precision(recommendation['topicYear'].split(/[-, :T]/).map(&:to_i))
+        published_on_precision = DateTimePrecision.precision(recommendation['topicYear'].to_s.split(/[-, :T]/).map(&:to_i))
       end
 
       update_or_create_artifact!(
@@ -116,7 +116,7 @@ class UspstfImporter < CedarImporter
       url = tool['url']
       metadata = {
         title: tool['title'],
-        url: url,
+        url: url.presence,
         artifact_type: 'Tool',
         artifact_status: 'active'
       }

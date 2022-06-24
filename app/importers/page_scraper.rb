@@ -8,6 +8,8 @@ module PageScraper
 
   # Process an individual HTML page or PDF to extract metadata
   def extract_metadata(page_url)
+    return {} if page_url.empty?
+    
     connection = Faraday.new page_url.strip do |con|
       con.use FaradayMiddleware::FollowRedirects, limit: 5
       con.adapter Faraday.default_adapter
