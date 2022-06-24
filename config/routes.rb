@@ -12,6 +12,12 @@ Rails.application.routes.draw do
   end
 
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
+
+  # Handle error routes
+  match "/404", :to => "errors#error_404", :via => :all
+  match "/500", :to => "errors#error_500", :via => :all
+
+  # Handle all application routes
   resources :search_logs, only: [:index]
   get '/repository/:id', to: 'home#repository', as: 'repository'
   get '/import_run/:id', to: 'home#import_run', as: 'import_run'

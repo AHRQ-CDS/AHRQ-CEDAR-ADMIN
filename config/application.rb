@@ -11,6 +11,9 @@ module CedarAdmin
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
+    # Handle errors using error routes that are part of our regular application rather than the static html error pages that ship with rails
+    config.exceptions_app = self.routes
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
