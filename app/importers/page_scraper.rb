@@ -9,7 +9,7 @@ module PageScraper
   # Process an individual HTML page or PDF to extract metadata
   def extract_metadata(page_url)
     return {} if page_url.empty?
-    
+
     connection = Faraday.new page_url.strip do |con|
       con.use FaradayMiddleware::FollowRedirects, limit: 5
       con.adapter Faraday.default_adapter
@@ -59,7 +59,6 @@ module PageScraper
     metadata[:keywords].concat(html.css('a.related-topic').collect(&:content)) if html.at_css('a.related-topic').present?
     # AAFP pages
     metadata[:keywords].concat(html.css('ul.relatedContent a').collect(&:content)) if html.at_css('ul.relatedContent a').present?
-
     # DOI
     doi_node = html.at_css('meta[name="citation_doi"]')
     metadata[:doi] = doi_node['content'] unless doi_node.nil?
