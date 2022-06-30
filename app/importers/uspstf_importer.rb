@@ -22,57 +22,63 @@ class UspstfImporter < CedarImporter
 
   def update_db!
     # Some metadata is only present at the general recommendation level, capture it here
-    general_rec_urls = {}
-    general_rec_keywords = {}
+    general_rec_info = {}
     @json_data['generalRecommendations'].each_pair do |id, recommendation|
-      # TODO: clinicalUrl and otherUrl fields in JSON are not resolvable
-      url = "#{Rails.configuration.uspstf_home_page}recommendation/#{recommendation['uspstfAlias']}"
-      general_rec_urls[id] = url
+      slug = recommendation['uspstfAlias']
+      url = "#{Rails.configuration.uspstf_home_page}recommendation/#{slug}"
       keywords = recommendation['keywords']&.split('|') || []
       recommendation['categories'].each do |cat|
         keywords << @json_data['categories'][cat.to_s]['name']
       end
-      general_rec_keywords[id] = keywords
+      general_rec_info[id.to_s] = {
+        url: url,
+        # Keywords are only specified at the general recommendation level so we save them here for
+        # use in the associated specific recommendations and the tools that are linked from the
+        # specific recommendations.
+        keywords: keywords,
+        slug: slug,
+        sorts: [] # populated with sort order of associated specific recommendations
+      }
     end
 
     # Extract specific recommendations
-    # TODO: consider whether specific recommendations should be standalone entries; alternately, we may wish
-    # to only have entries for the general recommendations because of the metadata
-    tool_keywords = {}
+    tool_general_rec_info = {} # captures the general recommendation for each tool
     grade_statements = @json_data['grades']
-    specific_rec_sorts = {}
     @json_data['specificRecommendations'].each do |recommendation|
-      remote_id = recommendation['id']
-      cedar_id = "USPSTF-SR-#{remote_id}"
+      remote_id = recommendation['id'].to_s
       general_rec_id = recommendation['general'].to_s
-      url = general_rec_urls[general_rec_id]
-      # Keywords are only specified at the general recommendation level so we propogate them to the specific
-      # recommendations here. We also save the keywords for later use with tools that are linked from the
-      # specific recommendation.
-      keywords = general_rec_keywords[general_rec_id]
+      general_rec = general_rec_info[general_rec_id]
+      if general_rec.nil?
+        Rails.logger.warn "Skipping USPSTF specific recommendation (#{recommendation['title']}) " \
+                          "with a missing parent general recommendation (id=#{general_rec_id})"
+        next
+      end
+
+      # The cedar id of a specific recommendation is made relative to the associated
+      # general recommendation. This ensures a unique id if the USPSTF changes the
+      # id (remote_id here).
+      cedar_id = "USPSTF-#{Digest::MD5.hexdigest(general_rec[:slug] + remote_id)}"
       recommendation['tool'].each do |tool_id|
-        tool_keywords[tool_id.to_s] ||= []
-        tool_keywords[tool_id.to_s].concat(keywords).uniq!
+        tool_general_rec_info[tool_id.to_s] = general_rec
       end
       strength_score = recommendation['grade']
       strength_sort = compute_strength_of_evidence_score(strength_score)
-      specific_rec_sorts[remote_id] = strength_sort
-      strength_statements = grade_statements[strength_score]
+      general_rec[:sorts] << strength_sort
 
       # TODO: publish date and url are not explicit fields in the JSON
       update_or_create_artifact!(
         cedar_id,
-        remote_identifier: remote_id.to_s,
+        remote_identifier: remote_id,
         title: recommendation['title'],
         description_html: recommendation['text'],
-        url: url,
-        keywords: keywords,
+        url: general_rec[:url],
+        keywords: general_rec[:keywords],
         artifact_type: 'Specific Recommendation',
         artifact_status: 'active',
-        strength_of_recommendation_statement: strength_statements[1],
+        strength_of_recommendation_statement: grade_statements[strength_score][1],
         strength_of_recommendation_score: strength_score,
         strength_of_recommendation_sort: strength_sort,
-        quality_of_evidence_statement: strength_statements[0],
+        quality_of_evidence_statement: grade_statements[strength_score][0],
         quality_of_evidence_score: strength_score,
         quality_of_evidence_sort: strength_sort
       )
@@ -81,14 +87,13 @@ class UspstfImporter < CedarImporter
     # Extract general recommendations
     @json_data['generalRecommendations'].each_pair do |id, recommendation|
       warnings = []
-      cedar_id = "USPSTF-GR-#{id}"
-      related_specific_recs = recommendation['specific'] || []
-      related_specific_rec_sorts = related_specific_recs.map { |specific_rec| specific_rec_sorts[specific_rec] }
-      strength_sort = related_specific_rec_sorts.max || 0
+      general_rec = general_rec_info[id.to_s]
+      cedar_id = "USPSTF-#{Digest::MD5.hexdigest(general_rec[:slug])}"
+      strength_sort = general_rec[:sorts].max || 0
 
       date = parse_by_core_format(recommendation['topicYear'].to_s) unless recommendation['topicYear'].nil?
       if date.nil?
-        warnings << "Encountered #{url} with invalid date"
+        warnings << "Encountered #{general_rec[:url]} with invalid date"
       else
         published_on_precision = DateTimePrecision.precision(recommendation['topicYear'].to_s.split(/[-, :T]/).map(&:to_i))
       end
@@ -98,12 +103,12 @@ class UspstfImporter < CedarImporter
         remote_identifier: id.to_s,
         title: recommendation['title'],
         description_html: recommendation['clinical'],
-        url: general_rec_urls[id],
+        url: general_rec[:url],
         published_on: date,
         published_on_precision: published_on_precision,
         artifact_type: 'General Recommendation',
         artifact_status: 'active',
-        keywords: general_rec_keywords[id],
+        keywords: general_rec[:keywords],
         strength_of_recommendation_sort: strength_sort,
         quality_of_evidence_sort: strength_sort,
         warnings: warnings
@@ -112,19 +117,29 @@ class UspstfImporter < CedarImporter
 
     # Extract tools
     @json_data['tools'].each_pair do |id, tool|
-      cedar_id = "USPSTF-TOOL-#{id}"
+      general_rec = tool_general_rec_info[id.to_s]
+      if general_rec.nil?
+        Rails.logger.warn "Skipping USPSTF tool (#{tool['title']}) with a missing parent general recommendation"
+        next
+      end
+
       url = tool['url']
+      if url.empty?
+        Rails.logger.warn "Skipping USPSTF tool (#{tool['title']}) with missing URL"
+        next
+      end
+
+      cedar_id = "USPSTF-#{Digest::MD5.hexdigest(url.to_s)}"
       metadata = {
         title: tool['title'],
-        url: url.presence,
+        url: url,
         artifact_type: 'Tool',
         artifact_status: 'active'
       }
       metadata.merge!(extract_metadata(url))
-      if tool_keywords[id].present?
-        metadata[:keywords] ||= []
-        metadata[:keywords].concat(tool_keywords[id]).uniq! # maerge/deep_merge don't concat.uniq arrays
-      end
+      # merge/deep_merge don't concat.uniq arrays so we can't set them in metadata above
+      metadata[:keywords] ||= []
+      metadata[:keywords].concat(general_rec[:keywords]).uniq! if general_rec.present?
       update_or_create_artifact!(cedar_id, metadata)
     end
   end

@@ -33,4 +33,16 @@ namespace :utilities do
       end
     end
   end
+
+  desc 'Remove obsolete USPSTF artifacts and version histories following change to ID format'
+  task cleanup_uspstf: :environment do
+    PaperTrail.request(enabled: false) do
+      Repository.find_by(alias: 'USPSTF').artifacts.where(artifact_status: 'retracted').each do |artifact|
+        if artifact.cedar_identifier.match?(/USPSTF-(TOOL|SR|GR)/)
+          artifact.destroy
+        end
+      end
+    end
+    PaperTrail::Version.where(item_type: 'Artifact').where('item_id NOT IN (?)', Artifact.all.collect(&:id)).destroy_all
+  end
 end

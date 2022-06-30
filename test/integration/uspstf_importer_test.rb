@@ -27,7 +27,9 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal(7, artifacts.count)
 
     # Check example specific recommendation
-    artifact = artifacts.where(cedar_identifier: 'USPSTF-SR-358').first
+    sr_358_id = "USPSTF-#{Digest::MD5.hexdigest('cervical-cancer-screening' + '358')}"
+    artifact = artifacts.where(cedar_identifier: sr_358_id).first
+    assert artifact.present?
     assert_equal('Cervical Cancer: Screening --Women aged 21 to 65 years', artifact.title)
     assert_equal('USPSTF', artifact.repository.alias)
     assert(artifact.keywords.include?('hpv'))
@@ -39,7 +41,9 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert(artifact.quality_of_evidence_statement.start_with?('The USPSTF strongly recommends'))
 
     # Check example general recommendation
-    artifact = artifacts.where(cedar_identifier: 'USPSTF-GR-199').first
+    gr_199_id = "USPSTF-#{Digest::MD5.hexdigest('cervical-cancer-screening')}"
+    artifact = artifacts.where(cedar_identifier: gr_199_id).first
+    assert artifact.present?
     assert_equal('Screening for Cervical Cancer', artifact.title)
     assert_equal('USPSTF', artifact.repository.alias)
     assert_equal('General Recommendation', artifact.artifact_type)
@@ -50,7 +54,9 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal(1, artifact.published_on_precision) # YEAR PRECISION = 1
 
     # Check example PDF tool
-    artifact = artifacts.where(cedar_identifier: 'USPSTF-TOOL-323').first
+    tool_323_id = "USPSTF-#{Digest::MD5.hexdigest('https://www.uspreventiveservicestaskforce.org/Page/Document/ClinicalSummaryFinal/cervical-cancer-screening2')}"
+    artifact = artifacts.where(cedar_identifier: tool_323_id).first
+    assert artifact.present?
     assert_equal('Cervical Cancer Screening - Clinical Summary (PDF)', artifact.title)
     assert(artifact.keywords.include?('hpv'))
     assert_equal('USPSTF', artifact.repository.alias)
@@ -58,7 +64,9 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal('This is a sample tool for the USPSTF importer.', artifact.description)
 
     # Check example HTML tool
-    artifact = artifacts.where(cedar_identifier: 'USPSTF-TOOL-324').first
+    tool_324_id = "USPSTF-#{Digest::MD5.hexdigest('https://jamanetwork.com/journals/jama/fullarticle/2697698')}"
+    artifact = artifacts.where(cedar_identifier: tool_324_id).first
+    assert artifact.present?
     assert_equal('Cervical Cancer Screening - Patient Page', artifact.title)
     assert_equal('USPSTF', artifact.repository.alias)
     assert_equal('Tool', artifact.artifact_type)
@@ -78,31 +86,31 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal(1, repository.import_runs.count)
     import_run = repository.import_runs.last
     assert_equal('success', import_run.status)
-    assert_equal(8, import_run.total_count)
+    assert_equal(7, import_run.total_count)
     assert_equal(7, import_run.new_count)
     assert_equal(0, import_run.update_count)
-    assert_equal(1, import_run.error_msgs.size)
+    assert_equal(0, import_run.error_msgs.size)
 
     # Import sample data a second time
     UspstfImporter.run
 
     #  Check if any artifacts were duplicated by second import
-    artifacts = Artifact.where(cedar_identifier: 'USPSTF-SR-358')
+    artifacts = Artifact.where(cedar_identifier: sr_358_id)
     assert_equal(1, artifacts.count)
-    artifacts = Artifact.where(cedar_identifier: 'USPSTF-GR-199')
+    artifacts = Artifact.where(cedar_identifier: gr_199_id)
     assert_equal(1, artifacts.count)
-    artifacts = Artifact.where(cedar_identifier: 'USPSTF-TOOL-323')
+    artifacts = Artifact.where(cedar_identifier: tool_323_id)
     assert_equal(1, artifacts.count)
-    artifacts = Artifact.where(cedar_identifier: 'USPSTF-TOOL-324')
+    artifacts = Artifact.where(cedar_identifier: tool_324_id)
     assert_equal(1, artifacts.count)
 
     # Check tracking
     assert_equal(2, repository.import_runs.count)
     import_run = repository.import_runs.last
     assert_equal('success', import_run.status)
-    assert_equal(8, import_run.total_count)
+    assert_equal(7, import_run.total_count)
     assert_equal(0, import_run.new_count)
     assert_equal(0, import_run.update_count)
-    assert_equal(1, import_run.error_msgs.size)
+    assert_equal(0, import_run.error_msgs.size)
   end
 end
