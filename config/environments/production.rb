@@ -1,8 +1,8 @@
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
-  # This app is deployed in a subdirectory
-  config.relative_url_root = '/stats'
+  # This app is often deployed deployed in a subdirectory
+  config.relative_url_root = "/#{ENV['CEDAR_ADMIN_PATH_PREFIX']}"
 
   # Code is not reloaded between requests.
   config.cache_classes = true
