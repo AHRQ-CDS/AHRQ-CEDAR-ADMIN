@@ -5,6 +5,7 @@
 class Artifact < ApplicationRecord
   belongs_to :repository
   has_and_belongs_to_many :concepts
+  before_save :set_published_on_range
   after_save :update_index
 
   # Track all revisions to artifacts
@@ -104,5 +105,22 @@ class Artifact < ApplicationRecord
       WHERE id=#{ActiveRecord::Base.connection.quote(id)}
     SQL
     ActiveRecord::Base.connection.execute(query)
+  end
+
+  def set_published_on_range
+    case published_on_precision
+    when 0
+      self.published_on_start = nil
+      self.published_on_end = nil
+    when 1 # year
+      self.published_on_start = published_on.to_datetime
+      self.published_on_end = published_on.to_datetime.next_year - 1.second
+    when 2 # year-month
+      self.published_on_start = published_on.to_datetime
+      self.published_on_end = published_on.to_datetime.next_month - 1.second
+    when 3..7 # year-month-day
+      self.published_on_start = published_on.to_datetime
+      self.published_on_end = published_on.to_datetime.next_day - 1.second
+    end
   end
 end

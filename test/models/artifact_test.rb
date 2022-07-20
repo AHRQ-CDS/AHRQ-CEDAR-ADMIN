@@ -143,4 +143,29 @@ class ArtifactTest < ActiveSupport::TestCase
     artifact.keywords = nil
     assert_equal(0, artifact.concepts.size)
   end
+
+  test 'setting published_on_start and published_on_end' do
+    repository = create(:repository)
+
+    # DAY PRECISION has a range with published_on_start and published_on_end across a 24-hour period
+    artifact = Artifact.new(published_on: Date.new(2021, 2, 25), published_on_precision: 3, repository: repository)
+    artifact.save!
+    assert_equal(DateTime.parse('2021-02-25 00:00:00 UTC'), artifact.published_on_start.utc)
+    assert_equal(DateTime.parse('2021-02-25 23:59:59 UTC'), artifact.published_on_end.utc)
+
+    # MONTH PRECISION has a range with published_on_start and published_on_end across a month-long period
+    artifact.update!(published_on_precision: 2, published_on: Date.new(2021, 2))
+    assert_equal(DateTime.parse('2021-02-01 00:00:00 UTC'), artifact.published_on_start.utc)
+    assert_equal(DateTime.parse('2021-02-28 23:59:59 UTC'), artifact.published_on_end.utc)
+
+    # YEAR PRECISION has a range with published_on_start and published_on_end across a year-long period
+    artifact.update!(published_on_precision: 1, published_on: Date.new(2021))
+    assert_equal(DateTime.parse('2021-01-01 00:00:00 UTC'), artifact.published_on_start.utc)
+    assert_equal(DateTime.parse('2021-12-31 23:59:59 UTC'), artifact.published_on_end.utc)
+
+    # NIL PRECISION has a range with published_on_start and published_on_end both nil
+    artifact.update!(published_on_precision: 0, published_on: nil)
+    assert_nil(artifact.published_on_start)
+    assert_nil(artifact.published_on_end)
+  end
 end

@@ -58,8 +58,6 @@ class CdsConnectImporter < CedarImporter
             artifact['repository_information']['publication_date'], warning_context, []
           )
 
-          published_on_start, published_on_end = PageScraper.published_on_range(published_date, published_on_precision)
-
           attributes.merge!(
             remote_identifier: artifact_id.to_s,
             title: artifact['title'],
@@ -67,8 +65,6 @@ class CdsConnectImporter < CedarImporter
             url: "#{Rails.configuration.cds_connect_base_url}node/#{artifact_id}",
             published_on: published_date,
             published_on_precision: published_on_precision,
-            published_on_start: published_on_start,
-            published_on_end: published_on_end,
             artifact_type: artifact['artifact_type']&.strip.presence,
             artifact_status: Artifact.artifact_statuses[cds_connect_status] || 'unknown',
             keywords: keywords,
