@@ -57,7 +57,6 @@ class CdsConnectImporter < CedarImporter
           published_date, warnings, published_on_precision = PageScraper.parse_and_precision(
             artifact['repository_information']['publication_date'], warning_context, []
           )
-
           attributes.merge!(
             remote_identifier: artifact_id.to_s,
             title: artifact['title'],
