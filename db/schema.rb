@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_15_160600) do
+ActiveRecord::Schema.define(version: 2022_07_20_161824) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,8 @@ ActiveRecord::Schema.define(version: 2022_06_15_160600) do
     t.string "quality_of_evidence_score"
     t.integer "quality_of_evidence_sort", default: 0
     t.integer "published_on_precision"
+    t.datetime "published_on_start"
+    t.datetime "published_on_end"
     t.index "to_tsvector('english'::regconfig, COALESCE(keyword_text, ''::text))", name: "index_artifacts_on_keyword_text", using: :gin
     t.index ["content_search"], name: "index_artifacts_on_content_search", using: :gin
     t.index ["keywords"], name: "index_artifacts_on_keywords", using: :gin

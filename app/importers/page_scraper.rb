@@ -123,5 +123,20 @@ module PageScraper
     end
   end
 
-  module_function :parse_and_precision
+  def published_on_range(published_date, published_on_precision)
+    case published_on_precision
+    when 1 # year
+      published_on_start = DateTime.new(published_date)
+      published_on_end = DateTime.new(published_date) + 1.year - 1.minute
+    when 2 # year-month
+      published_on_start = DateTime.new(published_date)
+      published_on_end = DateTime.new(published_date) + 1.month - 1.minute
+    when 3..7 # year-month-day
+      published_on_start = published_date.to_datetime
+      published_on_end = published_date.to_datetime + 1.day - 1.minute
+    end
+    return published_on_start, published_on_end
+  end
+
+  module_function :parse_and_precision, :published_on_range
 end
