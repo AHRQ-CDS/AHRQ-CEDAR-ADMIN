@@ -135,7 +135,7 @@ module PageScraper
       published_on_start = published_date.to_datetime
       published_on_end = published_date.to_datetime + 1.day - 1.minute
     end
-    return published_on_start, published_on_end
+    [published_on_start, published_on_end]
   end
 
   module_function :parse_and_precision, :published_on_range
