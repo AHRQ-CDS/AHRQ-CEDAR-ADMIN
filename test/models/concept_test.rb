@@ -38,4 +38,12 @@ class ConceptTest < ActiveSupport::TestCase
     concept = Concept.new(umls_cui: 'Test', synonyms_text: ['foo bar', 'foo, bar'])
     assert_equal 1, concept.synonyms_psql.size
   end
+
+  test '& is removed' do
+    concept = Concept.new(umls_cui: 'Test', synonyms_text: ['foo & bar', 'foo, bar'])
+    assert concept.synonyms_text.include?('foo bar')
+    assert !concept.synonyms_text.include?('foo & bar')
+    assert concept.synonyms_psql.include?('foo<->bar')
+    assert !concept.synonyms_psql.include?('foo<->&<->bar')
+  end
 end
