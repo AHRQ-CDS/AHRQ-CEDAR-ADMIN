@@ -45,7 +45,7 @@ class ConceptTest < ActiveSupport::TestCase
     assert concept.synonyms_psql.include?('skf<->105494')
     assert concept.synonyms_psql.include?('skf-105494')
     assert concept.synonyms_psql.include?('skf<->105<->494')
-    assert_not concept.synonyms_psql.include?('fopreventiono<->&<->control')
+    assert_not concept.synonyms_psql.include?('prevention<->&<->control')
     assert_not concept.synonyms_psql.include?('sk&f<->105494')
     assert_not concept.synonyms_psql.include?('sk&f-105494')
     assert_not concept.synonyms_psql.include?('sk&f<->105<->494')
