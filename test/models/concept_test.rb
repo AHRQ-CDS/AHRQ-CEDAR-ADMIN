@@ -40,10 +40,14 @@ class ConceptTest < ActiveSupport::TestCase
   end
 
   test '& is removed' do
-    concept = Concept.new(umls_cui: 'Test', synonyms_text: ['foo & bar', 'foo, bar'])
-    assert concept.synonyms_text.include?('foo bar')
-    assert_not concept.synonyms_text.include?('foo & bar')
-    assert concept.synonyms_psql.include?('foo<->bar')
-    assert_not concept.synonyms_psql.include?('foo<->&<->bar')
+    concept = Concept.new(umls_cui: 'Test', synonyms_text: ['prevention & control', 'sk&f 105494', 'sk&f-105494', 'sk&f 105,494'])
+    assert concept.synonyms_psql.include?('prevention<->control')
+    assert concept.synonyms_psql.include?('skf<->105494')
+    assert concept.synonyms_psql.include?('skf-105494')
+    assert concept.synonyms_psql.include?('skf<->105<->494')
+    assert_not concept.synonyms_psql.include?('fopreventiono<->&<->control')
+    assert_not concept.synonyms_psql.include?('sk&f<->105494')
+    assert_not concept.synonyms_psql.include?('sk&f-105494')
+    assert_not concept.synonyms_psql.include?('sk&f<->105<->494')
   end
 end
