@@ -45,4 +45,15 @@ namespace :utilities do
     end
     PaperTrail::Version.where(item_type: 'Artifact').where('item_id NOT IN (?)', Artifact.all.collect(&:id)).destroy_all
   end
+
+  # Populates published_on_start and published_on_end by saving each artifact and 
+  # thus invoking the before_save callback :set_published_on_range
+  desc 'Populate published_on range (published_on_start and published_on_end)'
+  task populate_published_on_range: :environment do
+    PaperTrail.request(enabled: false) do
+      Artifact.find_each(batch_size: 1000) do |artifact| 
+        artifact.save!
+      end
+    end
+  end
 end
