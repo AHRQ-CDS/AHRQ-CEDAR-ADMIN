@@ -46,14 +46,22 @@ namespace :utilities do
     PaperTrail::Version.where(item_type: 'Artifact').where('item_id NOT IN (?)', Artifact.all.collect(&:id)).destroy_all
   end
 
-  # Populates published_on_start and published_on_end by saving each artifact and 
+  # Populates published_on_start and published_on_end by saving each artifact and
   # thus invoking the before_save callback :set_published_on_range
   desc 'Populate published_on range (published_on_start and published_on_end)'
   task populate_published_on_range: :environment do
     PaperTrail.request(enabled: false) do
-      Artifact.find_each(batch_size: 1000) do |artifact| 
+      Artifact.find_each(batch_size: 1000) do |artifact|
         artifact.save!
       end
+    end
+  end
+
+  desc 'Update concept synonyms to remove redundacies and use DB stemming'
+  task update_synonyms: :environment do
+    Concept.find_each do |concept|
+      concept.synonyms_text = concept.synonyms_text # run the Concept#synonyms_text= method that udpates synonyms_psql
+      concept.save
     end
   end
 end
