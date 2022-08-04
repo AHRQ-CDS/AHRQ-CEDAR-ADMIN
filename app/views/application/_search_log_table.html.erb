@@ -45,7 +45,7 @@
         <pre class="hidden" id="raw-json-<%= index %>" ><%= JSON.pretty_generate(sl.search_params) %></pre>
       </td>
       <td>
-        <%= sl.count %> / <%= sl.link_clicks&.size&.to_i %>
+        <%= sl.count || 0 %> / <%= sl.link_clicks&.size&.to_i %>
         <ul class="bare-list">
           <% sl.repository_results.values.sort_by { |e| e['alias'] }.each do |repo| %>
             <% next if repo['count'].nil? %>
@@ -63,7 +63,7 @@
         </ul>
       </td>
       <td><%= sl.client_ip %></td>
-      <td><%= Integer((sl.end_time - sl.start_time) * 1000) %></td>
+      <td><%= if sl.end_time.nil? then 'Never Completed' else Integer((sl.end_time - sl.start_time) * 1000) end %></td>
     </tr>
   <% end %>
   </tbody>
