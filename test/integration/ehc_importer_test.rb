@@ -157,12 +157,9 @@ class EhcImporterTest < ActiveSupport::TestCase
       artifacts = repository.artifacts
       assert_equal(2, artifacts.count)
 
-      count = artifacts.where(remote_identifier: 'https://effectivehealthcare.ahrq.gov/products/plant-based-chronic-pain-treatment/living-review')
-      assert_equal(count, 1)
-
-      artifact = artifacts.where(remote_identifier: 'https://effectivehealthcare.ahrq.gov/products/plant-based-chronic-pain-treatment/living-review').first
-      assert(artifact.present?)
-      assert_equal(artifact.artifact_status, 'retracted')
+      previous_imported_artifact = artifacts.where(remote_identifier: 'https://effectivehealthcare.ahrq.gov/products/plant-based-chronic-pain-treatment/living-review')
+      assert_equal(1, previous_imported_artifact.count)
+      assert_equal(previous_imported_artifact.first.artifact_status, 'retracted')
     end
   end
 end
