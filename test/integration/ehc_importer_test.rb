@@ -99,7 +99,7 @@ class EhcImporterTest < ActiveSupport::TestCase
           <Title>Living Systematic Review on Cannabis and Other Plant-Based Treatments for Chronic Pain</Title>
           <Link>https://effectivehealthcare.ahrq.gov/products/plant-based-chronic-pain-treatment/living-review</Link>
           <Author-Name>lnawrocki</Author-Name>
-          <Description>A systematic review assessing the effectiveness and harms of plant-based treatments for chronic pain conditions is underway. The review will be &quot;living&quot; in the sense that it will identify and synthesize recently published literature on an ongoing basis. For the purposes of this review, plant-based compounds (PBCs) included are those that are similar to opioids in effect and that have the potential for addiction, misuse, and serious adverse effects; other PBCs such as herbal treatments are not included. The intended audience includes policy and decision makers, funders and researchers of treatments for chronic pain, and clinicians who treat chronic pain. The quarterly progress reports present the accumulating evidence and are updated on a regular basis. They include a description of the available studies and an appraisal of study quality.</Description>
+          <Description>A systematic review assessing the effectiveness and harms of plant-based treatments for chronic pain</Description>
           <Health-Topics>Chronic Pain</Health-Topics>
           <Product-Type>Surveillance Report</Product-Type>
           <Publish-Date>March 24, 2021</Publish-Date>
@@ -135,18 +135,17 @@ class EhcImporterTest < ActiveSupport::TestCase
           <Title>Treatments for Seasonal Allergic Rhinitis</Title>
           <Link>https://effectivehealthcare.ahrq.gov/products/allergy-seasonal/research</Link>
           <Author-Name>bahdevteam19</Author-Name>
-          <Description>Objectives: This review compared the effectiveness and common adverse events of medication classes used to treat seasonal allergic rhinitis (SAR) in adolescents and adults, in pregnant women, and in children. We sought to compare the following classes of drugs: oral and nasal antihistamines and decongestants; intranasal corticosteroids, mast cell stabilizers (cromolyn), and anticholinergics (ipratropium); oral leukotriene receptor antagonists (montelukast); and nasal saline.</Description>
+          <Description>Objectives: This review compared the effectiveness and common adverse events of medication</Description>
           <Health-Topics>Immune System and Disorders,Hay Fever</Health-Topics>
           <Product-Type>Systematic Review</Product-Type>
           <Publish-Date>July 16, 2013</Publish-Date>
           <Status>Archived</Status>
           <Keywords>Mycetozoa</Keywords>
-          <Citation>Glacy J, Putnam K, Godfrey S, Falzon L, Mauger B, Samson D, Aronson N. Treatments for Seasonal Allergic Rhinitis. Comparative Effectiveness Review No. 120. (Prepared by the Blue Cross and Blue Shield Association Technology Evaluation Center Evidence-based Practice Center under Contract No. 290-2007-10058.) AHRQ Publication No. 13-EHC098-EF. Rockville, MD: Agency for Healthcare Research and Quality; July 2013.</Citation>
+          <Citation>Glacy J, Putnam K, Godfrey S, Falzon L, Mauger B, Samson D, Aronson N. Treatments for Seasonal Allergic Rhinitis.</Citation>
         </item>
       </response>"
 
       stub_request(:get, /product-feed/).to_return(status: 200, headers: { 'Content-Type' => 'application/xml' }, body: response_2)
-
 
       EhcImporter.run
 
