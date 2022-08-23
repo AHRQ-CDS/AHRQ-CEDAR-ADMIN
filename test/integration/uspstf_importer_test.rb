@@ -32,13 +32,22 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert artifact.present?
     assert_equal('Cervical Cancer: Screening --Women aged 21 to 65 years', artifact.title)
     assert_equal('USPSTF', artifact.repository.alias)
-    assert(artifact.keywords.include?('hpv'))
     assert_equal('Specific Recommendation', artifact.artifact_type)
     assert_equal(2, artifact.strength_of_recommendation_sort)
     assert_equal('A', artifact.strength_of_recommendation_score)
     assert(artifact.strength_of_recommendation_statement.start_with?('The USPSTF recommends'))
     assert_equal('A', artifact.quality_of_evidence_score)
     assert(artifact.quality_of_evidence_statement.start_with?('The USPSTF strongly recommends'))
+    assert_equal(Date.new(2018, 7, 23), artifact.published_on)
+    assert_equal(3, artifact.published_on_precision) # DAY PRECISION = 3
+    assert(artifact.keywords.include?('screening'))
+    assert(artifact.keywords.include?('cervical cancer'))
+    assert(artifact.keywords.include?('pap smear'))
+    assert(artifact.keywords.include?('hpv'))
+    assert(artifact.keywords.include?('human papillomavirus'))
+    assert(artifact.keywords.include?('hysterectomy'))
+    assert(artifact.keywords.include?('cervix'))
+    assert(artifact.keywords.include?('uspstf'))
 
     # Check example general recommendation
     gr_199_id = "USPSTF-#{Digest::MD5.hexdigest('cervical-cancer-screening')}"
@@ -50,8 +59,16 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal(2, artifact.strength_of_recommendation_sort)
     assert_nil(artifact.strength_of_recommendation_score)
     assert_equal(2, artifact.quality_of_evidence_sort)
-    assert_equal(Date.new(2018), artifact.published_on)
-    assert_equal(1, artifact.published_on_precision) # YEAR PRECISION = 1
+    assert_equal(Date.new(2018, 7, 23), artifact.published_on)
+    assert_equal(3, artifact.published_on_precision) # DAY PRECISION = 3
+    assert(artifact.keywords.include?('screening'))
+    assert(artifact.keywords.include?('cervical cancer'))
+    assert(artifact.keywords.include?('pap smear'))
+    assert(artifact.keywords.include?('hpv'))
+    assert(artifact.keywords.include?('human papillomavirus'))
+    assert(artifact.keywords.include?('hysterectomy'))
+    assert(artifact.keywords.include?('cervix'))
+    assert(artifact.keywords.include?('uspstf'))
 
     # Check example PDF tool
     tool_323_id = "USPSTF-#{Digest::MD5.hexdigest('https://www.uspreventiveservicestaskforce.org/Page/Document/ClinicalSummaryFinal/cervical-cancer-screening2')}"
@@ -62,6 +79,18 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal('USPSTF', artifact.repository.alias)
     assert_equal('Tool', artifact.artifact_type)
     assert_equal('This is a sample tool for the USPSTF importer.', artifact.description)
+    assert_equal(Date.new(2021, 2, 9), artifact.published_on)
+    assert_equal(3, artifact.published_on_precision) # DAY PRECISION = 3
+    assert(artifact.keywords.include?('clinical summary'))
+    assert(artifact.keywords.include?('cervical cancer'))
+    assert(artifact.keywords.include?('screening'))
+    assert(artifact.keywords.include?('cervical cancer'))
+    assert(artifact.keywords.include?('pap smear'))
+    assert(artifact.keywords.include?('hpv'))
+    assert(artifact.keywords.include?('human papillomavirus'))
+    assert(artifact.keywords.include?('hysterectomy'))
+    assert(artifact.keywords.include?('cervix'))
+    assert(artifact.keywords.include?('uspstf'))
 
     # Check example HTML tool
     tool_324_id = "USPSTF-#{Digest::MD5.hexdigest('https://jamanetwork.com/journals/jama/fullarticle/2697698')}"
@@ -71,7 +100,8 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert_equal('USPSTF', artifact.repository.alias)
     assert_equal('Tool', artifact.artifact_type)
     assert_equal('A sample HTML USPSTF tool', artifact.description)
-    assert(artifact.keywords.include?('uspstf'))
+    assert_equal(Date.new(2018, 7, 23), artifact.published_on)
+    assert_equal(3, artifact.published_on_precision) # DAY PRECISION = 3
     assert(artifact.keywords.include?('tool'))
     assert(artifact.keywords.include?('one'))
     assert(artifact.keywords.include?('two'))
@@ -80,7 +110,14 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert(artifact.keywords.include?('five'))
     assert(artifact.keywords.include?('six'))
     assert(artifact.keywords.include?('seven'))
+    assert(artifact.keywords.include?('screening'))
+    assert(artifact.keywords.include?('cervical cancer'))
+    assert(artifact.keywords.include?('pap smear'))
     assert(artifact.keywords.include?('hpv'))
+    assert(artifact.keywords.include?('human papillomavirus'))
+    assert(artifact.keywords.include?('hysterectomy'))
+    assert(artifact.keywords.include?('cervix'))
+    assert(artifact.keywords.include?('uspstf'))
 
     # Check tracking
     assert_equal(1, repository.import_runs.count)
