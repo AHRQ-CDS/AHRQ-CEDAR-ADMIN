@@ -63,6 +63,9 @@ module PageScraper
     doi_node = html.at_css('meta[name="citation_doi"]')
     metadata[:doi] = doi_node['content'] unless doi_node.nil?
 
+    # Check for EPC archived status
+    metadata[:artifact_status] = 'archived' if html.css('meta[name="warning"]').any? { |warning| warning['content']&.include? 'historical reference only' }
+
     # Publication date
     date_node =
       html.at_css('meta[name="DCTERMS.issued"]') ||
@@ -70,16 +73,24 @@ module PageScraper
       html.at_css('meta[name="DC.Date"]') ||
       html.at_css('meta[name="DC.date"]') ||
       html.at_css('meta[name="citation_publication_date"]') ||
-      html.at_css('meta[name="citation_date"]')
+      html.at_css('meta[name="citation_date"]') ||
+      html.at_css('meta[name="datereviewed"]') ||
+      html.at_css('meta[name="datecreated"]') ||
+      html.at_css('div[id="page-created"]') ||
+      html.at_css('span[id="lblTitleDate"]') ||
+      html.at_css('span[id="lblTitleId"]')
 
-    date = parse_by_core_format(date_node['content']) unless date_node.nil?
-    if date_node.nil?
+    date_content = date_node['content'] || date_node.content unless date_node.nil?
+    date_content.delete!('Page originally created ') if date_content&.include?('Page originally created ')
+
+    date = parse_by_core_format(date_content) unless date_content.nil?
+    if date_content.nil?
       warnings << "Encountered #{page_url} with missing date"
     elsif date.nil?
-      warnings << "Encountered #{page_url} with invalid date"
+      warnings << "Encountered #{page_url} with invalid date: #{date_content}"
     else
       metadata[:published_on] = date
-      metadata[:published_on_precision] = DateTimePrecision.precision(date_node['content'].split(/[-, :T]/).map(&:to_i))
+      metadata[:published_on_precision] = DateTimePrecision.precision(date_content.split(/[-, :T]/).map(&:to_i))
     end
     metadata[:warnings] = warnings
     metadata
@@ -102,8 +113,13 @@ module PageScraper
     case input
     when String
       begin
-        date = Date.parse(input)
-        precision = DateTimePrecision.precision(Date._parse(input))
+        if input.present?
+          date = Date.parse(input)
+          precision = DateTimePrecision.precision(Date._parse(input))
+        else
+          date = nil
+          precision = 0
+        end
       rescue Date::Error
         messages << "#{warning_context}, #{input}"
       end
@@ -116,11 +132,12 @@ module PageScraper
 
   # See for formats: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/date/
   def parse_by_core_format(input)
-    ['%Y-%m-%d', '%Y-%m', '%Y', '%F %T', '%FT%H:%M:%S', '%Y-%m-%dT%H:%M:%S%z'].each do |date_format|
+    ['%Y-%m-%d', '%Y-%m', '%Y', '%F %T', '%FT%H:%M:%S', '%Y-%m-%dT%H:%M:%S%z', '%B %Y'].each do |date_format|
       return Date.strptime(input, date_format)
     rescue Date::Error
       next
     end
+    nil
   end
 
   module_function :parse_and_precision
