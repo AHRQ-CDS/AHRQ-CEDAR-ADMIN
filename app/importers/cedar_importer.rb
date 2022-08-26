@@ -93,6 +93,7 @@ class CedarImporter
       # if a (presumably transient) error occured while processing an artifact we don't change an
       # existing artifact or create a new one
       @import_statistics[:error_msgs] << attributes[:error]
+      attributes.delete(:error)
     elsif artifact.present?
       artifact.assign_attributes(attributes.merge(repository: repository))
       changed = artifact.changed?
