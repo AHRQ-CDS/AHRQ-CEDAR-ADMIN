@@ -2,11 +2,12 @@
 namespace :db do
 
   LOCATION = File.join(Rails.root, 'datafiles')
+  DATE_FORMAT = '%Y_%m_%d__%H_%M_%S'
 
   desc "Dump the database to datafiles/<APP_NAME>_<DATETIME>.dump"
   task :dump => :environment do
     with_config do |app, host, db, user|
-      datetime = DateTime.now.strftime("%Y_%m_%d__%H_%M_%S")
+      datetime = DateTime.now.strftime(DATE_FORMAT)
       filename = File.join(LOCATION, "#{app}_#{datetime}.dump")
       cmd = "pg_dump --host #{host} --username '#{user}' --verbose --clean --no-owner --no-acl --format=c #{db} > #{filename}"
       puts cmd
@@ -28,6 +29,36 @@ namespace :db do
       cmd = "pg_restore --verbose --host #{host} --username '#{user}' --clean --no-owner --no-acl --dbname #{db} #{filename}"
       puts cmd
       exec cmd
+    end
+  end
+
+  desc 'Prune database dumps to keep daily dumps for the last month and weekly dumps before that'
+  task :prune_dumps => :environment do
+    puts "Pruning database dumps"
+    def file_time(filename)
+      return unless match = filename.match(/_([0-9_]+).dump/)
+      Time.strptime(match[1], DATE_FORMAT)
+    end
+    path = File.join(LOCATION, '*.dump')
+    # Get list of matching files where we can determine the time from the filename and sort by time
+    files = Dir.glob(path).select { |f| file_time(f) }.sort_by { |f| file_time(f) }
+    # File from older than past month, keep most recent weekly
+    files.select { |f| file_time(f) < 1.month.ago }.group_by { |f| file_time(f).strftime('%Y week %V') }.each do |week, ff|
+      sorted = ff.sort_by { |f| file_time(f) }
+      sorted[0..-2].each do |f|
+        puts "Deleting #{f}"
+        File.delete(f)
+      end
+      puts "Keeping #{sorted.last}"
+    end
+    # Files from past month, keep most recent daily
+    files.select { |f| file_time(f) >= 1.month.ago }.group_by { |f| file_time(f).strftime('%Y-%m-%d') }.each do |day, ff|
+      sorted = ff.sort_by { |f| file_time(f) }
+      sorted[0..-2].each do |f|
+        puts "Deleting #{f}"
+        File.delete(f)
+      end
+      puts "Keeping #{sorted.last}"
     end
   end
 
