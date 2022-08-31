@@ -93,6 +93,16 @@ class CedarImporter
       # if a (presumably transient) error occured while processing an artifact we don't change an
       # existing artifact or create a new one
       @import_statistics[:error_msgs] << attributes[:error]
+
+      # set the artifact to retracted if its last successful update is two weeks ago
+      if artifact.present? &&
+         artifact.artifact_status != 'retracted' &&
+         (DateTime.now - artifact.updated_at.to_datetime).to_int > 14
+        artifact.artifact_status = 'retracted'
+        artifact.paper_trail_event = 'retract'
+        artifact.save!
+        @import_statistics[:update_count] += 1
+      end
       attributes.delete(:error)
     elsif artifact.present?
       artifact.assign_attributes(attributes.merge(repository: repository))
