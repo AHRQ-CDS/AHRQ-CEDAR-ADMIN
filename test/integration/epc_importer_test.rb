@@ -33,15 +33,16 @@ class EpcImporterTest < ActiveSupport::TestCase
     assert_equal('A sample HTML EPC product', artifact.description)
     assert(artifact.keywords.include?('epc'))
     assert(artifact.keywords.include?('a and b'))
-    assert_equal(Date.new(2020), artifact.published_on)
-    assert_equal(1, artifact.published_on_precision) # YEAR PRECISION = 1
+    assert_equal(Date.new(2021, 2), artifact.published_on)
+    assert_equal(2, artifact.published_on_precision) # MONTH PRECISION = 2
+    assert_equal('archived', artifact.artifact_status)
 
     artifact = artifacts.where(title: 'Screening for Asymptomatic Carotid Artery Stenosis in the General Population').first
     assert(artifact.present?)
     assert_equal('A sample HTML EPC product', artifact.description)
     assert(artifact.keywords.include?('epc'))
-    assert_equal(Date.new(2020), artifact.published_on)
-    assert_equal(1, artifact.published_on_precision) # YEAR PRECISION = 1
+    assert_equal(Date.new(2021, 3), artifact.published_on)
+    assert_equal(2, artifact.published_on_precision) # MONTH PRECISION = 1
 
     artifact = artifacts.where(title: 'Management of Infantile Epilepsy').first
     assert(artifact.present?)

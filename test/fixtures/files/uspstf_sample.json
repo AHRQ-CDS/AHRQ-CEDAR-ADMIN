@@ -93,6 +93,7 @@
     "199": {
       "topicType": "Screening",
       "topicYear": 2018,
+      "pubDate": "2018-07-23",
       "uspstfAlias": "cervical-cancer-screening",
       "specific": [
         358,
@@ -116,7 +117,8 @@
     "323": {
       "url": "https://www.uspreventiveservicestaskforce.org/Page/Document/ClinicalSummaryFinal/cervical-cancer-screening2",
       "title": "Cervical Cancer Screening - Clinical Summary (PDF)",
-      "text": ""
+      "text": "",
+      "keywords": "Clinical Summary|Cervical Cancer"
     },
     "324": {
       "url": "https://jamanetwork.com/journals/jama/fullarticle/2697698",

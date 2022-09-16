@@ -27,9 +27,13 @@ class UspstfImporter < CedarImporter
       slug = recommendation['uspstfAlias']
       url = "#{Rails.configuration.uspstf_home_page}recommendation/#{slug}"
       keywords = recommendation['keywords']&.split('|') || []
+      keywords << recommendation['topicType']
       recommendation['categories'].each do |cat|
         keywords << @json_data['categories'][cat.to_s]['name']
       end
+      date = parse_by_core_format(recommendation['pubDate']) unless recommendation['pubDate'].empty?
+      published_on_precision = DateTimePrecision.precision(recommendation['pubDate'].to_s.split(/[-, :T]/).map(&:to_i)) if date.present?
+
       general_rec_info[id.to_s] = {
         url: url,
         # Keywords are only specified at the general recommendation level so we save them here for
@@ -37,6 +41,8 @@ class UspstfImporter < CedarImporter
         # specific recommendations.
         keywords: keywords,
         slug: slug,
+        published_on: date,
+        published_on_precision: published_on_precision,
         sorts: [] # populated with sort order of associated specific recommendations
       }
     end
@@ -71,6 +77,8 @@ class UspstfImporter < CedarImporter
         remote_identifier: remote_id,
         title: recommendation['title'],
         description_html: recommendation['text'],
+        published_on: general_rec[:published_on],
+        published_on_precision: general_rec[:published_on_precision],
         url: general_rec[:url],
         keywords: general_rec[:keywords],
         artifact_type: 'Specific Recommendation',
@@ -90,13 +98,7 @@ class UspstfImporter < CedarImporter
       general_rec = general_rec_info[id.to_s]
       cedar_id = "USPSTF-#{Digest::MD5.hexdigest(general_rec[:slug])}"
       strength_sort = general_rec[:sorts].max || 0
-
-      date = parse_by_core_format(recommendation['topicYear'].to_s) unless recommendation['topicYear'].nil?
-      if date.nil?
-        warnings << "Encountered #{general_rec[:url]} with invalid date"
-      else
-        published_on_precision = DateTimePrecision.precision(recommendation['topicYear'].to_s.split(/[-, :T]/).map(&:to_i))
-      end
+      warnings << "Encountered #{general_rec[:url]} with invalid date" if general_rec[:published_on].nil?
 
       update_or_create_artifact!(
         cedar_id,
@@ -104,8 +106,8 @@ class UspstfImporter < CedarImporter
         title: recommendation['title'],
         description_html: recommendation['clinical'],
         url: general_rec[:url],
-        published_on: date,
-        published_on_precision: published_on_precision,
+        published_on: general_rec[:published_on],
+        published_on_precision: general_rec[:published_on_precision],
         artifact_type: 'General Recommendation',
         artifact_status: 'active',
         keywords: general_rec[:keywords],
@@ -137,9 +139,16 @@ class UspstfImporter < CedarImporter
         artifact_status: 'active'
       }
       metadata.merge!(extract_metadata(url))
-      # merge/deep_merge don't concat.uniq arrays so we can't set them in metadata above
+      # merge/deep_merge doesn't concat.uniq arrays so we can't set them in metadata above
       metadata[:keywords] ||= []
-      metadata[:keywords].concat(general_rec[:keywords]).uniq! if general_rec.present?
+      metadata[:keywords].concat(tool['keywords'].split('|')) if tool['keywords'].present?
+      metadata[:keywords].concat(general_rec[:keywords]) if general_rec[:keywords].present?
+      metadata[:keywords].uniq!
+      # default the publication date to that of the general recommendation if not found
+      if metadata[:published_on].nil?
+        metadata[:published_on] = general_rec[:published_on]
+        metadata[:published_on_precision] = general_rec[:published_on_precision]
+      end
       update_or_create_artifact!(cedar_id, metadata)
     end
   end

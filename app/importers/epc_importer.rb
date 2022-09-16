@@ -76,19 +76,21 @@ class EpcImporter < CedarImporter
       published_date, warnings, published_on_precision = PageScraper.parse_and_precision(
         artifact.at_css('div.views-field-field-timestamp span.field-content')&.content, warning_context, []
       )
+      page_metadata = extract_metadata(artifact_url)
       metadata = {
         remote_identifier: artifact_url,
-        title: artifact_title,
+        title: page_metadata[:title] || artifact_title,
+        description: page_metadata[:description],
         url: artifact_url,
-        published_on: published_date,
-        published_on_precision: published_on_precision,
+        published_on: published_on_precision.to_i >= page_metadata[:published_on_precision].to_i ? published_date : page_metadata[:published_on],
+        published_on_precision: [published_on_precision.to_i, page_metadata[:published_on_precision].to_i].max,
         artifact_type: artifact_type,
-        artifact_status: artifact_status,
-        warnings: [],
-        keywords: []
+        artifact_status: page_metadata[:artifact_status] || artifact_status,
+        warnings: warnings.concat(page_metadata[:warnings].to_a),
+        keywords: page_metadata[:keywords].to_a,
+        doi: page_metadata[:doi]
       }
-      metadata.merge!(extract_metadata(artifact_url))
-      metadata[:warnings].concat warnings
+      metadata[:error] = page_metadata[:error] if page_metadata[:error].present?
       update_or_create_artifact!(cedar_id, metadata)
       Rails.logger.info "Processed EPC artifact #{artifact_url}"
     end
