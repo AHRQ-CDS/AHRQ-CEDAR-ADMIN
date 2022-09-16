@@ -89,4 +89,76 @@ class EhcImporterTest < ActiveSupport::TestCase
       assert_equal(1, import_run.delete_count)
     end
   end
+
+  test 'handle missing EHC content' do
+    with_versioning do
+      # Load sample data for mocking
+      response_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
+      <response>
+        <item key=\"0\">
+          <Title>Living Systematic Review on Cannabis and Other Plant-Based Treatments for Chronic Pain</Title>
+          <Link>https://effectivehealthcare.ahrq.gov/products/plant-based-chronic-pain-treatment/living-review</Link>
+          <Author-Name>lnawrocki</Author-Name>
+          <Description>A systematic review assessing the effectiveness and harms of plant-based treatments for chronic pain</Description>
+          <Health-Topics>Chronic Pain</Health-Topics>
+          <Product-Type>Surveillance Report</Product-Type>
+          <Publish-Date>March 24, 2021</Publish-Date>
+          <Status></Status>
+          <Keywords>Cannabis, Chronic Pain, Mycetozoa</Keywords>
+          <Citation></Citation>
+        </item>
+      </response>"
+
+      # Stub out all request and return mock data as appropriate
+      stub_request(:get, /product-feed/).to_return(status: 200, headers: { 'Content-Type' => 'application/xml' }, body: response_1)
+
+      # Ensure that none are loaded before the test runs
+      assert_equal(0, Repository.where(alias: 'EHC').count)
+
+      # Load the mock records
+      EhcImporter.run
+
+      # Ensure that all the expected data is loaded
+      assert_equal(1, Repository.where(alias: 'EHC').count)
+
+      repository = Repository.where(alias: 'EHC').first
+      artifacts = repository.artifacts
+      assert_equal(1, artifacts.count)
+
+      artifact = artifacts.where(remote_identifier: 'https://effectivehealthcare.ahrq.gov/products/plant-based-chronic-pain-treatment/living-review').first
+      assert(artifact.present?)
+      assert_equal(artifact.artifact_status, 'active')
+
+      response_2 = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>
+      <response>
+        <item key=\"0\">
+          <Title>Treatments for Seasonal Allergic Rhinitis</Title>
+          <Link>https://effectivehealthcare.ahrq.gov/products/allergy-seasonal/research</Link>
+          <Author-Name>bahdevteam19</Author-Name>
+          <Description>Objectives: This review compared the effectiveness and common adverse events of medication</Description>
+          <Health-Topics>Immune System and Disorders,Hay Fever</Health-Topics>
+          <Product-Type>Systematic Review</Product-Type>
+          <Publish-Date>July 16, 2013</Publish-Date>
+          <Status>Archived</Status>
+          <Keywords>Mycetozoa</Keywords>
+          <Citation>Glacy J, Putnam K, Godfrey S, Falzon L, Mauger B, Samson D, Aronson N. Treatments for Seasonal Allergic Rhinitis.</Citation>
+        </item>
+      </response>"
+
+      stub_request(:get, /product-feed/).to_return(status: 200, headers: { 'Content-Type' => 'application/xml' }, body: response_2)
+
+      EhcImporter.run
+
+      # Ensure that all the expected data is loaded
+      assert_equal(1, Repository.where(alias: 'EHC').count)
+
+      repository = Repository.where(alias: 'EHC').first
+      artifacts = repository.artifacts
+      assert_equal(2, artifacts.count)
+
+      previous_imported_artifact = artifacts.where(remote_identifier: 'https://effectivehealthcare.ahrq.gov/products/plant-based-chronic-pain-treatment/living-review')
+      assert_equal(1, previous_imported_artifact.count)
+      assert_equal(previous_imported_artifact.first.artifact_status, 'retracted')
+    end
+  end
 end
