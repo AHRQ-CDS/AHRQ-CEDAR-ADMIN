@@ -57,10 +57,9 @@ class ConceptImporter
          SYNONYM_CODE_SYSTEMS.include?(code_system) &&
          SYNONYM_SUPPRESSION_FLAGS.include?(fields[SUPPRESS_COLUMN])
         synonyms << description.downcase.strip
-        # Only include preferred terms as codes to avoid duplication of codes
+        # Avoid duplication of codes
         code_to_assign = "#{code_system}_#{code}"
-        if (code_system != 'MSH' || (code_system == 'MSH' && preferred == 'Y')) &&
-           assigned_codes.exclude?(code_to_assign) &&
+        if assigned_codes.exclude?(code_to_assign) &&
            INCLUDED_TERM_TYPES.include?(code_system) &&
            INCLUDED_TERM_TYPES[code_system].include?(fields[TERM_TYPE_COLUMN].strip)
           codes << {
