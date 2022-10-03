@@ -1,17 +1,29 @@
-# CEDAR Admin
+# The CEDAR Project
 
-The CEDAR Admin repository provides:
+The [CEDAR project](https://cds.ahrq.gov/cedar/) provides a standards-based API that supports search, access, and use of patient centered outcomes research and other research findings across multiple repositories and programs within [AHRQ CEPI](https://www.ahrq.gov/cpi/centers/cepi/index.html).
 
-1. A web application for CEDAR administrators
-2. Functionality to index the contents of external evidence repositories and map artifact metadata to the CEDAR data model
+Health IT developers can use CEDAR to integrate AHRQ CEPI research findings directly into their existing systems, where the findings can then be accessed and used by researchers, clinicians, policymakers, patients, and others. CEDAR optimizes the use of patient centered outcomes research and other research data by following standard guidelines for improving the Findability, Accessibility, Interoperability, and Reuse (the FAIR principles) of digital assets, providing fast and efficient access to information.
 
-See also:
+CEDAR is publicly available for other platforms to use to discover and retrieve AHRQ evidence from multiple resources simultaneously.
+
+## CEDAR Admin
+
+CEDAR Admin supports the CEDAR project's indexing and administrative capabilities. The CEDAR Admin repository provides:
+
+1. Functionality to index the contents of external evidence repositories and map artifact metadata to the CEDAR data model
+2. A web application for CEDAR administrators
+
+For information about using or contributing to this project, please see
 
 - [Contribution Guide](CONTRIBUTING.md)
 - [Code of Conduct](CODE-OF-CONDUCT.md)
 - [Terms and Conditions](TERMS-AND-CONDITIONS.md)
 
-## Prerequisites
+## Development Details
+
+CEDAR Admin is a Ruby on Rails application.
+
+### Prerequisites
 
 * Ruby 2.7.1 or later
 * Bundler
@@ -20,7 +32,7 @@ See also:
 * PostgreSQL Database
 * Docker (if building Docker image)
 
-## Install Dependencies
+### Installing Dependencies
 
 After cloning this repository, run
 
@@ -32,7 +44,7 @@ rails db:migrate
 rails db:seed
 ```
 
-## Test
+### Testing
 
 To run tests, run
 
@@ -40,7 +52,7 @@ To run tests, run
 rails test
 ```
 
-## Run
+### Running CEDAR Admin
 
 After installing and testing, to run the CEDAR Admin application:
 (Consider populating the app via the import commands below if this is your first run)
@@ -49,7 +61,7 @@ After installing and testing, to run the CEDAR Admin application:
 rails server
 ```
 
-## Importing UMLS Concepts
+### Importing UMLS Concepts
 
 Download the MRCONSO.RRF file from: [https://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html](https://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html) and move it to the CEDAR directory. Run
 
@@ -59,7 +71,7 @@ rake import:umls_concepts
 
 Due to the size of the MRCONSO.RRF file, this can take several hours to complete, be patient.
 
-## Importing Data from Repositories
+### Importing Data from Repositories
 
 To import data from the US Preventative Services Task Force, run
 
@@ -67,7 +79,7 @@ To import data from the US Preventative Services Task Force, run
 rake import:uspstf
 ```
 
-## Environment Variables
+### Environment Variables
 
 CEDAR respects the following environment variables:
 
@@ -95,7 +107,7 @@ For use in development:
 
   * `CEDAR_DEVELOPMENT_LDAP_AUTH` - Authenticate via an LDAP server while in development mode (yes or no, defaults to no)
 
-## Authenticating Users
+### Authenticating Users
 
 Due to the sensitivity of certain data elements (e.g. client IP addresses and search terms), users will need to authenticate. Currently only LDAP authentication is supported.
 
@@ -103,7 +115,7 @@ For convenience, the default in a development environment (`Rails.env.developmen
 
 To configure LDAP authentication and authorization details provide the various `CEDAR_ADMIN_LDAP_*` environment variables described above as part of your deployment environment.
 
-## Docker
+### Docker
 
 Building the docker image for deployment:
 
