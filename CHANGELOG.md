@@ -1,5 +1,24 @@
 # Changelog
 
+## v0.6.0 - 2022-10-03
+
+* Addresses error when displaying logs for searches that do not complete
+* Removes redundant synonym expansions
+* Addresses styling issue with menu display
+* Updates the EPC importer
+    - Identifies archived artifacts using a HTML meta tag
+    - Improves support for EPC artifact dates
+    - Removes duplicate warnings for missing artifact dates
+    - Re-orders import log view so latest import is at the top of the page
+* USPSTF importer updates
+    - Uses general recommendation pubDate instead of topicYear
+    - Adds general recommendation topicType to CEDAR keywords
+    - Uses tool keywords to supplement those on the associated general recommendation
+* Marks artifacts is retracted after two weeks of failed import attempts
+* Suports pruning of older database backups
+* Fixes an issue where concepts may only have a Spanish MeSH code
+* Updates README with additional information
+
 ## v0.5.0 - 2022-07-05
 
 * Retains metadata for artifacts deleted by a repository
