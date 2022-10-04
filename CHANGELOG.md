@@ -14,7 +14,7 @@
     - Uses general recommendation pubDate instead of topicYear
     - Adds general recommendation topicType to CEDAR keywords
     - Uses tool keywords to supplement those on the associated general recommendation
-* Marks artifacts is retracted after two weeks of failed import attempts
+* Marks artifacts as retracted after two weeks of failed import attempts
 * Suports pruning of older database backups
 * Fixes an issue where concepts may only have a Spanish MeSH code
 * Updates README with additional information
