@@ -1,6 +1,6 @@
 # The CEDAR Project
 
-The [CEDAR project](https://cds.ahrq.gov/cedar/) provides a standards-based API that supports search, access, and use of patient centered outcomes research and other research findings across multiple repositories and programs within [AHRQ CEPI](https://www.ahrq.gov/cpi/centers/cepi/index.html).
+The [CEDAR project](https://cds.ahrq.gov/cedar/) provides a standards-based API that supports search, access, and use of patient centered outcomes research and other research findings across multiple repositories and programs within [AHRQ's Center for Evidence and Practice Improvement (CEPI)](https://www.ahrq.gov/cpi/centers/cepi/index.html).
 
 Health IT developers can use CEDAR to integrate AHRQ CEPI research findings directly into their existing systems, where the findings can then be accessed and used by researchers, clinicians, policymakers, patients, and others. CEDAR optimizes the use of patient centered outcomes research and other research data by following standard guidelines for improving the Findability, Accessibility, Interoperability, and Reuse (the FAIR principles) of digital assets, providing fast and efficient access to information.
 
