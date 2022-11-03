@@ -90,7 +90,7 @@ end
 group :test do
   gem 'rubocop', require: false
   gem 'rubocop-rails', require: false
-  gem 'brakeman', require: false
+  gem 'brakeman', '>= 5.3', require: false
   # Support Capybara system testing and selenium driver
   gem 'capybara', '>= 2.15'
   gem 'selenium-webdriver'
