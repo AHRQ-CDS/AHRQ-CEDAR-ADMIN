@@ -45,3 +45,7 @@
   color: #007A00;
 }
 
+// Empty state for pie chart "No Data" text created by ChartKick
+figure>* {
+  color: #691F74 !important;  // AHRQ Purple
+}
