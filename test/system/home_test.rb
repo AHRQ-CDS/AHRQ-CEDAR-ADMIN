@@ -17,19 +17,25 @@ class HomeTest < ApplicationSystemTestCase
   end
 
   test 'home functions as expected' do
+    # visits to ids w/i page scroll to elem in event of failure for screenshot
     visit '/home'
     assert_selector 'h1', text: 'CEDAR Statistics'
 
+    visit '#chart-1'
     assert_selector 'h3', text: 'Artifacts Per Repository'
     assert_selector 'h3', text: 'Import Statistics'
     page.has_link? 'Repository 1', count: 3
 
+    visit '#chart-2'
     assert_selector 'h3', text: 'Artifacts By Status'
+    visit '#chart-3'
     assert_selector 'h3', text: 'Top 10 Artifacts By Type'
 
+    visit '#chart-4'
     assert_selector 'h3', text: 'Top 10 Keywords'
     page.has_link? @keyword, count: 1
 
+    visit '#tag-cloud'
     assert_selector 'h3', text: 'Tag Cloud'
     within '#tag-cloud' do
       assert_selector 'svg', count: 1
@@ -39,11 +45,16 @@ class HomeTest < ApplicationSystemTestCase
     page.has_button? 'View All Search Logs'
     page.has_link? 'Show Raw JSON', count: 1
 
+    visit '#chart-5'
     assert_selector 'h3', text: 'Search Counts for the Last 10 Days'
+    visit '#chart-6'
     assert_selector 'h3', text: 'Search Counts by Parameter for the Last 10 Days'
+    visit '#chart-7'
     assert_selector 'h3', text: 'Top 20 Search Terms for the Last 10 Days'
 
-    assert_selector 'canvas', count: 7
+    # Last 3 charts are empty (no canvas) because test doesn't simulate searches
+    assert_selector 'figure', count: 7
+    assert_selector 'canvas', count: 4
   end
 
   test 'home is accessible' do
