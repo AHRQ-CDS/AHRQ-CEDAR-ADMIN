@@ -142,7 +142,8 @@ GEM
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
     ice_nine (0.11.2)
-    jbuilder (2.10.1)
+    jbuilder (2.11.5)
+      actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
     kaminari (1.2.1)
       activesupport (>= 4.1.0)
@@ -360,7 +361,7 @@ DEPENDENCIES
   faraday-cookie_jar
   faraday_middleware
   groupdate
-  jbuilder (~> 2.7)
+  jbuilder (~> 2.11)
   kaminari
   listen (~> 3.2)
   paper_trail
