@@ -92,3 +92,36 @@
     </header>
   </div>
 </section>
+
+<%# Icon used for links that leave federal sites, used in external-links.js %>
+<%= image_tag("exit_disclaimer_blue.png", alt: "exit disclaimer", id: "leavingSiteImage", style: "display: none") %>
+
+<%# Modal dialog to show when a user clicks a link that leaves the site %>
+<div class="modal fade" id="leavingSite" tabindex="-1" role="dialog" aria-labelledby="leavingSite" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exampleModalLabel">
+          Exit Notification and Disclaimer
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </h3>
+      </div>
+      <div class="modal-body">
+        <p>Notice to users upon leaving this Federal Government Web site and entering a non-Federal Web site:</p>
+        <ul>
+          <li>This notice means that you are leaving this Federal Government Web site and entering a non-Federal Web site.</li>
+          <li>This external link provides additional information that is consistent with the intended purpose of a Federal site.</li>
+          <li>Linking to a non-Federal site does not constitute an endorsement by the Department of Health and Human Services (HHS) or any of its employees of the sponsors or the information and products presented on the site.</li>
+          <li>HHS cannot attest to the accuracy of information provided by this link.</li>
+          <li>You will be subject to the destination site's privacy policy when you follow the link.</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <a href="#" class="continue btn btn-primary">Continue</a>
+      </div>
+    </div>
+  </div>
+</div>

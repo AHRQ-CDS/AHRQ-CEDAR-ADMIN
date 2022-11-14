@@ -11,6 +11,7 @@ require("chartkick/chart.js")
 require("packs/search-log.js")
 
 require("bootstrap")
+require("packs/external-links")
 import "../stylesheets/application";
 document.addEventListener("turbolinks:load", function() {
     $(function () {
