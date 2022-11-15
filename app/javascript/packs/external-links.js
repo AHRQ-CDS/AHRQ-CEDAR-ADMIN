@@ -19,7 +19,9 @@ jQuery(document).on('turbolinks:load', function() {
     // need to figure out what level we're at, and we do that by grabbing the src from a hidden version of the
     // image that's already on the page
     const image = document.createElement("img");
-    image.src = jQuery('#leavingSiteImage').attr('src');
+    const sourceImage = jQuery('#leavingSiteImage');
+    image.src = sourceImage.attr('src');
+    image.alt = sourceImage.attr('alt');
     this.insertAdjacentHTML('beforeEnd', ' '); // Add space before image
     this.appendChild(image);
 
