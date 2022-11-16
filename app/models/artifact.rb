@@ -82,9 +82,10 @@ class Artifact < ApplicationRecord
     self.concepts = mapped_concepts.uniq
   end
 
-  # Preprocess keywords (both regular and MeSH) to normalize, remove duplicates, and store for searching
+  # Preprocess keywords (both regular and MeSH) to normalize, remove blanks and duplicates, and store for searching
 
   def keywords=(keywords)
+    keywords = keywords&.reject { |k| k.blank? }
     keywords = keywords&.map { |k| I18n.transliterate(k).downcase }&.uniq
     super(keywords)
     self.keyword_text = keywords&.join(', ')
