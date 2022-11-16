@@ -29,6 +29,10 @@ class ConceptImporter
     description = synonyms[0] if description.blank? && synonyms.present?
     synonyms << description
     synonyms = synonyms.map { |s| I18n.transliterate(s).downcase }.uniq
+
+    # Skip creating any that are blank
+    return if description.blank? && synonyms.all?(&:blank?) && codes.all?(&:blank?)
+
     Concept.find_or_initialize_by(umls_cui: umls_cui).update!(umls_description: description, synonyms_text: synonyms, codes: codes)
   end
 
