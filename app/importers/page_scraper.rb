@@ -11,8 +11,7 @@ module PageScraper
     return {} if page_url.empty?
 
     connection = Faraday.new page_url.strip do |con|
-      con.use FaradayMiddleware::FollowRedirects, limit: 5
-      con.adapter Faraday.default_adapter
+      con.response :follow_redirects, limit: 5
     end
     response = connection.get
     if response.status != 200

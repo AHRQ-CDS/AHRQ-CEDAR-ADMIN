@@ -12,7 +12,7 @@ class CdsConnectImporter < CedarImporter
       builder.use :cookie_jar
       # NOTE: Basic auth is only needed for the staging server
       if Rails.configuration.cds_connect_basic_auth_username && Rails.configuration.cds_connect_basic_auth_password
-        builder.basic_auth(Rails.configuration.cds_connect_basic_auth_username, Rails.configuration.cds_connect_basic_auth_password)
+        builder.request :authorization, :basic, Rails.configuration.cds_connect_basic_auth_username, Rails.configuration.cds_connect_basic_auth_password
       end
     end
 
