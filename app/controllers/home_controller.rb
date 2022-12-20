@@ -129,7 +129,6 @@ class HomeController < ApplicationController
     PaperTrail.request(enabled: false)
     ImportRun.transaction do
       @import_run = ImportRun.find(params[:id])
-      # PaperTrail.request.controller_info = { import_run_id: @import_run.id }
       @import_run.versions.map(&:item).uniq.each do |artifact|
         next if artifact.paper_trail.previous_version.nil? # ignores newly created items this run
 
