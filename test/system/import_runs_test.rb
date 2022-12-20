@@ -10,8 +10,8 @@ class ImportRunsTest < ApplicationSystemTestCase
     @repository = create_repository_with_artifacts(count: 2)
     @start = Time.current
     @import_run = create(:import_run, repository: @repository, start_time: @start,
-                         end_time: Time.current, total_count: 2, new_count: 0, update_count: 0,
-                         delete_count: 0, status: :success)
+                                      end_time: Time.current, total_count: 2, new_count: 0, update_count: 0,
+                                      delete_count: 0, status: :success)
   end
 
   test 'import_run functions as expected' do
