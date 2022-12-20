@@ -35,6 +35,11 @@ class CedarImporter
   end
 
   def self.run
+    unless repository.enabled
+      Rails.logger.warn "Skipping #{repository.alias} import, importer is disabled"
+      return false
+    end
+
     # Track import statistics and set up an import run to store them
     # TODO: It may be possible to just count the paper trail updates, additions, and deletions at the end instead
     @import_statistics = {
@@ -45,36 +50,62 @@ class CedarImporter
       error_msgs: [],
       warning_msgs: []
     }
-    import_run = ImportRun.create(repository: repository, start_time: Time.current)
+    # Start a transaction to so that the import completes atomically, this ensures that API
+    # clients won't see partial, potentially inconsistent, updates during import runs.
+    ImportRun.transaction do
+      import_run = ImportRun.create(repository: repository, start_time: Time.current)
 
-    # When we track any changes to artifacts we want to associate the change with the appropriate import run
-    PaperTrail.request.controller_info = { import_run_id: import_run.id }
+      # When we track any changes to artifacts we want to associate the change with the appropriate import run
+      PaperTrail.request.controller_info = { import_run_id: import_run.id }
 
-    # Track artifacts we update or create so that all others are marked for deletion
-    @imported_artifact_ids = []
+      # Track artifacts we update or create so that all others are marked for deletion
+      @imported_artifact_ids = []
+      changed_count = 0
+      original_count = 0
 
-    try do
-      # Run the individually defined importer
-      download_and_update!
+      try do
+        # Run the individually defined importer
+        download_and_update!
 
-      # Mark any entries that were not found in the completed index run as deleted
-      deleted_artifacts = repository.artifacts.where.not(id: @imported_artifact_ids).where.not(artifact_status: 'retracted').all
-      @import_statistics[:delete_count] = deleted_artifacts.length
-      deleted_artifacts.each do |artifact|
-        artifact.artifact_status = 'retracted'
-        artifact.paper_trail_event = 'retract'
-        artifact.save!
+        # Mark any entries that were not found in the completed index run as deleted
+        deleted_artifacts = repository.artifacts.where.not(id: @imported_artifact_ids).where.not(artifact_status: 'retracted').all
+        @import_statistics[:delete_count] = deleted_artifacts.length
+        deleted_artifacts.each do |artifact|
+          artifact.artifact_status = 'retracted'
+          artifact.paper_trail_event = 'retract'
+          artifact.save!
+        end
+
+        # TODO: consider if we want to store statistics per-artifact rather than per-run
+        import_run.update(@import_statistics.merge(end_time: Time.current, status: 'success'))
+      rescue StandardError => e
+        # Log the failure and abort the import run for this importer
+        # TODO: We can use "retry" if indexing fails; number of retries should be configurable?
+        import_run.update(@import_statistics.merge(end_time: Time.current, status: 'failure', error_message: e.message))
+      ensure
+        changed_count = @import_statistics[:update_count] + @import_statistics[:delete_count]
+        original_count = @import_statistics[:total_count] - @import_statistics[:new_count]
+        @import_statistics = nil
       end
 
-      # TODO: consider if we want to store statistics per-artifact rather than per-run
-      import_run.update(@import_statistics.merge(end_time: Time.current, status: 'success'))
-    rescue StandardError => e
-      # Log the failure and abort the import run for this importer
-      # TODO: We can use "retry" if indexing fails; number of retries should be configurable?
-      import_run.update(@import_statistics.merge(end_time: Time.current, status: 'failure', error_message: e.message))
-    ensure
-      @import_statistics = nil
+      # if too much changed for this import we add new versions of the artifacts to rollback updates
+      # and deletions. Also mark the import as suspect and in need of admin review and disable the
+      # importer
+      suppress_large_change_detection = ActiveModel::Type::Boolean.new.cast(ENV['suppress_large_change_detection'])
+      if !suppress_large_change_detection && original_count.positive? && changed_count * 100 / original_count > 10 # 10% change threshold
+        # loop over the items that changed, ignoring new items added this run
+        import_run.versions.map(&:item).each do |artifact|
+          next if artifact.paper_trail.previous_version.nil?
+
+          artifact = artifact.paper_trail.previous_version
+          artifact.paper_trail_event = 'suppress'
+          artifact.save!
+        end
+        import_run.update status: :flagged
+        repository.update enabled: false
+      end
     end
+    true
   end
 
   # Update existing or create new entry for an artifact, tracking statistics

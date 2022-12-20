@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_11_16_170724) do
+ActiveRecord::Schema.define(version: 2022_12_16_094000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,6 +109,7 @@ ActiveRecord::Schema.define(version: 2022_11_16_170724) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "name"
     t.string "description"
+    t.boolean "enabled", default: true
     t.index ["fhir_id"], name: "index_artifacts_on_fhir_id"
   end
 

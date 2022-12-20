@@ -1,8 +1,17 @@
 <div class="row">
   <div class="col-sm">
-    <h1>Import Run: <%= @import_run.repository.name %> [<%= format_datetime_with_tz(@import_run.start_time) %>]</h1>
+    <h1>Import Run (<%= @import_run.status&.capitalize %>): <%= @import_run.repository.name %> [<%= format_datetime_with_tz(@import_run.start_time) %>]</h1>
     <% if @import_run.status == 'failure' %>
     <h4>Failed: <%= @import_run.error_message %></h4>
+    <% end %>
+    <% if @import_run.status == 'flagged' %>
+    <p>This import run was flagged due to the large number of changes. Indexing of the repository
+      is disabled until this is resolved. If you accept the import run, the changes below will be
+      persisted. If you reject the import run, the changes will be rolled back to the state prior to
+      this run and this run will be marked as suppressed. Either action will re-enable indexing of
+      the repository.</p>
+    <%= button_to "Accept", { action: :accept_run, id: @import_run.id }, data: { confirm: "Are you sure? This will accept all changes." } %>
+    <%= button_to "Reject", { action: :reject_run, id: @import_run.id} , data: { confirm: "Are you sure? This will suppress all changes." } %>
     <% end %>
     <% updated = @versions.select { |v| v.event == 'update' } %>
     <h4>Updated [<%= updated.length %>]</h4>

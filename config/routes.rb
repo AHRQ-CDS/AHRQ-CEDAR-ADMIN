@@ -27,4 +27,6 @@ Rails.application.routes.draw do
   get '/keyword_counts', to: 'home#keyword_counts', as: 'keyword_counts'
   get '/repository_report', to: 'home#repository_report', as: 'repository_report'
   get '/repository_missing/:id', to: 'home#repository_missing', as: 'repository_missing'
+  post '/home/accept_run/:id', to: 'home#accept_run', as: 'accept_run'
+  post '/home/reject_run/:id', to: 'home#reject_run', as: 'reject_run'
 end
