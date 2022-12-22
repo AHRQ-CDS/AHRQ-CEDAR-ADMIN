@@ -5,7 +5,7 @@ namespace :import do
   task uspstf: :environment do
     puts 'Importing data from USPSTF'
     if UspstfImporter.run
-      Rake::Task["import:update_counts"].invoke() unless ENV['dont_update_artifact_counts'] || !ran
+      Rake::Task["import:update_counts"].invoke() unless ENV['dont_update_artifact_counts']
     else
       puts 'Skipped, importer disabled'
     end
