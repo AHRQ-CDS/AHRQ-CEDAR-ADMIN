@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1><%= @import_run.repository.alias %> Importer <%= @import_run.status.capitalize %></h1>
+    <p>
+      The <%= @import_run.end_time %> import run was flagged due to a large number of changes. Indexing
+      of the <%= @import_run.repository.alias %> repository is disabled until this is resolved.
+    </p>
+    <p>
+      View and resolve online: <a href="<%= @url %>"><%= @url %></a>.
+    </p>
+  </body>
+</html>

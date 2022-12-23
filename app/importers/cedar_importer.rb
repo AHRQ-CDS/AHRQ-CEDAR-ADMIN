@@ -82,6 +82,7 @@ class CedarImporter
         # Log the failure and abort the import run for this importer
         # TODO: We can use "retry" if indexing fails; number of retries should be configurable?
         import_run.update(@import_statistics.merge(end_time: Time.current, status: 'failure', error_message: e.message))
+        ImportMailer.with(import_run: import_run).failure_email.deliver_now
       ensure
         changed_count = @import_statistics[:update_count] + @import_statistics[:delete_count]
         original_count = @import_statistics[:total_count] - @import_statistics[:new_count]
@@ -103,6 +104,7 @@ class CedarImporter
         end
         import_run.update status: :flagged
         repository.update enabled: false
+        ImportMailer.with(import_run: import_run).flagged_email.deliver_now
       end
     end
     true

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1><%= @import_run.repository.alias %> Importer <%= @import_run.status.capitalize %></h1>
+    <p>
+      The <%= @import_run.end_time %> import run failed. Error was: <%= @import_run.error_message %>.
+    </p>
+    <p>
+      View online: <a href="<%= @url %>"><%= @url %></a>.
+    </p>
+  </body>
+</html>
