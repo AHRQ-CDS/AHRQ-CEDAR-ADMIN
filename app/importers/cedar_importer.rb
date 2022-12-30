@@ -104,6 +104,9 @@ class CedarImporter
       @import_statistics[:error_msgs] << error_message
       attributes.delete(:error)
     elsif artifact.present?
+      # Set all description fields to nil so any changed description will be propagrated to all three
+      artifact.assign_attributes(description: nil, description_html: nil, description_markdown: nil)
+      # Set the new attribute values
       artifact.assign_attributes(attributes.merge(repository: repository))
       changed = artifact.changed?
       artifact.save!
