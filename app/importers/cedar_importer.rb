@@ -89,16 +89,20 @@ class CedarImporter
         @import_statistics = nil
       end
 
-      # if too much changed for this import we add new versions of the artifacts to rollback updates
+      # If too much changed for this import we add new versions of the artifacts to rollback updates
       # and deletions. Also mark the import as suspect and in need of admin review and disable the
       # importer
       suppress_large_change_detection = ActiveModel::Type::Boolean.new.cast(ENV['suppress_large_change_detection'])
       if !suppress_large_change_detection && original_count.positive? && changed_count * 100 / original_count > 10 # 10% change threshold
-        # loop over the items that changed, ignoring new items added this run
+        # loop over the items that changed on this import run
         import_run.versions.map(&:item).each do |artifact|
-          next if artifact.paper_trail.previous_version.nil?
-
-          artifact = artifact.paper_trail.previous_version
+          if artifact.paper_trail.previous_version.nil?
+            # new artifact
+            artifact.artifact_status = :suppressed
+          else
+            # changed artifact
+            artifact = artifact.paper_trail.previous_version
+          end
           artifact.paper_trail_event = 'suppress'
           artifact.save!
         end

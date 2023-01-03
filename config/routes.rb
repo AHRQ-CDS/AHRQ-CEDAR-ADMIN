@@ -21,12 +21,12 @@ Rails.application.routes.draw do
   resources :search_logs, only: [:index]
   get '/repository/:id', to: 'home#repository', as: 'repository'
   get '/import_run/:id', to: 'home#import_run', as: 'import_run'
+  post '/import_run/:id/accept', to: 'home#accept_run', as: 'accept_run'
+  post '/import_run/:id/reject', to: 'home#reject_run', as: 'reject_run'
   get '/artifact/:id', to: 'home#artifact', as: 'artifact'
   get '/version/:id', to: 'home#version', as: 'paper_trail_version'
   get '/keyword/:keyword', to: 'home#keyword', as: 'keyword'
   get '/keyword_counts', to: 'home#keyword_counts', as: 'keyword_counts'
   get '/repository_report', to: 'home#repository_report', as: 'repository_report'
   get '/repository_missing/:id', to: 'home#repository_missing', as: 'repository_missing'
-  post '/home/accept_run/:id', to: 'home#accept_run', as: 'accept_run'
-  post '/home/reject_run/:id', to: 'home#reject_run', as: 'reject_run'
 end

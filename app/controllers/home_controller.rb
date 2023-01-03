@@ -127,9 +127,7 @@ class HomeController < ApplicationController
     ImportRun.transaction do
       import_run = ImportRun.find(params[:id])
       import_run.versions.map(&:item).uniq.each do |artifact|
-        next if artifact.paper_trail.previous_version.nil? # ignores newly created items this run
-
-        artifact.paper_trail.previous_version.save!
+        artifact.paper_trail.previous_version&.save!
       end
       import_run.update!(status: :reviewed)
       import_run.repository.update!(enabled: true)
