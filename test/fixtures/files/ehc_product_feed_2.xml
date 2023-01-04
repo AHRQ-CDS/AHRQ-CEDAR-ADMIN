@@ -12,4 +12,16 @@
     <Keywords>Cannabis, Chronic Pain, Mycetozoa</Keywords>
     <Citation></Citation>
   </item>
+  <item key="2">
+    <Title>A New Artifact</Title>
+    <Link>https://effectivehealthcare.ahrq.gov/products/new/living-review</Link>
+    <Author-Name>anon</Author-Name>
+    <Description>A new artifact description.</Description>
+    <Health-Topics>Chronic Pain</Health-Topics>
+    <Product-Type>Surveillance Report</Product-Type>
+    <Publish-Date>December 24, 2022</Publish-Date>
+    <Status></Status>
+    <Keywords>Chronic Pain</Keywords>
+    <Citation></Citation>
+  </item>
 </response>

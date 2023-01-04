@@ -21,6 +21,8 @@ Rails.application.routes.draw do
   resources :search_logs, only: [:index]
   get '/repository/:id', to: 'home#repository', as: 'repository'
   get '/import_run/:id', to: 'home#import_run', as: 'import_run'
+  post '/import_run/:id/accept', to: 'home#accept_run', as: 'accept_run'
+  post '/import_run/:id/reject', to: 'home#reject_run', as: 'reject_run'
   get '/artifact/:id', to: 'home#artifact', as: 'artifact'
   get '/version/:id', to: 'home#version', as: 'paper_trail_version'
   get '/keyword/:keyword', to: 'home#keyword', as: 'keyword'

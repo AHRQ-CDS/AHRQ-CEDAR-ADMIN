@@ -69,6 +69,16 @@ Rails.application.configure do
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
   # config.action_mailer.raise_delivery_errors = false
 
+  config.action_mailer.smtp_settings = {
+    address: ENV['CEDAR_SMTP_SERVER'],
+    port: ENV['CEDAR_SMTP_PORT']&.to_i || 25,
+    domain: ENV['CEDAR_SMTP_DOMAIN'],
+    user_name: ENV['CEDAR_SMTP_USERNAME'],
+    password: ENV['CEDAR_SMTP_PASSWORD']
+  }
+  config.action_mailer.perform_deliveries = ActiveModel::Type::Boolean.new.cast(ENV['CEDAR_SMTP_ENABLED'])
+
+
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true

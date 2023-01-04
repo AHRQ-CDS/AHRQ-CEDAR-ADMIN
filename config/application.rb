@@ -46,6 +46,11 @@ module CedarAdmin
     # Settings for the NGC importer
     config.ngc_base_url = ENV['CEDAR_NGC_BASE_URL']
 
+    # Mailer settings
+    config.action_mailer.default_url_options = { host: 'cds.ahrq.gov' }
+    config.cedar_from_email = 'cedar@cds.ahrq.gov'
+    config.cedar_to_email = 'cedar@cds.ahrq.gov'
+
     config.time_zone = 'Eastern Time (US & Canada)'
 
     # Authentication bypass setting

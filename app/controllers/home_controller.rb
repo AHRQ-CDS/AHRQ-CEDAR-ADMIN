@@ -114,6 +114,27 @@ class HomeController < ApplicationController
     @versions = @import_run.versions.includes(:item)
   end
 
+  def reject_run
+    import_run = ImportRun.find(params[:id])
+    import_run.update!(status: :suppressed)
+    import_run.repository.update!(enabled: true)
+    redirect_to :import_run
+  end
+
+  def accept_run
+    # Rollback to prior version of each artifact to undo the suppression of the flagged changes
+    PaperTrail.request(enabled: false)
+    ImportRun.transaction do
+      import_run = ImportRun.find(params[:id])
+      import_run.versions.map(&:item).uniq.each do |artifact|
+        artifact.paper_trail.previous_version&.save!
+      end
+      import_run.update!(status: :reviewed)
+      import_run.repository.update!(enabled: true)
+    end
+    redirect_to :import_run
+  end
+
   def artifact
     @artifact = Artifact.find(params[:id])
   end

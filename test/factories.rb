@@ -13,6 +13,7 @@ FactoryBot.define do
 
   factory :repository do
     sequence(:name) { |n| "Repository #{n}" }
+    sequence(:alias) { |n| "Alias #{n}" }
   end
 
   factory :artifact do

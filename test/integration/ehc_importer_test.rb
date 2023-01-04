@@ -48,8 +48,10 @@ class EhcImporterTest < ActiveSupport::TestCase
       assert_equal(2, import_run.new_count)
       assert_equal(0, import_run.update_count)
 
-      # Run importer a second time with one of the previously imported artifacts missing
+      # Run importer a second time with one of the previously imported artifacts missing and a new
+      # artifact present
       # Load sample data for mocking
+      ENV['suppress_large_change_detection'] = 'false'
       artifact_list_mock = file_fixture('ehc_product_feed_2.xml').read
 
       # Stub out all request and return mock data as appropriate
@@ -63,7 +65,7 @@ class EhcImporterTest < ActiveSupport::TestCase
 
       repository = Repository.where(alias: 'EHC').first
       artifacts = repository.artifacts
-      assert_equal(2, artifacts.count)
+      assert_equal(3, artifacts.count)
 
       artifact = artifacts.where(title: 'Living Systematic Review on Cannabis and Other Plant-Based Treatments for Chronic Pain').first
       assert(artifact.present?)
@@ -75,17 +77,60 @@ class EhcImporterTest < ActiveSupport::TestCase
       artifact = artifacts.where(title: 'Treatments for Seasonal Allergic Rhinitis').first
       assert(artifact.present?)
       assert(artifact.keywords.include?('hay fever'))
-      assert_equal(artifact.artifact_status, 'retracted')
+      assert_equal('archived', artifact.artifact_status)
+      assert_equal(3, artifact.versions.length)
+      assert_equal('suppress', artifact.versions.last.event)
+
+      artifact = artifacts.where(title: 'A New Artifact').first
+      assert(artifact.present?)
+      assert(artifact.keywords.include?('chronic pain'))
+      assert_equal('suppressed', artifact.artifact_status)
       assert_equal(2, artifact.versions.length)
-      assert_equal('retract', artifact.versions.last.event)
+      assert_equal('suppress', artifact.versions.last.event)
 
       # Check tracking
       assert_equal(2, repository.import_runs.count)
       import_run = repository.import_runs.last
-      assert_equal('success', import_run.status)
-      assert_equal(1, import_run.total_count)
-      assert_equal(0, import_run.new_count)
+      assert_equal('flagged', import_run.status)
+      assert_equal(2, import_run.total_count)
+      assert_equal(1, import_run.new_count)
       assert_equal(0, import_run.update_count)
+      assert_equal(1, import_run.delete_count)
+
+      # run once more with large change detection off
+      ENV['suppress_large_change_detection'] = 'true'
+      repository.enabled = true
+      repository.save!
+      EhcImporter.run
+
+      # Ensure that all the expected data is still present
+      assert_equal(1, Repository.where(alias: 'EHC').count)
+
+      repository = Repository.where(alias: 'EHC').first
+      artifacts = repository.artifacts
+      assert_equal(3, artifacts.count)
+
+      artifact = artifacts.where(title: 'Living Systematic Review on Cannabis and Other Plant-Based Treatments for Chronic Pain').first
+      assert(artifact.present?)
+      assert(artifact.keywords.include?('chronic pain'))
+      assert_equal(artifact.artifact_status, 'active')
+      assert_equal(1, artifact.versions.length)
+      assert_equal('create', artifact.versions.last.event)
+
+      artifact = artifacts.where(title: 'Treatments for Seasonal Allergic Rhinitis').first
+      assert(artifact.present?)
+      assert(artifact.keywords.include?('hay fever'))
+      assert_equal('retracted', artifact.artifact_status)
+      assert_equal(4, artifact.versions.length)
+      assert_equal('retract', artifact.versions.last.event)
+
+      # Check tracking
+      assert_equal(3, repository.import_runs.count)
+      import_run = repository.import_runs.last
+      assert_equal('success', import_run.status)
+      assert_equal(2, import_run.total_count)
+      assert_equal(0, import_run.new_count)
+      assert_equal(1, import_run.update_count)
       assert_equal(1, import_run.delete_count)
     end
   end
