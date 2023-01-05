@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.7.0 - 2023-01-05
+
+* Adds feature to detect a large number of changes on import and require approval
+* Adds repository descriptions
+* Flags external links with icon and adds a popup
+* Fixes issue with importing concepts that are empty strings
+* Fixes issue where description fields were not always correctly synched
+* Adds appropriate user agent on importer requests
+* Adds introductory text to site and updates links
+* Updates dependencies
+
 ## v0.6.0 - 2022-10-03
 
 * Addresses error when displaying logs for searches that do not complete
