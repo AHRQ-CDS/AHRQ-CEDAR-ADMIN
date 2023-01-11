@@ -142,7 +142,10 @@ class CedarImporter
       attributes.delete(:error)
     elsif artifact.present?
       # Set all description fields to nil so any changed description will be propagrated to all three
-      artifact.assign_attributes(description: nil, description_html: nil, description_markdown: nil)
+      # TODO: Temporarily avoid removing the description if it's not in the source repository
+      if attributes[:description] || attributes[:description_html] || attributes[:description_markdown]
+        artifact.assign_attributes(description: nil, description_html: nil, description_markdown: nil)
+      end
       # Set the new attribute values
       artifact.assign_attributes(attributes.merge(repository: repository))
       changed = artifact.changed?
