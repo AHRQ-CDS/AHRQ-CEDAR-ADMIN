@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.7.1 - 2023-01-18
+
+* Temporarily works around importer issue of descriptions being removed from source repository
+* Adds more configurability to email settings
+
 ## v0.7.0 - 2023-01-05
 
 * Adds feature to detect a large number of changes on import and require approval
