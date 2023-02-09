@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   before_action :authenticate_user!
 
   rescue_from Net::LDAP::Error, Errno::ECONNREFUSED, ArgumentError do
-    flash[:error] = 'Unable to reach LDAP authentication service. Please contact your admin.'
+    flash[:error] = I18n.t 'ldap_err'
     redirect_to(request.referer || root_path)
   end
 

@@ -51,9 +51,9 @@ module PageScraper
                                    keyword.strip.gsub(/^and /, '')
                                  end)
     end
-    if html.at_css('meta[name="citation_keyword"]').present?
-      metadata[:keywords].concat(html.css('meta[name="citation_keyword"]').collect { |keyword_node| keyword_node['content'] })
-    end
+
+    metadata[:keywords].concat(html.css('meta[name="citation_keyword"]').pluck('content')) if html.at_css('meta[name="citation_keyword"]').present?
+
     # JAMA Network pages
     metadata[:keywords].concat(html.css('a.related-topic').collect(&:content)) if html.at_css('a.related-topic').present?
     # AAFP pages

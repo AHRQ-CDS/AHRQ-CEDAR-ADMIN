@@ -31,3 +31,5 @@
 
 en:
   hello: "Hello world"
+  ldap_err: "Unable to reach LDAP authentication service. Please contact your admin."
+  only_valid_urls: "only valid URLs"
