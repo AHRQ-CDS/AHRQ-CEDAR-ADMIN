@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?><OAI-PMH
+	xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.openarchives.org/OAI/2.0/ http://www.openarchives.org/OAI/2.0/OAI-PMH.xsd"><responseDate>2023-01-30T20:58:55Z</responseDate><request verb="GetRecord" identifier="oai:books.ncbi.nlm.nih.gov:293871" metadataPrefix="nbk_meta">https://api.ncbi.nlm.nih.gov/lit/oai/books/</request><GetRecord><record><header><identifier>oai:books.ncbi.nlm.nih.gov:293871</identifier><datestamp>2015-05-12</datestamp><setSpec>es117</setSpec><setSpec>book-open</setSpec></header><metadata><book-part xmlns="https://dtd.nlm.nih.gov/ns/book/2.3/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" xsi:schemaLocation="https://dtd.nlm.nih.gov/ns/book/2.3/ https://dtd.nlm.nih.gov/book/2.3/xsd/book.xsd" book-part-type="toc" id="toc" indexed="true" xml:lang="EN" xlink:type="simple">
+  <book-meta>
+    <book-id pub-id-type="art-access-id">NBK293871</book-id>
+    <book-id pub-id-type="pmid">25973510</book-id>
+    <book-id pub-id-type="pmcid">es117</book-id>
+    <book-id pub-id-type="publisher-id">13-05190-EF-1</book-id>
+    <book-title-group>
+      <book-title>Screening for Abnormal Glucose and Type 2 Diabetes Mellitus</book-title>
+      <subtitle>A Systematic Review to Update the 2008 U.S. Preventive Services Task Force Recommendation</subtitle>
+    </book-title-group>
+    <volume>117</volume>
+    <series>Evidence Syntheses</series>
+    <contrib-group>
+      <contrib contrib-type="author" xlink:type="simple">
+        <name name-style="western">
+          <surname>Selph</surname>
+          <given-names>Shelley</given-names>
+        </name>
+        <degrees>MD, MPH</degrees>
+      </contrib>
+      <contrib contrib-type="author" xlink:type="simple">
+        <name name-style="western">
+          <surname>Dana</surname>
+          <given-names>Tracy</given-names>
+        </name>
+        <degrees>MLS</degrees>
+      </contrib>
+      <contrib contrib-type="author" xlink:type="simple">
+        <name name-style="western">
+          <surname>Bougatsos</surname>
+          <given-names>Christina</given-names>
+        </name>
+        <degrees>MPH</degrees>
+      </contrib>
+      <contrib contrib-type="author" xlink:type="simple">
+        <name name-style="western">
+          <surname>Blazina</surname>
+          <given-names>Ian</given-names>
+        </name>
+        <degrees>MPH</degrees>
+      </contrib>
+      <contrib contrib-type="author" xlink:type="simple">
+        <name name-style="western">
+          <surname>Patel</surname>
+          <given-names>Hetal</given-names>
+        </name>
+        <degrees>MD</degrees>
+      </contrib>
+      <contrib contrib-type="author" xlink:type="simple">
+        <name name-style="western">
+          <surname>Chou</surname>
+          <given-names>Roger</given-names>
+        </name>
+        <degrees>MD</degrees>
+      </contrib>
+      <role>Investigators</role>
+      <aff>Pacific Northwest Evidence-based Practice Center</aff>
+    </contrib-group>
+    <author-notes>
+      <fn>
+        <p><bold>Acknowledgments:</bold> The authors acknowledge AHRQ Medical Officer, Quyen Ngo-Metzger, MD, MPH, as well as current and former members of the U.S. Preventive Services Task Force who contributed to topic deliberations. The authors also acknowledge the Portland Veterans Affairs Medical Center for supporting the work of Hetal Patel, MD, Preventive Medicine Resident, on this report.</p>
+      </fn>
+    </author-notes>
+    <publisher>
+      <publisher-name>Agency for Healthcare Research and Quality (US)</publisher-name>
+      <publisher-loc>Rockville (MD)</publisher-loc>
+    </publisher>
+    <pub-date pub-type="epub">
+      <month>04</month>
+      <year>2015</year>
+    </pub-date>
+    <abstract abstract-type="structured">
+      <title>Structured Abstract</title>
+      <sec id="background" indexed="true">
+        <title>Background</title>
+        <p>Type 2 diabetes mellitus (DM) is the leading cause of kidney failure.</p>
+      </sec>
+      <sec id="purpose" indexed="true">
+        <title>Purpose</title>
+        <p>To systematically update the 2008 U.S. Preventive Services Task Force (USPSTF) review on screening for type 2 diabetes in adults.</p>
+      </sec>
+      <sec id="data_sources" sec-type="methods" indexed="true">
+        <title>Data Sources</title>
+        <p>We searched the Cochrane Central Register of Controlled Trials and Cochrane Database of Systematic Reviews (through March 2014), and MEDLINE<sup>®</sup> (2007 to March 2014), and manually reviewed reference lists.</p>
+      </sec>
+      <sec id="study_selection" sec-type="methods" indexed="true">
+        <title>Study Selection</title>
+        <p>Randomized, controlled trials; controlled observational studies; and good-quality systematic reviews on benefits and harms of screening for DM, IFG, or IGT versus no screening; treatment versus no treatment; more versus less intensive glucose, blood pressure, or lipid control interventions; or aspirin use versus nonuse in persons with DM, IFG, or IGT.</p>
+      </sec>
+      <sec id="data_extraction" sec-type="methods" indexed="true">
+        <title>Data Extraction</title>
+        <p>One investigator abstracted data and a second investigator checked data abstraction for accuracy. Two investigators independently assessed study quality using methods developed by the USPSTF.</p>
+      </sec>
+      <sec id="data_synthesis" sec-type="methods|results" indexed="true">
+        <title>Data Synthesis (Results)</title>
+        <p>In one good- and one fair-quality trial, screening for DM was associated with no mortality benefit versus no screening, including one trial of patients at higher risk for diabetes (hazard ratio, 1.06 [95% confidence interval, 0.90 to 1.25]). Evidence on harms of screening was limited but indicated no long-term psychological harms. Consistent evidence from multiple trials found that treatment of IFG/IGT was associated with delayed progression to DM. Most trials of treatment for IFG/IGT found no difference in all-cause or cardiovascular mortality, although one trial found that use of lifestyle modification reduced risk of both outcomes after 23 years followup. For screen-detected diabetes, one large fair-quality trial found no effect of an intensive multifactorial intervention on risk of all-cause or cardiovascular mortality versus standard control. For established diabetes (not specifically screen detected), intensive glucose treatment was associated with reduced risk of myocardial infarction and retinopathy, with no effects on mortality. Intensive blood pressure control was associated with a slightly reduced risk of mortality versus standard therapy, but evidence from two recent major trials was mixed. Two trials found that intensive multifactorial interventions were associated with reduced mortality versus standard interventions. Certain pharmacological therapies for screen-detected or early DM, IFG, or IGT were associated with increased risk of withdrawal because of adverse events, hypoglycemia, or hypotension, with no increase in risk of serious adverse events.</p>
+      </sec>
+      <sec id="limitations" indexed="true">
+        <title>Limitations</title>
+        <p>We did not include non–English language articles. Few studies of treatment were conducted in screen-detected populations.</p>
+      </sec>
+      <sec id="conclusions" sec-type="conclusions" indexed="true">
+        <title>Conclusions</title>
+        <p>Screening for DM did not improve mortality after 10 years followup and more evidence is needed to determine effective treatments for screen-detected DM. However, treatment for IFG/IGT was associated with delayed progression to DM.</p>
+      </sec>
+    </abstract>
+    <notes notes-type="funding-group">
+      <p content-type="funding-statement"><bold>Prepared for:</bold>
+<contract-sponsor id="US-HS-AHRQ-HHS" xlink:type="simple">Agency for Healthcare Research and Quality</contract-sponsor>, U.S. Department of Health and Human Services<xref ref-type="fn" rid="address1"/>, <fn id="address1"><p>540 Gaither Road, Rockville, MD 20850; <ext-link xlink:href="http://www.ahrq.gov" ext-link-type="uri" xlink:type="simple">www.ahrq.gov</ext-link></p></fn>
+<bold>Contract No.</bold>
+<contract-num rid="US-HS-AHRQ-HHS" xlink:type="simple">HHSA 290-2007-10057-I</contract-num>, <bold>Task Order No. 13</bold>. <bold>Prepared by:</bold>
+<named-content content-type="award-recipient" xlink:type="simple">Pacific Northwest Evidence-based Practice Center</named-content><xref ref-type="fn" rid="address2"/>
+<fn id="address2"><p>Oregon Health &amp; Science University, 3181 SW Sam Jackson Park Road, Portland, OR 97239; <ext-link xlink:href="http://www.ohsu.edu/epc" ext-link-type="uri" xlink:type="simple">www.ohsu.edu/epc</ext-link></p></fn></p>
+    </notes>
+    <notes notes-type="disclaimer">
+      <p>This report is based on research conducted by the Pacific Northwest Evidence-based Practice Center (EPC) under contract to the Agency for Healthcare Research and Quality (AHRQ), Rockville, MD (Contract No. HHSA-290-2007-10057-I, Task Order No. 13). The findings and conclusions in this document are those of the authors, who are responsible for its contents, and do not necessarily represent the views of AHRQ. Therefore, no statement in this report should be construed as an official position of AHRQ or of the U.S. Department of Health and Human Services.</p>
+      <p>The information in this report is intended to help health care decisionmakers—patients and clinicians, health system leaders, and policymakers, among others—make well-informed decisions and thereby improve the quality of health care services. This report is not intended to be a substitute for the application of clinical judgment. Anyone who makes decisions concerning the provision of clinical care should consider this report in the same way as any medical reference and in conjunction with all other pertinent information (i.e., in the context of available resources and circumstances presented by individual patients).</p>
+      <p>This report may be used, in whole or in part, as the basis for development of clinical practice guidelines and other quality enhancement tools, or as a basis for reimbursement and coverage policies. AHRQ or U.S. Department of Health and Human Services endorsement of such derivative products may not be stated or implied.</p>
+    </notes>
+    <notes notes-type="suggested-citation">
+      <p>
+<citation citation-type="other" xlink:type="simple" id="suggestedcitation">Selph S, Dana T, Bougatsos C, Blazina I, Patel H, Chou R. Screening for Abnormal Glucose and Type 2 Diabetes Mellitus: A Systematic Review to Update the 2008 U.S. Preventive Services Task Force Recommendation. Evidence Synthesis No. 117. AHRQ Publication No. 13-05190-EF-1. Rockville, MD: Agency for Healthcare Research and Quality; 2015.</citation></p>
+    </notes>
+    <notes notes-type="collection-link">
+      <p>
+<related-object link-type="collection-link" source-id="hsevidsyncollect" source-id-type="pmcid" source-type="collection" content-type="collection">U.S. Preventive Services Task Force Evidence Syntheses, formerly Systematic Evidence Reviews</related-object>
+<related-object link-type="collection-link" source-id="hstatcollect" source-id-type="pmcid" source-type="collection" content-type="super-collection">Health Services/Technology Assessment Texts (HSTAT)</related-object></p>
+    </notes>
+    <custom-meta-wrap>
+      <custom-meta xlink:type="simple">
+        <meta-name>books-source-type</meta-name>
+        <meta-value>Report</meta-value>
+      </custom-meta>
+      <custom-meta xlink:type="simple">
+        <meta-name>books-subject</meta-name>
+        <meta-value>Health Care</meta-value>
+      </custom-meta>
+    </custom-meta-wrap>
+  </book-meta>
+  <book-part-meta>
+    <title-group>
+      <title>Table of Contents</title>
+    </title-group>
+  </book-part-meta>
+</book-part>
+
+</metadata></record></GetRecord></OAI-PMH>

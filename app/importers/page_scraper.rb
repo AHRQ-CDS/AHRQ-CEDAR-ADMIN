@@ -9,11 +9,9 @@ module PageScraper
   # Process an individual HTML page or PDF to extract metadata
   def extract_metadata(page_url)
     return {} if page_url.empty?
+    return extract_nih_bookshelf_metadata(page_url) if page_url.match?(%r{ncbi\.nlm\.nih\.gov/books/NBK})
 
-    connection = Faraday.new page_url.strip do |con|
-      con.response :follow_redirects, limit: 5
-    end
-    response = connection.get
+    response = get_url(page_url)
     if response.status != 200
       error_msg = "Page retrieval (#{page_url}) failed with status #{response.status}"
       Rails.logger.warn error_msg
@@ -32,6 +30,13 @@ module PageScraper
     error_msg = "Failed to retrieve page (#{page_url}): #{e.message}"
     Rails.logger.warn error_msg
     { error: error_msg }
+  end
+
+  def get_url(url)
+    connection = Faraday.new url.strip do |con|
+      con.response :follow_redirects, limit: 5
+    end
+    connection.get
   end
 
   def extract_html_metadata(html, page_url)
@@ -137,6 +142,34 @@ module PageScraper
       next
     end
     nil
+  end
+
+  def extract_nih_bookshelf_metadata(url)
+    # the NIH bookshelf site blocks bulk downloads but provides an alternate site to obtain metadata
+    # extract the book_if from the original URL and use it to create a new URL for the metadata
+    book_id_match = url.match(%r{/books/NBK(\d+)})
+    return {} if book_id_match.size < 2
+
+    metadata_url = "https://api.ncbi.nlm.nih.gov/lit/oai/books/?verb=GetRecord&identifier=oai:books.ncbi.nlm.nih.gov:#{book_id_match[1]}&metadataPrefix=nbk_meta"
+
+    response = get_url(metadata_url)
+    if response.status != 200
+      error_msg = "Page retrieval (#{metadata_url} for NIH Bookshelf #{url}) failed with status #{response.status}"
+      Rails.logger.warn error_msg
+      return { error: error_msg }
+    end
+
+    metadata_xml = Nokogiri::XML(response.body)
+
+    metadata = {}
+    metadata[:description] = metadata_xml.at_xpath('//book:abstract[@abstract-type="structured"]/book:sec[@id="background"]/book:p[1]', 'book' => 'https://dtd.nlm.nih.gov/ns/book/2.3/').content.presence&.strip
+    date_str = metadata_xml.at_xpath('/oai:OAI-PMH/oai:GetRecord/oai:record/oai:header/oai:datestamp', 'oai' => 'http://www.openarchives.org/OAI/2.0/').content.presence&.strip
+    if date_str.present?
+      metadata[:published_on] = parse_by_core_format(date_str)
+      metadata[:published_on_precision] = DateTimePrecision.precision(date_str.split(/[-, :T]/).map(&:to_i))
+    end
+
+    metadata
   end
 
   module_function :parse_and_precision

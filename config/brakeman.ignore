@@ -15,7 +15,7 @@
           "type": "controller",
           "class": "HomeController",
           "method": "artifact",
-          "line": 49,
+          "line": 140,
           "file": "app/controllers/home_controller.rb",
           "rendered": {
             "name": "home/artifact",
@@ -29,6 +29,9 @@
       },
       "user_input": "Artifact.find(params[:id]).url",
       "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
       "note": "The URL is validated when artifacts are imported"
     },
     {
@@ -46,7 +49,7 @@
           "type": "controller",
           "class": "HomeController",
           "method": "artifact",
-          "line": 49,
+          "line": 140,
           "file": "app/controllers/home_controller.rb",
           "rendered": {
             "name": "home/artifact",
@@ -60,6 +63,9 @@
       },
       "user_input": null,
       "confidence": "High",
+      "cwe_id": [
+        79
+      ],
       "note": "The description HTML is white list validated when artifacts are imported"
     },
     {
@@ -77,7 +83,7 @@
           "type": "controller",
           "class": "HomeController",
           "method": "artifact",
-          "line": 49,
+          "line": 140,
           "file": "app/controllers/home_controller.rb",
           "rendered": {
             "name": "home/artifact",
@@ -91,9 +97,12 @@
       },
       "user_input": "Artifact.find(params[:id]).keywords",
       "confidence": "Weak",
+      "cwe_id": [
+        79
+      ],
       "note": ""
     }
   ],
-  "updated": "2021-06-17 09:05:51 -0400",
-  "brakeman_version": "4.10.0"
+  "updated": "2023-01-31 14:10:28 -0500",
+  "brakeman_version": "5.3.1"
 }
