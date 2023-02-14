@@ -22,7 +22,7 @@ class Artifact < ApplicationRecord
 
   # Validate URLs to ensure that they begin with "http"; this allows "http://" and "https://" but prevents
   # "javascript:" and "data:", which are both security issues
-  validates :url, format: { with: /\Ahttp(s)?:.*\z/i, message: 'only valid URLs' }, allow_nil: true
+  validates :url, format: { with: /\Ahttp(s)?:.*\z/i, message: I18n.t('only_valid_urls') }, allow_nil: true
 
   # Handle setting of description fields; there are 3 different fields:
   #
@@ -86,7 +86,7 @@ class Artifact < ApplicationRecord
   # Preprocess keywords (both regular and MeSH) to normalize, remove blanks and duplicates, and store for searching
 
   def keywords=(keywords)
-    keywords = keywords&.reject { |k| k.blank? }
+    keywords = keywords&.reject(&:blank?)
     keywords = keywords&.map { |k| I18n.transliterate(k).downcase }&.uniq
     super(keywords)
     self.keyword_text = keywords&.join(', ')

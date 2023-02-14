@@ -92,7 +92,7 @@ class CedarImporter
       # If too much changed for this import we add new versions of the artifacts to rollback updates
       # and deletions. Also mark the import as suspect and in need of admin review and disable the
       # importer
-      suppress_large_change_detection = ActiveModel::Type::Boolean.new.cast(ENV['suppress_large_change_detection'])
+      suppress_large_change_detection = ActiveModel::Type::Boolean.new.cast(ENV.fetch('suppress_large_change_detection', false))
       if !suppress_large_change_detection && original_count.positive? && changed_count * 100 / original_count > 10 # 10% change threshold
         # loop over the items that changed on this import run
         import_run.versions.map(&:item).each do |artifact|

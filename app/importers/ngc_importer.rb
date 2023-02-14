@@ -16,7 +16,7 @@ class NgcImporter < CedarImporter
   end
 
   def self.update_cache!
-    Dir.mkdir(CACHE_DIR) unless Dir.exist?(CACHE_DIR)
+    FileUtils.mkdir_p(CACHE_DIR)
     index_file = File.join(CACHE_DIR, 'index.json')
     index = File.exist?(index_file) ? JSON.parse(File.read(index_file)) : {}
 

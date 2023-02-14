@@ -21,7 +21,7 @@ class CdsConnectImporter < CedarImporter
     raise "#{@repository_alias} ID retrieval failed with status #{response.status}" unless response.status == 200
 
     artifact_list = JSON.parse(response.body)
-    artifact_ids = artifact_list.map { |a| a['nid'] }
+    artifact_ids = artifact_list.pluck('nid')
 
     # Send our login request so we can access each artifact via the API
     credentials = {
