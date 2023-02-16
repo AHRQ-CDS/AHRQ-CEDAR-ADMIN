@@ -162,7 +162,11 @@ module PageScraper
     metadata_xml = Nokogiri::XML(response.body)
 
     metadata = {}
-    metadata[:description] = metadata_xml.at_xpath('//book:abstract[@abstract-type="structured"]/book:sec[@id="background"]/book:p[1]', 'book' => 'https://dtd.nlm.nih.gov/ns/book/2.3/')&.content.presence&.strip
+
+    # Use the first paragraph of the abstract as the artifact description
+    description = metadata_xml.at_xpath('//book:abstract//book:p[1]', 'book' => 'https://dtd.nlm.nih.gov/ns/book/2.3/')&.content.presence&.squish
+    metadata[:description] = description if description.present?
+
     date_str = metadata_xml.at_xpath('/oai:OAI-PMH/oai:GetRecord/oai:record/oai:header/oai:datestamp', 'oai' => 'http://www.openarchives.org/OAI/2.0/').content.presence&.strip
     if date_str.present?
       metadata[:published_on] = parse_by_core_format(date_str)
