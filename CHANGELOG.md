@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.7.2 - 2023-02-22
+
+* Uses NIH bookshelf metadata service for NIH imports instead of scraping HTML
+* Fixes an exception handling issue with importer
+* Updates to Ruby 3.0.3 and Rails 6.1.7
+
 ## v0.7.1 - 2023-01-18
 
 * Temporarily works around importer issue of descriptions being removed from source repository
