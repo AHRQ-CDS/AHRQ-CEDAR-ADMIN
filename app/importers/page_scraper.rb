@@ -82,7 +82,8 @@ module PageScraper
       html.at_css('meta[name="datecreated"]') ||
       html.at_css('div[id="page-created"]') ||
       html.at_css('span[id="lblTitleDate"]') ||
-      html.at_css('span[id="lblTitleId"]')
+      html.at_css('span[id="lblTitleId"]') ||
+      html.css('div[id="mainContent"] div[id="centerContent"] p').find { |p| parse_by_core_format(p.content).present? }
 
     date_content = date_node['content'] || date_node.content unless date_node.nil?
     date_content.delete!('Page originally created ') if date_content&.include?('Page originally created ')
