@@ -160,14 +160,15 @@ module PageScraper
     end
 
     metadata_xml = Nokogiri::XML(response.body)
+    # Data is present in multiple namespaces, but the data we retrieve is pretty specific so we can just ignore them
+    metadata_xml.remove_namespaces!
 
     metadata = {}
 
     # Use the first paragraph of the abstract as the artifact description
-    description = metadata_xml.at_xpath('//book:abstract//book:p[1]', 'book' => 'https://dtd.nlm.nih.gov/ns/book/2.3/')&.content.presence&.squish
+    description = metadata_xml.at_xpath('//abstract//p[1]')&.content.presence&.squish
     metadata[:description] = description if description.present?
-
-    date_str = metadata_xml.at_xpath('/oai:OAI-PMH/oai:GetRecord/oai:record/oai:header/oai:datestamp', 'oai' => 'http://www.openarchives.org/OAI/2.0/').content.presence&.strip
+    date_str = metadata_xml.at_xpath('/OAI-PMH/GetRecord/record/header/datestamp')&.content.presence&.strip
     if date_str.present?
       metadata[:published_on] = parse_by_core_format(date_str)
       metadata[:published_on_precision] = DateTimePrecision.precision(date_str.split(/[-, :T]/).map(&:to_i))
