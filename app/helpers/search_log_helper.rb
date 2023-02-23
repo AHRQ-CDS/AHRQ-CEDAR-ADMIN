@@ -44,7 +44,7 @@ module SearchLogHelper
     references = code_search.split(',')
     references.each do |ref|
       coding = ref.split('|')
-      parsed_codes.push([CODE_SYSTEMS[coding[0]] || 'Unknown Code System', coding[1]])
+      parsed_codes.push([CODE_SYSTEMS[coding[0]] || '[Unknown Code System]', coding[1] || '[No Code]'])
     end
     parsed_codes
   end
@@ -53,12 +53,10 @@ module SearchLogHelper
   #
   # @return umls_description for first result (should only be 1)
   def get_code_description(code_search)
-    target = code_search.split(',')[0].split('|')[1]
-    concepts = Concept.where('(codes::text) LIKE (?)', "%#{target}%").to_ary
-    if concepts.length >= 1
-      concepts.first.umls_description
-    else
-      '[Missing UMLS Description]'
-    end
+    code = code_search.split(',')[0].split('|')[1]
+    return 'No Code Provided' if code.blank?
+
+    concept = Concept.where('codes @> ?', "[{\"code\":\"#{code}\"}]").first
+    concept&.umls_description || "Unrecognized Code #{code}"
   end
 end
