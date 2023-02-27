@@ -2,6 +2,30 @@
 
 # Primary application controller, providing a statistical overview of CEDAR
 class HomeController < ApplicationController
+  CLICKED_ARTIFACTS_SQL = <<-SQL.squish
+    SELECT
+      JSONB_PATH_QUERY(link_clicks, '$.artifact_id') as artifact_id,
+      COUNT(*) as count
+    FROM
+      search_logs
+    GROUP BY
+      artifact_id
+    ORDER BY
+      count DESC
+  SQL
+
+  RETURNED_ARTIFACTS_SQL = <<-SQL.squish
+    SELECT
+      JSONB_ARRAY_ELEMENTS(returned_artifact_ids) as artifact_id,
+      COUNT(*) as count
+    FROM
+      search_logs
+    GROUP BY
+      artifact_id
+    ORDER BY
+      count DESC
+  SQL
+
   # NOTE: If we want to show search count by publisher:
   # When no artifact-publisher is selected, the API queries against all artifact-publishers.
   # So, artifact-publisher is absent from the query params, even though the user of the API is querying
@@ -15,6 +39,13 @@ class HomeController < ApplicationController
     @artifacts_per_repository = Artifact.joins(:repository).group('repository').count
     @artifacts_by_status = Artifact.group(:artifact_status).count
     @top_artifacts_by_type = Artifact.group(:artifact_type).count.sort_by { |_, v| -v }[0, 10]
+    @artifact_clicks = ActiveRecord::Base.connection.exec_query(CLICKED_ARTIFACTS_SQL)
+    @artifact_clicks = @artifact_clicks[..9]
+    @artifact_clicks = @artifact_clicks.map { |entry| { artifact: Artifact.find(entry['artifact_id']), count: entry['count'] } }
+
+    @returned_artifacts = ActiveRecord::Base.connection.exec_query(RETURNED_ARTIFACTS_SQL)
+    @returned_artifacts = @returned_artifacts[..9]
+    @returned_artifacts = @returned_artifacts.map { |entry| { artifact: Artifact.find(entry['artifact_id']), count: entry['count'] } }
 
     # Set up import run data for display; first find the last (up to) 5 distinct calendar days when imports happened
     start_dates = ImportRun.select('DISTINCT DATE(start_time) AS start_date').order(:start_date).reverse_order.limit(5).map(&:start_date)
@@ -107,6 +138,18 @@ class HomeController < ApplicationController
       ActiveRecord::Relation::QueryAttribute.new('repository_id', params[:id].to_i, ActiveRecord::Type::Integer.new)
     ]
     @missing_attribute = ActiveRecord::Base.connection.exec_query(query, 'sql_repository_missing_records', binds)
+
+    repository_artifact_ids = artifacts.map(&:id)
+
+    @artifact_clicks = ActiveRecord::Base.connection.exec_query(CLICKED_ARTIFACTS_SQL)
+    @artifact_clicks = @artifact_clicks.select { |entry| repository_artifact_ids.include? entry['artifact_id'].to_i }
+    @artifact_clicks = @artifact_clicks[..9]
+    @artifact_clicks = @artifact_clicks.map { |entry| { artifact: Artifact.find(entry['artifact_id']), count: entry['count'] } }
+
+    @returned_artifacts = ActiveRecord::Base.connection.exec_query(RETURNED_ARTIFACTS_SQL)
+    @returned_artifacts = @returned_artifacts.select { |entry| repository_artifact_ids.include? entry['artifact_id'].to_i }
+    @returned_artifacts = @returned_artifacts[..9]
+    @returned_artifacts = @returned_artifacts.map { |entry| { artifact: Artifact.find(entry['artifact_id']), count: entry['count'] } }
   end
 
   def import_run

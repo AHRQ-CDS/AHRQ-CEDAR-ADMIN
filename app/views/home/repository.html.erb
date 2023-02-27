@@ -2,6 +2,54 @@
 
 <%= render 'data_with_pie_chart', title: 'Artifacts By Status', data: @artifacts_by_status, alt_text: 'A pie chart displaying the table data for this repository\'s Artifacts By Status' %>
 
+<% if @artifact_clicks.present? %>
+<div class="row mt-5">
+  <div class="col-sm">
+    <h3 id="clicked_links">Top 10 Artifact Click Throughs</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Artifact Title</th>
+          <th>Clicks</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @artifact_clicks.each do |row| %>
+          <tr>
+            <td><%= link_to row[:artifact].title, row[:artifact] %></td>
+            <td><%= row[:count] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% end %>
+
+<% if @returned_artifacts.present? %>
+<div class="row mt-5">
+  <div class="col-sm">
+    <h3 id="clicked_links">Top 10 Artifact Search Hits</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Artifact Title</th>
+          <th>Hits</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @returned_artifacts.each do |row| %>
+          <tr>
+            <td><%= link_to row[:artifact].title, row[:artifact] %></td>
+            <td><%= row[:count] %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% end %>
+
 <%= render 'data_with_pie_chart', title: 'Top 10 Keywords', data: @top_artifacts_per_keyword, path_method: :keyword_path, alt_text: 'A pie chart displaying the table data for this repository\'s Top 10 Keywords' %>
 
 <div class="row mt-5">
