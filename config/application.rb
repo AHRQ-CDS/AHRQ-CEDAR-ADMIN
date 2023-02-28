@@ -47,7 +47,10 @@ module CedarAdmin
     config.ngc_base_url = ENV['CEDAR_NGC_BASE_URL']
 
     # Mailer settings
-    config.action_mailer.default_url_options = { host: ENV['HOSTNAME'] || 'cds.ahrq.gov' }
+    config.action_mailer.default_url_options = {
+      host: ENV['HOSTNAME'] || 'cds.ahrq.gov',
+      script_name: ENV['CEDAR_ADMIN_PATH_PREFIX']
+    }
     config.cedar_from_email = ENV['CEDAR_FROM_EMAIL'] || 'cedar@ahrq.hhs.gov'
     config.cedar_to_email = ENV['CEDAR_TO_EMAIL'] || 'cedar@ahrq.hhs.gov'
 
