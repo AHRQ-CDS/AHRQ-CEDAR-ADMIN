@@ -2,30 +2,6 @@
 
 # Primary application controller, providing a statistical overview of CEDAR
 class HomeController < ApplicationController
-  CLICKED_ARTIFACTS_SQL = <<-SQL.squish
-    SELECT
-      JSONB_PATH_QUERY(link_clicks, '$.artifact_id') as artifact_id,
-      COUNT(*) as count
-    FROM
-      search_logs
-    GROUP BY
-      artifact_id
-    ORDER BY
-      count DESC
-  SQL
-
-  RETURNED_ARTIFACTS_SQL = <<-SQL.squish
-    SELECT
-      JSONB_ARRAY_ELEMENTS(returned_artifact_ids) as artifact_id,
-      COUNT(*) as count
-    FROM
-      search_logs
-    GROUP BY
-      artifact_id
-    ORDER BY
-      count DESC
-  SQL
-
   # NOTE: If we want to show search count by publisher:
   # When no artifact-publisher is selected, the API queries against all artifact-publishers.
   # So, artifact-publisher is absent from the query params, even though the user of the API is querying
@@ -39,12 +15,37 @@ class HomeController < ApplicationController
     @artifacts_per_repository = Artifact.joins(:repository).group('repository').count
     @artifacts_by_status = Artifact.group(:artifact_status).count
     @top_artifacts_by_type = Artifact.group(:artifact_type).count.sort_by { |_, v| -v }[0, 10]
-    @artifact_clicks = ActiveRecord::Base.connection.exec_query(CLICKED_ARTIFACTS_SQL)
-    @artifact_clicks = @artifact_clicks[..9]
+
+    query = <<-SQL.squish
+      SELECT
+        JSONB_PATH_QUERY(link_clicks, '$.artifact_id')::bigint as artifact_id,
+        COUNT(*) as count
+      FROM
+        search_logs
+      GROUP BY
+        artifact_id
+      ORDER BY
+        count DESC
+      LIMIT
+        10
+    SQL
+    @artifact_clicks = ActiveRecord::Base.connection.exec_query(query)
     @artifact_clicks = @artifact_clicks.map { |entry| { artifact: Artifact.find(entry['artifact_id']), count: entry['count'] } }
 
-    @returned_artifacts = ActiveRecord::Base.connection.exec_query(RETURNED_ARTIFACTS_SQL)
-    @returned_artifacts = @returned_artifacts[..9]
+    query = <<-SQL.squish
+      SELECT
+        JSONB_ARRAY_ELEMENTS(returned_artifact_ids)::bigint as artifact_id,
+        COUNT(*) as count
+      FROM
+        search_logs
+      GROUP BY
+        artifact_id
+      ORDER BY
+        count DESC
+      LIMIT
+        10
+    SQL
+    @returned_artifacts = ActiveRecord::Base.connection.exec_query(query)
     @returned_artifacts = @returned_artifacts.map { |entry| { artifact: Artifact.find(entry['artifact_id']), count: entry['count'] } }
 
     # Set up import run data for display; first find the last (up to) 5 distinct calendar days when imports happened
@@ -139,16 +140,56 @@ class HomeController < ApplicationController
     ]
     @missing_attribute = ActiveRecord::Base.connection.exec_query(query, 'sql_repository_missing_records', binds)
 
-    repository_artifact_ids = artifacts.map(&:id)
-
-    @artifact_clicks = ActiveRecord::Base.connection.exec_query(CLICKED_ARTIFACTS_SQL)
-    @artifact_clicks = @artifact_clicks.select { |entry| repository_artifact_ids.include? entry['artifact_id'].to_i }
-    @artifact_clicks = @artifact_clicks[..9]
+    query = <<-SQL.squish
+      WITH click_count AS (
+        SELECT
+          JSONB_PATH_QUERY(link_clicks, '$.artifact_id')::bigint as artifact_id,
+          COUNT(*) as count
+        FROM
+          search_logs
+        GROUP BY
+          artifact_id
+      )
+      SELECT
+        c.artifact_id, c.count
+      FROM
+        click_count c
+      INNER JOIN artifacts a ON
+        c.artifact_id = a.id
+      WHERE
+        a.repository_id = $1
+      ORDER BY
+        c.count DESC
+      LIMIT
+        10
+    SQL
+    @artifact_clicks = ActiveRecord::Base.connection.exec_query(query, 'sql_clicked_link_count', binds)
     @artifact_clicks = @artifact_clicks.map { |entry| { artifact: Artifact.find(entry['artifact_id']), count: entry['count'] } }
 
-    @returned_artifacts = ActiveRecord::Base.connection.exec_query(RETURNED_ARTIFACTS_SQL)
-    @returned_artifacts = @returned_artifacts.select { |entry| repository_artifact_ids.include? entry['artifact_id'].to_i }
-    @returned_artifacts = @returned_artifacts[..9]
+    query = <<-SQL.squish
+      WITH returned_count AS (
+        SELECT
+          JSONB_ARRAY_ELEMENTS(returned_artifact_ids)::bigint as artifact_id,
+          COUNT(*) as count
+        FROM
+          search_logs
+        GROUP BY
+          artifact_id
+      )
+      SELECT
+        c.artifact_id, c.count
+      FROM
+        returned_count c
+      INNER JOIN artifacts a ON
+        c.artifact_id = a.id
+      WHERE
+        a.repository_id = $1
+      ORDER BY
+        c.count DESC
+      LIMIT
+        10
+    SQL
+    @returned_artifacts = ActiveRecord::Base.connection.exec_query(query, 'sql_returned_artifact_count', binds)
     @returned_artifacts = @returned_artifacts.map { |entry| { artifact: Artifact.find(entry['artifact_id']), count: entry['count'] } }
   end
 
