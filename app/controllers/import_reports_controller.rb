@@ -6,7 +6,7 @@ class ImportReportsController < ApplicationController
     start_time = ImportRun.select('DISTINCT DATE(start_time) AS start_date').order(:start_date).reverse_order.map(&:start_date).last
     base_imports = ImportRun.where('DATE(start_time) >= ?', start_time).order(:start_time).reverse_order
 
-    @flagged_runs = base_imports.where('status = ?', 'flagged').page(params[:flagged_page])
+    @flagged_runs = base_imports.where(status: 'flagged').page(params[:flagged_page])
     @flagged_tabular = @flagged_runs.group_by { |ir| ir.start_time.to_date }
     @flagged_summaries = create_summaries(@flagged_tabular)
 
@@ -16,11 +16,11 @@ class ImportReportsController < ApplicationController
   end
 
   private
+
   def create_summaries(runs)
     runs.transform_values do |irs|
       ImportRun.new(total_count: irs.sum(&:total_count), new_count: irs.sum(&:new_count),
                     update_count: irs.sum(&:update_count), delete_count: irs.sum(&:delete_count))
     end
   end
-
 end
