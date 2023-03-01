@@ -221,6 +221,48 @@ class HomeController < ApplicationController
 
   def artifact
     @artifact = Artifact.find(params[:id])
+    query = <<-SQL.squish
+      WITH returned_count AS (
+        SELECT
+          JSONB_ARRAY_ELEMENTS(returned_artifact_ids)::bigint as artifact_id,
+          COUNT(*) as count
+        FROM
+          search_logs
+        GROUP BY
+          artifact_id
+      )
+      SELECT
+        c.count
+      FROM
+        returned_count c
+      WHERE
+        c.artifact_id = $1
+    SQL
+    binds = [
+      ActiveRecord::Relation::QueryAttribute.new('repository_id', @artifact.id, ActiveRecord::Type::Integer.new)
+    ]
+    returned_count = ActiveRecord::Base.connection.exec_query(query, 'sql_returned_count', binds)
+    query = <<-SQL.squish
+      WITH returned_count AS (
+        SELECT
+          JSONB_PATH_QUERY(link_clicks, '$.artifact_id')::bigint as artifact_id,
+          COUNT(*) as count
+        FROM
+          search_logs
+        GROUP BY
+          artifact_id
+      )
+      SELECT
+        c.count
+      FROM
+        returned_count c
+      WHERE
+        c.artifact_id = $1
+    SQL
+    clicked_count = ActiveRecord::Base.connection.exec_query(query, 'sql_returned_count', binds)
+    @search_stats = {}
+    @search_stats[:returned] = returned_count.first['count'] if returned_count.first.present?
+    @search_stats[:clicked] = clicked_count.first['count'] if clicked_count.first.present?
   end
 
   def version
