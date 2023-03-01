@@ -7,6 +7,6 @@
     </br>
     <p><span class="float-heading">Total count: <%= @search_logs.total_count %></span></p>
     <%= paginate @search_logs, window: 2 %>
-    <%= render 'search_log_table', locals: {data: @search_logs} %>
+    <%= render partial: 'search_log_table', locals: { search_logs: @search_logs } %>
   </div>
 </div>
