@@ -33,9 +33,16 @@ class HomeController < ApplicationController
     # Set up import run data for display; first find the last (up to) 5 distinct calendar days when imports happened
     start_dates = ImportRun.select('DISTINCT DATE(start_time) AS start_date').order(:start_date).reverse_order.limit(5).map(&:start_date)
     # Find all the import runs that happened over those days and group them by day
-    @import_runs = ImportRun.where('DATE(start_time) >= ?', start_dates.last).order(:start_time).reverse_order.group_by { |ir| ir.start_time.to_date }
+    @import_runs = ImportRun.where('DATE(start_time) >= ?', start_dates.last).order(:start_time).reverse_order
+    @flagged_runs = @import_runs.where(status: 'flagged')
+    @import_runs = @import_runs.group_by { |ir| ir.start_time.to_date }
+    @flagged_runs = @flagged_runs.group_by { |ir| ir.start_time.to_date }
     # Create summaries for each date
     @import_run_summaries = @import_runs.transform_values do |irs|
+      ImportRun.new(total_count: irs.sum(&:total_count), new_count: irs.sum(&:new_count),
+                    update_count: irs.sum(&:update_count), delete_count: irs.sum(&:delete_count))
+    end
+    @flagged_run_summaries = @flagged_runs.transform_values do |irs|
       ImportRun.new(total_count: irs.sum(&:total_count), new_count: irs.sum(&:new_count),
                     update_count: irs.sum(&:update_count), delete_count: irs.sum(&:delete_count))
     end

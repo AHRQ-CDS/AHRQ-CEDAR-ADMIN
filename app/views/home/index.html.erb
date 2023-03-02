@@ -65,15 +65,21 @@
 
 <%= render 'data_with_pie_chart', title: 'Top 10 Keywords', data: @top_artifacts_per_keyword, path_method: :keyword_path, alt_text: 'A pie chart displaying the table data for Top 10 Keywords' %>
 
-<hr class="mt-5 mb-5"/>
+<hr class="mt-5 mb-5" />
 <a id="imports" class="mt-5 mb-5"></a>
-<div class="row mt-10"/>
+<div class="row mt-10">
   <div class="col-sm">
-    <%= render partial: 'import_run_table', locals: { title: 'Import Statistics', import_runs: @import_runs, import_run_summaries: @import_run_summaries, show_link: true } %>
+    <%= render partial: 'import_run_table', locals: { title: 'Most Recent Flagged Imports', import_runs: @flagged_runs, import_run_summaries: @flagged_run_summaries, is_flags: true } %>
   </div>
 </div>
 
-<hr class="mt-5 mb-5"/>
+<div class="row mt-10">
+  <div class="col-sm">
+    <%= render partial: 'import_run_table', locals: { title: 'Most Recent Import Statistics', import_runs: @import_runs, import_run_summaries: @import_run_summaries, show_link: true } %>
+  </div>
+</div>
+
+<hr class="mt-5 mb-5">
 <a id="tags" class="mt-5 mb-5"></a>
 <div class="row mt-10">
   <div class="col-sm">
