@@ -29,7 +29,7 @@ class HomeTest < ApplicationSystemTestCase
     visit '#chart-2'
     assert_selector 'h3', text: 'Artifacts By Status'
     visit '#chart-3'
-    assert_selector 'h3', text: 'Top 10 Artifacts By Type'
+    assert_selector 'h3', text: 'Top 10 Artifact Types'
 
     visit '#chart-4'
     assert_selector 'h3', text: 'Top 10 Keywords'
