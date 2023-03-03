@@ -19,8 +19,8 @@
     <p><strong>DOI:</strong> <%= @artifact.doi || '<not specified>'%></p>
     <p><strong>Published On:</strong> <%= format_date(@artifact.published_on) || '<not specified>' %></p>
     <p><strong>Indexed At:</strong> <%= format_datetime_with_tz(@artifact.created_at) || '<not specified>' %></p>
-    <p><strong>Times Found:</strong> <%= @search_stats[:returned] || 'never' %></p>
-    <p><strong>Times Clicked:</strong> <%= @search_stats[:clicked] || 'never' %></p>
+    <p><strong>Times Found:</strong> <%= @artifact.search_stats&.returned_count || 'never' %></p>
+    <p><strong>Times Clicked:</strong> <%= @artifact.search_stats&.click_count || 'never' %></p>
     <h4>Version History</h4>
     <ul>
       <% @artifact.versions.order(:id).reverse_order.each do |v| %>

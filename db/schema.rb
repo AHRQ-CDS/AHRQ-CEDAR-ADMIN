@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_27_134100) do
+ActiveRecord::Schema.define(version: 2023_03_03_204344) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -155,4 +155,23 @@ ActiveRecord::Schema.define(version: 2023_02_27_134100) do
   add_foreign_key "artifacts", "repositories"
   add_foreign_key "import_runs", "repositories"
   add_foreign_key "versions", "import_runs"
+
+  create_view "artifact_search_stats", sql_definition: <<-SQL
+      WITH click_count AS (
+           SELECT (jsonb_path_query(search_logs.link_clicks, '$."artifact_id"'::jsonpath))::bigint AS artifact_id,
+              count(*) AS click_count
+             FROM search_logs
+            GROUP BY ((jsonb_path_query(search_logs.link_clicks, '$."artifact_id"'::jsonpath))::bigint)
+          ), returned_count AS (
+           SELECT (jsonb_array_elements(search_logs.returned_artifact_ids))::bigint AS artifact_id,
+              count(*) AS returned_count
+             FROM search_logs
+            GROUP BY ((jsonb_array_elements(search_logs.returned_artifact_ids))::bigint)
+          )
+   SELECT COALESCE(c.artifact_id, r.artifact_id) AS artifact_id,
+      c.click_count,
+      r.returned_count
+     FROM (click_count c
+       FULL JOIN returned_count r ON ((r.artifact_id = c.artifact_id)));
+  SQL
 end
