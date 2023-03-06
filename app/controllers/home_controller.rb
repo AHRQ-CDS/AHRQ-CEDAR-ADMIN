@@ -119,13 +119,13 @@ class HomeController < ApplicationController
     @missing_attribute = ActiveRecord::Base.connection.exec_query(query, 'sql_repository_missing_records', binds)
 
     @artifact_clicks = Artifact.joins(:search_stats)
-                               .where(repository_id: 1)
+                               .where(repository_id: @repository.id)
                                .where.not('search_stats.click_count': nil)
                                .order(click_count: :desc)
                                .limit(10)
 
     @returned_artifacts = Artifact.joins(:search_stats)
-                                  .where(repository_id: 1)
+                                  .where(repository_id: @repository.id)
                                   .where.not('search_stats.returned_count': nil)
                                   .order(returned_count: :desc)
                                   .limit(10)
