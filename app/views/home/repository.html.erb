@@ -68,15 +68,15 @@
         </tr>
       </thead>
       <tbody>
-        <% @missing_attribute.each do |row| %>
+        <% @repository.stats.each do |stats| %>
           <tr>
-            <td><%= row["artifact_type"] %></td>
-            <td><%= row["total"] %></td>
-            <td><%= row["missing_title"] %></td>
-            <td><%= row["missing_desc"] %></td>
-            <td><%= row["missing_keyword"] %></td>
-            <td><%= row["missing_concept"] %></td>
-            <td><%= row["missing_concept"] - row["missing_keyword"] %></td>
+            <td><%= stats.artifact_type %></td>
+            <td><%= stats.total %></td>
+            <td><%= stats.missing_title %></td>
+            <td><%= stats.missing_desc %></td>
+            <td><%= stats.missing_keyword %></td>
+            <td><%= stats.missing_concept %></td>
+            <td><%= stats.missing_concept - stats.missing_keyword %></td>
           </tr>
         <% end %>
       </tbody>

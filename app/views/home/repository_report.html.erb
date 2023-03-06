@@ -13,34 +13,35 @@
         </tr>
       </thead>
       <tbody>
-        <% @missing_fields.each do |row| %>
+        <% @repositories.each do |repository| %>
         <tr>
-          <td><%= row['repository'] %></td>
-          <td><%= row['total'] %></td>
+          <td><%= repository.name %></td>
+          <td><%= repository.stats.sum(:total) %></td>
+          <td><%= repository.stats.sum(:missing_title) %></td>
           <td>
-            <%= row['missing_title'] %>
-          </td>     
-          <td>
-            <% if row['missing_desc'] > 0 %>
-              <%= link_to row['missing_desc'], "repository/#{row['repository_id']}#missing_desc" %>
+            <% missing_desc = repository.stats.sum(:missing_desc) %>
+            <% if missing_desc > 0 %>
+              <%= link_to missing_desc, "repository/#{repository.id}#missing_desc" %>
             <% else %>
-              <%= row['missing_desc'] %>
+              <%= missing_desc %>
             <% end %>
           </td>
           <td>
-            <% if row['missing_keyword'] > 0 %>
-              <%= link_to row['missing_keyword'], "repository/#{row['repository_id']}#missing_desc" %>
+            <% missing_keyword = repository.stats.sum(:missing_keyword) %>
+            <% if missing_keyword > 0 %>
+              <%= link_to missing_keyword, "repository/#{repository.id}#missing_desc" %>
             <% else %>
-              <%= row['missing_keyword'] %>
+              <%= missing_keyword %>
             <% end %>
-          </td>     
+          </td>
           <td>
-            <% if row['missing_concept'] > 0 %>
-              <%= link_to row['missing_concept'], "repository/#{row['repository_id']}#missing_desc" %>
+            <% missing_concept = repository.stats.sum(:missing_concept) %>
+            <% if missing_concept > 0 %>
+              <%= link_to missing_concept, "repository/#{repository.id}#missing_desc" %>
             <% else %>
-              <%= row['missing_concept'] %>
+              <%= missing_concept %>
             <% end %>
-          </td>                          
+          </td>
         </tr>
         <% end %>
       </tbody>

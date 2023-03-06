@@ -61,7 +61,7 @@ class HomeController < ApplicationController
   end
 
   def repository
-    @repository = Repository.find(params[:id])
+    @repository = Repository.joins(:stats).find(params[:id])
     artifacts = @repository.artifacts
     @artifact_count = artifacts.count
     @artifact_count_missing_description = artifacts.where(description: nil, description_html: nil, description_markdown: nil).count
@@ -72,51 +72,6 @@ class HomeController < ApplicationController
 
     keywords = artifacts.where.not('keywords <@ ?', '[]').flat_map(&:keywords)
     @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
-
-    query = <<-SQL.squish
-      WITH concept_count as (
-        SELECT a.id, COUNT(ac.concept_id) as count_all FROM artifacts a
-        LEFT JOIN artifacts_concepts ac ON a.id = ac.artifact_id
-        GROUP BY a.id
-      )
-      SELECT
-        a.artifact_type,
-        COUNT(*) AS total,
-        SUM(
-          CASE WHEN (
-            (a.title IS NULL OR LENGTH(a.title) = 0)
-          )
-          THEN 1 ELSE 0 END) AS missing_title,
-        SUM(
-          CASE WHEN (
-            (a.description IS NULL OR LENGTH(a.description) = 0)
-          )
-          THEN 1 ELSE 0 END) AS missing_desc,
-        SUM(
-          CASE WHEN (
-            (a.keywords IS NULL OR JSONB_ARRAY_LENGTH(a.keywords) = 0)
-          )
-          THEN 1 ELSE 0 END) AS missing_keyword,
-        SUM(
-          CASE WHEN (
-            (ac.count_all IS NULL OR ac.count_all = 0)
-          )
-          THEN 1 ELSE 0 END) AS missing_concept
-      FROM
-        artifacts a
-      INNER JOIN
-        concept_count ac on a.id = ac.id
-      WHERE
-        a.repository_id = $1
-      GROUP BY
-        a.artifact_type
-      ORDER BY
-        COUNT(*) DESC;
-    SQL
-    binds = [
-      ActiveRecord::Relation::QueryAttribute.new('repository_id', params[:id].to_i, ActiveRecord::Type::Integer.new)
-    ]
-    @missing_attribute = ActiveRecord::Base.connection.exec_query(query, 'sql_repository_missing_records', binds)
 
     @artifact_clicks = Artifact.joins(:search_stats)
                                .where(repository_id: @repository.id)
@@ -183,48 +138,7 @@ class HomeController < ApplicationController
   end
 
   def repository_report
-    query = <<-SQL.squish
-      WITH concept_count as (
-        SELECT a.id, COUNT(ac.concept_id) as count_all FROM artifacts a
-        LEFT JOIN artifacts_concepts ac ON a.id = ac.artifact_id
-        GROUP BY a.id
-      )
-      SELECT
-        r.name as repository,
-        r.id as repository_id,
-        COUNT(*) AS total,
-        SUM(
-          CASE WHEN (
-            (a.title IS NULL OR LENGTH(a.title) = 0)
-          )
-          THEN 1 ELSE 0 END) AS missing_title,
-        SUM(
-          CASE WHEN (
-            (a.description IS NULL OR LENGTH(a.description) = 0)
-          )
-          THEN 1 ELSE 0 END) AS missing_desc,
-        SUM(
-          CASE WHEN (
-            (a.keywords IS NULL OR JSONB_ARRAY_LENGTH(a.keywords) = 0)
-          )
-          THEN 1 ELSE 0 END) AS missing_keyword,
-        SUM(
-          CASE WHEN (
-            (ac.count_all IS NULL OR ac.count_all = 0)
-          )
-          THEN 1 ELSE 0 END) AS missing_concept
-      FROM
-        artifacts a
-      INNER JOIN
-        repositories r on a.repository_id = r.id
-      INNER JOIN
-        concept_count ac on a.id = ac.id
-      GROUP BY
-        r.name, r.id
-      ORDER BY
-        r.name
-    SQL
-    @missing_fields = ActiveRecord::Base.connection.exec_query(query)
+    @repositories = Repository.order(:name)
   end
 
   def repository_missing
