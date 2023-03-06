@@ -20,11 +20,13 @@ class HomeController < ApplicationController
                                .where.not('search_stats.click_count': nil)
                                .order(click_count: :desc)
                                .limit(10)
+    @artifact_clicks_per_repository = Artifact.joins(:search_stats, :repository).group(:repository).sum(:click_count)
 
     @returned_artifacts = Artifact.joins(:search_stats)
                                   .where.not('search_stats.returned_count': nil)
                                   .order(returned_count: :desc)
                                   .limit(10)
+    @artifact_returns_per_repository = Artifact.joins(:search_stats, :repository).group(:repository).sum(:returned_count)
 
     # Set up import run data for display; first find the last (up to) 5 distinct calendar days when imports happened
     start_dates = ImportRun.select('DISTINCT DATE(start_time) AS start_date').order(:start_date).reverse_order.limit(5).map(&:start_date)

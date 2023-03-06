@@ -5,6 +5,8 @@
 
 <%= render 'data_with_pie_chart', title: 'Artifacts By Status', data: @artifacts_by_status, alt_text: 'A pie chart displaying the table data for Artifacts By Status' %>
 
+<%= render 'data_with_pie_chart', title: 'Artifact Clicks Per Repository', data: @artifact_clicks_per_repository, path_method: :repository_path, alt_text: 'A pie chart displaying the table data for Artifact Clicks Per Repository' %>
+
 <% if @artifact_clicks.count > 0 %>
 <div class="row mt-5">
   <div class="col-sm">
@@ -30,6 +32,8 @@
   </div>
 </div>
 <% end %>
+
+<%= render 'data_with_pie_chart', title: 'Artifact Search Hits Per Repository', data: @artifact_returns_per_repository, path_method: :repository_path, alt_text: 'A pie chart displaying the table data for Artifact Search Hits Per Repository' %>
 
 <% if @returned_artifacts.count > 0 %>
 <div class="row mt-5">
