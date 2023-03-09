@@ -1,0 +1,55 @@
+<div class="row mt-5">
+  <div class="col-sm">
+
+    <h1>Search Statistics</h1>
+
+    <%= form_with method: :get, local: true do |form| %>
+      <%= form.date_field("start_date", value: @start_date) %>
+      <%= form.date_field("end_date", value: @end_date) %>
+      <%= form.hidden_field("exclude_ips", value: @exclude_ips.join(',')) %>
+      <%= form.submit("Change", class: 'btn btn-primary btn-sm') %>
+    <% end %>
+
+    <br>
+    <h3>Summary</h3>
+
+    <p>
+      There were <%= @search_count %> searches between <%= @start_date.strftime('%A %B %-d, %Y') %>
+      and <%= @end_date.strftime('%A %B %-d, %Y') %> with an average of <%= @searches_per_day %>
+      searches per day.
+    </p>
+    <p>Searches came from <%= @ip_addresses.length %> unique IP addresses.</p>
+    <p>The average search took <%= @average_time %> seconds to complete.</p>
+
+    <br>
+    <h3>Searches By Day</h3>
+
+    <%= line_chart @searches_by_day %>
+
+    <br>
+    <h3>Top IP addresses</h3>
+
+    <table class="table">
+      <thead>
+        <th>IP Address</th>
+        <th>Number of queries</th>
+        <th></th>
+      </thead>
+      <tbody>
+        <% @top_ip_addresses.each do |ip, count| %>
+        <tr>
+          <td><%= ip.to_s %></td>
+          <td><%= count %></td>
+          <td>
+            <% exclude_ips = (@exclude_ips + [ip.to_s]).join(',') %>
+            <%= link_to 'Exclude', search_stats_path(start_date: @start_date, end_date: @end_date, exclude_ips: exclude_ips), class: 'btn btn-primary btn-sm' %>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= link_to 'Revert IP Exclusions', search_stats_path(start_date: @start_date, end_date: @end_date), class: 'btn btn-primary' %>
+
+  </div>
+</div>
