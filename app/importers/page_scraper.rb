@@ -5,7 +5,7 @@ require 'date_time_precision/lib'
 # Functionality for importing metadata from web pages
 module PageScraper
   KEYWORD_SEPARATOR = /[,;]/.freeze
-  DATE_FORMAT = ['%Y-%m-%d', '%Y-%m', '%Y', '%F %T', '%FT%H:%M:%S', '%Y-%m-%dT%H:%M:%S%z', '%B %Y'].freeze
+  DATE_FORMATS = ['%Y-%m-%d', '%Y-%m', '%Y', '%F %T', '%FT%H:%M:%S', '%Y-%m-%dT%H:%M:%S%z', '%B %Y'].freeze
 
   # Process an individual HTML page or PDF to extract metadata
   def extract_metadata(page_url)
@@ -139,7 +139,7 @@ module PageScraper
   end
 
   # See for formats: https://www.dublincore.org/specifications/dublin-core/dcmi-terms/terms/date/
-  def parse_by_core_format(input, formats: DATE_FORMAT)
+  def parse_by_core_format(input, formats: DATE_FORMATS)
     formats.each do |date_format|
       return Date.strptime(input, date_format)
     rescue Date::Error
