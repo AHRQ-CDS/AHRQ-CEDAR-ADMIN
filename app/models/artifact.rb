@@ -5,6 +5,7 @@
 class Artifact < ApplicationRecord
   belongs_to :repository
   has_and_belongs_to_many :concepts
+  has_one :search_stats, class_name: 'ArtifactSearchStats', dependent: nil
   before_save :set_published_on_range
   after_save :update_index
 

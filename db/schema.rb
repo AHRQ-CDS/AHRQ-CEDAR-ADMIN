@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_02_27_134100) do
+ActiveRecord::Schema.define(version: 2023_03_06_192549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -155,4 +155,59 @@ ActiveRecord::Schema.define(version: 2023_02_27_134100) do
   add_foreign_key "artifacts", "repositories"
   add_foreign_key "import_runs", "repositories"
   add_foreign_key "versions", "import_runs"
+
+  create_view "artifact_search_stats", sql_definition: <<-SQL
+      WITH click_count AS (
+           SELECT (jsonb_path_query(search_logs.link_clicks, '$."artifact_id"'::jsonpath))::bigint AS artifact_id,
+              count(*) AS click_count
+             FROM search_logs
+            GROUP BY ((jsonb_path_query(search_logs.link_clicks, '$."artifact_id"'::jsonpath))::bigint)
+          ), returned_count AS (
+           SELECT (jsonb_array_elements(search_logs.returned_artifact_ids))::bigint AS artifact_id,
+              count(*) AS returned_count
+             FROM search_logs
+            GROUP BY ((jsonb_array_elements(search_logs.returned_artifact_ids))::bigint)
+          )
+   SELECT COALESCE(c.artifact_id, r.artifact_id) AS artifact_id,
+      c.click_count,
+      r.returned_count
+     FROM (click_count c
+       FULL JOIN returned_count r ON ((r.artifact_id = c.artifact_id)));
+  SQL
+  create_view "repository_stats", sql_definition: <<-SQL
+      WITH concept_count AS (
+           SELECT a_1.id,
+              count(ac_1.concept_id) AS count_all
+             FROM (artifacts a_1
+               LEFT JOIN artifacts_concepts ac_1 ON ((a_1.id = ac_1.artifact_id)))
+            GROUP BY a_1.id
+          )
+   SELECT a.repository_id,
+      a.artifact_type,
+      count(*) AS total,
+      sum(
+          CASE
+              WHEN ((a.title IS NULL) OR (length((a.title)::text) = 0)) THEN 1
+              ELSE 0
+          END) AS missing_title,
+      sum(
+          CASE
+              WHEN ((a.description IS NULL) OR (length(a.description) = 0)) THEN 1
+              ELSE 0
+          END) AS missing_desc,
+      sum(
+          CASE
+              WHEN ((a.keywords IS NULL) OR (jsonb_array_length(a.keywords) = 0)) THEN 1
+              ELSE 0
+          END) AS missing_keyword,
+      sum(
+          CASE
+              WHEN ((ac.count_all IS NULL) OR (ac.count_all = 0)) THEN 1
+              ELSE 0
+          END) AS missing_concept
+     FROM (artifacts a
+       JOIN concept_count ac ON ((a.id = ac.id)))
+    GROUP BY a.repository_id, a.artifact_type
+    ORDER BY (count(*)) DESC;
+  SQL
 end

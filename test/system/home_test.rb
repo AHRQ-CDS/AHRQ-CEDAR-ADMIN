@@ -53,7 +53,7 @@ class HomeTest < ApplicationSystemTestCase
     assert_selector 'h3', text: 'Top 20 Search Terms for the Last 10 Days'
 
     # Last 3 charts are empty (no canvas) because test doesn't simulate searches
-    assert_selector 'figure', count: 7
+    assert_selector 'figure', count: 9
     assert_selector 'canvas', count: 4
   end
 

@@ -2,7 +2,7 @@
 
 <%= render 'data_with_pie_chart', title: 'Artifacts By Status', data: @artifacts_by_status, alt_text: 'A pie chart displaying the table data for this repository\'s Artifacts By Status' %>
 
-<% if @artifact_clicks.present? %>
+<% if @artifact_clicks.count > 0 %>
 <div class="row mt-5">
   <div class="col-sm">
     <h3 id="clicked_links">Top 10 Artifact Click Throughs</h3>
@@ -14,10 +14,10 @@
         </tr>
       </thead>
       <tbody>
-        <% @artifact_clicks.each do |row| %>
+        <% @artifact_clicks.each do |artifact| %>
           <tr>
-            <td><%= link_to row[:artifact].title, row[:artifact] %></td>
-            <td><%= row[:count] %></td>
+            <td><%= link_to artifact.title, artifact %></td>
+            <td><%= artifact.search_stats.click_count %></td>
           </tr>
         <% end %>
       </tbody>
@@ -26,7 +26,7 @@
 </div>
 <% end %>
 
-<% if @returned_artifacts.present? %>
+<% if @returned_artifacts.count > 0 %>
 <div class="row mt-5">
   <div class="col-sm">
     <h3 id="clicked_links">Top 10 Artifact Search Hits</h3>
@@ -38,10 +38,10 @@
         </tr>
       </thead>
       <tbody>
-        <% @returned_artifacts.each do |row| %>
+        <% @returned_artifacts.each do |artifact| %>
           <tr>
-            <td><%= link_to row[:artifact].title, row[:artifact] %></td>
-            <td><%= row[:count] %></td>
+            <td><%= link_to artifact.title, artifact %></td>
+            <td><%= artifact.search_stats.returned_count %></td>
           </tr>
         <% end %>
       </tbody>
@@ -68,15 +68,15 @@
         </tr>
       </thead>
       <tbody>
-        <% @missing_attribute.each do |row| %>
+        <% @repository.stats.each do |stats| %>
           <tr>
-            <td><%= row["artifact_type"] %></td>
-            <td><%= row["total"] %></td>
-            <td><%= row["missing_title"] %></td>
-            <td><%= row["missing_desc"] %></td>
-            <td><%= row["missing_keyword"] %></td>
-            <td><%= row["missing_concept"] %></td>
-            <td><%= row["missing_concept"] - row["missing_keyword"] %></td>
+            <td><%= stats.artifact_type %></td>
+            <td><%= stats.total %></td>
+            <td><%= stats.missing_title %></td>
+            <td><%= stats.missing_desc %></td>
+            <td><%= stats.missing_keyword %></td>
+            <td><%= stats.missing_concept %></td>
+            <td><%= stats.missing_concept - stats.missing_keyword %></td>
           </tr>
         <% end %>
       </tbody>

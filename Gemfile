@@ -71,6 +71,9 @@ gem 'devise_ldap_authenticatable'
 # gem 'date_time_precision'
 gem 'date_time_precision', require: false
 
+# Support for database views
+gem 'scenic'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
