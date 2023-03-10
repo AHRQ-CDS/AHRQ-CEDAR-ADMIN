@@ -17,12 +17,14 @@ class HomeController < ApplicationController
     @top_artifacts_by_type = Artifact.group(:artifact_type).count.sort_by { |_, v| -v }[0, 10]
 
     @artifact_clicks = Artifact.joins(:search_stats)
+                               .preload(:search_stats)
                                .where.not('search_stats.click_count': nil)
                                .order(click_count: :desc)
                                .limit(10)
     @artifact_clicks_per_repository = Artifact.joins(:search_stats, :repository).group(:repository).sum(:click_count)
 
     @returned_artifacts = Artifact.joins(:search_stats)
+                                  .preload(:search_stats)
                                   .where.not('search_stats.returned_count': nil)
                                   .order(returned_count: :desc)
                                   .limit(10)
@@ -76,12 +78,14 @@ class HomeController < ApplicationController
     @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]
 
     @artifact_clicks = Artifact.joins(:search_stats)
+                               .preload(:search_stats)
                                .where(repository_id: @repository.id)
                                .where.not('search_stats.click_count': nil)
                                .order(click_count: :desc)
                                .limit(10)
 
     @returned_artifacts = Artifact.joins(:search_stats)
+                                  .preload(:search_stats)
                                   .where(repository_id: @repository.id)
                                   .where.not('search_stats.returned_count': nil)
                                   .order(returned_count: :desc)
