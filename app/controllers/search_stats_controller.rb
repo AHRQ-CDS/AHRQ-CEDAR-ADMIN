@@ -24,7 +24,7 @@ class SearchStatsController < ApplicationController
     # Generate various counts, averages, and per-day figures
     @search_count = @searches.count
     @searches_per_day = @search_count / [(@end_date - @start_date).round, 1].max
-    @average_time = @searches.average('end_time - start_time').round(3)
+    @average_time = @searches.average('end_time - start_time').round(3) if @search_count.positive?
     @searches_by_day = @searches.group_by_day(:start_time).count
 
     # Pull out the IP addresses that have performed searches

@@ -21,7 +21,9 @@
       searches per day.
     </p>
     <p>Searches came from <%= @ip_addresses.length %> unique IP addresses.</p>
-    <p>The average search took <%= @average_time %> seconds to complete.</p>
+    <% if @average_time %>
+      <p>The average search took <%= @average_time %> seconds to complete.</p>
+    <% end %>
 
     <br>
     <h3>Searches By Date</h3>
