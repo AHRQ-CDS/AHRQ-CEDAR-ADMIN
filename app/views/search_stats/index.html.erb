@@ -49,6 +49,8 @@
       </tbody>
     </table>
 
+    <p>Excluded IP Addresses: <%= @exclude_ips.join(', ') %></p>
+
     <%= link_to 'Revert IP Exclusions', search_stats_path(start_date: @start_date, end_date: @end_date), class: 'btn btn-primary' %>
 
   </div>

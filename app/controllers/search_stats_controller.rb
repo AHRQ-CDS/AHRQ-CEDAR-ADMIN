@@ -5,6 +5,8 @@ class SearchStatsController < ApplicationController
   def index
     # List of IP addresses that we should not include in statistics
     @exclude_ips = (params[:exclude_ips] || '').split(',')
+    # Reject anything that doesn't look like an IP address (either v4 or v6)
+    @exclude_ips.select! { |ip| IPAddr.new(ip) rescue false }
 
     # The date range we should show statistics for, with a default of the last 30 days
     @start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today - 30.days
