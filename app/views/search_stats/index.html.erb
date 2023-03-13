@@ -3,11 +3,13 @@
 
     <h1>Search Statistics</h1>
 
-    <%= form_with method: :get, local: true do |form| %>
-      <%= form.date_field("start_date", value: @start_date) %>
-      <%= form.date_field("end_date", value: @end_date) %>
-      <%= form.hidden_field("exclude_ips", value: @exclude_ips.join(',')) %>
-      <%= form.submit("Change", class: 'btn btn-primary btn-sm') %>
+    <%= form_with method: :get, local: true, class: 'form-inline' do |form| %>
+      <%= form.label :start_date %>&nbsp;
+      <%= form.date_field "start_date", value: @start_date, class: 'form-control' %>&nbsp;
+      <%= form.label :end_date %>&nbsp;
+      <%= form.date_field "end_date", value: @end_date, class: 'form-control' %>&nbsp;
+      <%= form.hidden_field "exclude_ips", value: @exclude_ips.join(',') %>&nbsp;
+      <%= form.submit "Change", class: 'btn btn-primary' %>
     <% end %>
 
     <br>
