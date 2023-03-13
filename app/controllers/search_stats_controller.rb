@@ -9,8 +9,8 @@ class SearchStatsController < ApplicationController
     @exclude_ips.select! { |ip| IPAddr.new(ip) rescue false }
 
     # The date range we should show statistics for, with a default of the last 30 days
-    @start_date = params[:start_date] ? Date.parse(params[:start_date]) : Date.today - 30.days
-    @end_date = params[:end_date] ? Date.parse(params[:end_date]) : Date.today
+    @start_date = params[:start_date] ? Date.parse(params[:start_date]) : Time.zone.today - 30.days
+    @end_date = params[:end_date] ? Date.parse(params[:end_date]) : Time.zone.today
 
     # The searches that happened oin the selected date range
     @searches = SearchLog.where('start_time >= ? AND start_time <= ?', @start_date, @end_date)
@@ -29,7 +29,7 @@ class SearchStatsController < ApplicationController
 
     # Pull out the IP addresses that have performed searches
     @ip_addresses = @searches.group(:client_ip).count
-    @top_ip_addresses = @ip_addresses.sort_by { |key, value| value }.reverse[0,10]
+    @top_ip_addresses = @ip_addresses.sort_by { |_key, value| value }.reverse[0, 20]
 
     # TODO: consider reporting on artifact clicks during the selected time period
   end

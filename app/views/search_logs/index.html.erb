@@ -2,7 +2,7 @@
   <div class="col-sm">
     <h1>Search Logs</h1>
     <% if @ip %>
-      <h4>IP Address: <%= @ip %></h4>
+      <h4>IP Address: <%= @ip %><%= " (#{@name})" if @name %></h4>
     <% end %>
     </br>
     <p><span class="float-heading">Total count: <%= @search_logs.total_count %></span></p>
