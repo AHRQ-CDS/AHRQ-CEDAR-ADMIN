@@ -1,0 +1,62 @@
+<div class="row mt-5">
+  <div class="col-sm">
+
+    <h1>Search Statistics</h1>
+
+    <%= form_with method: :get, local: true, class: 'form-inline date-range-form' do |form| %>
+      <%= form.label :start_date %>
+      <%= form.date_field "start_date", value: @start_date, class: 'form-control' %>
+      <%= form.label :end_date %>
+      <%= form.date_field "end_date", value: @end_date, class: 'form-control' %>
+      <%= form.hidden_field "exclude_ips", value: @exclude_ips.join(',') %>
+      <%= form.submit "Change", class: 'btn btn-primary' %>
+    <% end %>
+
+    <br>
+    <h3>Summary</h3>
+
+    <p>
+      There were <%= @search_count %> searches between <%= @start_date.strftime('%A %B %-d, %Y') %>
+      and <%= @end_date.strftime('%A %B %-d, %Y') %> with an average of <%= @searches_per_day %>
+      searches per day.
+    </p>
+    <p>Searches came from <%= @ip_addresses.length %> unique IP addresses.</p>
+    <% if @average_time %>
+      <p>The average search took <%= @average_time %> seconds to complete.</p>
+    <% end %>
+
+    <br>
+    <h3>Searches By Date</h3>
+
+    <%= column_chart @searches_by_day %>
+
+    <br>
+    <h3>Top IP addresses</h3>
+
+    <table class="table">
+      <thead>
+        <th>IP Address</th>
+        <th>Number of queries</th>
+        <th></th>
+      </thead>
+      <tbody>
+        <% @top_ip_addresses.each do |ip, count| %>
+        <tr>
+          <td><%= link_to ip, search_logs_path(ip: ip.to_s) %></td>
+          <td><%= count %></td>
+          <td>
+            <% exclude_ips = (@exclude_ips + [ip.to_s]).join(',') %>
+            <%= link_to 'Exclude', search_stats_path(start_date: @start_date, end_date: @end_date, exclude_ips: exclude_ips), class: 'btn btn-primary btn-sm' %>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <% if @exclude_ips.length > 0 %>
+      <p>Excluded IP Addresses: <%= @exclude_ips.join(', ') %></p>
+      <%= link_to 'Revert IP Exclusions', search_stats_path(start_date: @start_date, end_date: @end_date), class: 'btn btn-primary' %>
+    <% end %>
+
+  </div>
+</div>
