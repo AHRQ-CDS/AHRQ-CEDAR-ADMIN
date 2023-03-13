@@ -12,8 +12,8 @@ class SearchStatsController < ApplicationController
     @start_date = params[:start_date] ? Date.parse(params[:start_date]) : Time.zone.today - 30.days
     @end_date = params[:end_date] ? Date.parse(params[:end_date]) : Time.zone.today
 
-    # The searches that happened in the selected date range
-    @searches = SearchLog.where('start_time >= ? AND start_time <= ?', @start_date, @end_date)
+    # The searches that happened in the selected date range (making sure we include all times during the end day)
+    @searches = SearchLog.where('start_time >= ? AND start_time <= ?', @start_date, @end_date + 1.day)
 
     # Update the query with the IP addresses that should not be included
     # TODO: there must be a cleaner way to do this... issue is that conversion to inet doesn't play nice with bound expressions
