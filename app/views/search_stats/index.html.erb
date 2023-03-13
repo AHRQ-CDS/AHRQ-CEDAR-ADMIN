@@ -38,7 +38,7 @@
       <tbody>
         <% @top_ip_addresses.each do |ip, count| %>
         <tr>
-          <td><%= ip.to_s %></td>
+          <td><%= link_to ip, search_logs_path(ip: ip.to_s) %></td>
           <td><%= count %></td>
           <td>
             <% exclude_ips = (@exclude_ips + [ip.to_s]).join(',') %>

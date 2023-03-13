@@ -31,7 +31,6 @@ class SearchStatsController < ApplicationController
     @ip_addresses = @searches.group(:client_ip).count
     @top_ip_addresses = @ip_addresses.sort_by { |key, value| value }.reverse[0,10]
 
-    # TODO: consider linking the IP addresses to a page that lists the searches by that IP address
     # TODO: consider reporting on artifact clicks during the selected time period
   end
 end
