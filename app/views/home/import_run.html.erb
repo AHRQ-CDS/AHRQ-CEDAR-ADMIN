@@ -1,5 +1,6 @@
 <div class="row">
   <div class="col-sm">
+    <%= link_to 'Return to Import Reports', import_reports_path, class: "float-right" %>
     <h1>Import Run (<%= @import_run.status&.capitalize %>): <%= @import_run.repository.name %> [<%= format_datetime_with_tz(@import_run.start_time) %>]</h1>
     <% if @import_run.status == 'failure' %>
     <h4>Failed: <%= @import_run.error_message %></h4>
