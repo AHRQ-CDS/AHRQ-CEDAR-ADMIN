@@ -1,14 +1,24 @@
 <% if local_assigns.has_key?(:title) %>
-  <h3><%= title %></h3>
+  <% if local_assigns[:is_flags] %>
+    <h3>&#x26A0;&nbsp;<%= title %></h3>
+  <% else %>
+    <h3><%= title %></h3>
+  <% end %>
 <% end %>
-<% if local_assigns[:import_run_summaries].blank? %>
+<% if local_assigns[:import_runs].blank? %>
   <%# Display empty state message. Message may differ based on underlying data %>
   <div class="row mt-3 mb-3">
     <div class="col-sm">
       <% if local_assigns[:is_flags] %>
         <p>All clear! No flagged imports at the moment.</p>
       <% else %>
-        <p>No import runs at the moment. Try running <pre>rake:import</pre> to create some.</p>
+        <p>
+          No import runs at the moment. You can try:
+          <ul>
+            <li>Running <code>rake:import</code></li>
+            <li>Running the docker import worker directly (see README)</li> or
+            <li>Ensuring CEDAR is configured to auto-run imports and wait until the next run</li>
+        </p>
       <% end %>
     </div>
   </div>
@@ -37,39 +47,39 @@
         </tr>
       </thead>
       <tbody>
-        <% import_run_summaries.each do |date, irs| %>
-        <tr class="import-run-summaries">
-          <td><%= format_date(date) %></td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td><%= irs.total_count %></td>
-          <td><%= irs.new_count %></td>
-          <td><%= irs.update_count %></td>
-          <td><%= irs.delete_count %></td>
-          <td><%= irs.error_msgs.size %></td>
-          <td><%= irs.warning_msgs.size %></td>
-        </tr>
-        <% import_runs[date].sort_by(&:start_time).reverse_each do |ir| %>
-        <tr>
-          <td><%= link_to format_datetime_with_tz(ir.start_time), ir %></td>
-          <td><%= link_to ir.repository.name, ir.repository %></td>
-          <td>
-            <% if ir.start_time && ir.end_time %>
-              <%= distance_of_time_in_words(ir.end_time, ir.start_time) %>
-            <% else %>
-              Incomplete
+        <% create_run_summaries(import_runs).each do |date, irs| %>
+          <tr class="import-run-summaries">
+            <td><%= format_date(date) %></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td><%= irs.total_count %></td>
+            <td><%= irs.new_count %></td>
+            <td><%= irs.update_count %></td>
+            <td><%= irs.delete_count %></td>
+            <td><%= irs.error_msgs.size %></td>
+            <td><%= irs.warning_msgs.size %></td>
+          </tr>
+            <% import_runs[date].sort_by(&:start_time).reverse_each do |ir| %>
+              <tr>
+                <td><%= link_to format_datetime_with_tz(ir.start_time), ir %></td>
+                <td><%= link_to ir.repository.name, ir.repository %></td>
+                <td>
+                  <% if ir.start_time && ir.end_time %>
+                    <%= distance_of_time_in_words(ir.end_time, ir.start_time) %>
+                  <% else %>
+                    Incomplete
+                  <% end %>
+                </td>
+                <td><%= ir.status %></td>
+                <td><%= ir.total_count %></td>
+                <td><%= ir.new_count %></td>
+                <td><%= ir.update_count %></td>
+                <td><%= ir.delete_count %></td>
+                <td><%= ir.error_msgs.size %></td>
+                <td><%= ir.warning_msgs.size %></td>
+              </tr>
             <% end %>
-          </td>
-          <td><%= ir.status %></td>
-          <td><%= ir.total_count %></td>
-          <td><%= ir.new_count %></td>
-          <td><%= ir.update_count %></td>
-          <td><%= ir.delete_count %></td>
-          <td><%= ir.error_msgs.size %></td>
-          <td><%= ir.warning_msgs.size %></td>
-        </tr>
-        <% end %>
         <% end %>
       </tbody>
     </table>
