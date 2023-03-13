@@ -6,7 +6,7 @@ class SearchLogsController < ApplicationController
     @search_logs = SearchLog.order(start_time: :desc).page params[:page]
 
     # Takes an optional parameter of an IP address (which we make sure is valid)
-    @ip = params[:ip] if (IPAddr.new(params[:ip]) rescue false)
+    @ip = params[:ip] if (IPAddr.new(params[:ip]) rescue false) # rubocop:disable Style/RescueModifier
     return unless @ip
 
     # Look up the name if we can
