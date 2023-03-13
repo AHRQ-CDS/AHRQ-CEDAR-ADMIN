@@ -5,6 +5,7 @@ class EpcImporter < CedarImporter
   repository_name 'Evidence-based Practice Center Program'
   repository_alias 'EPC'
   repository_home_page Rails.configuration.epc_home_page
+  TECHNOLOGY_ASSESSMENT_URL = 'https://www.ahrq.gov/research/findings/ta/index.html'
 
   include PageScraper
 
@@ -69,7 +70,11 @@ class EpcImporter < CedarImporter
         artifact_uri.scheme = page_uri.scheme
         artifact_url = artifact_uri.to_s
       end
-      cedar_id = "EPC-#{Digest::MD5.hexdigest(artifact_url)}"
+      cedar_id = artifact_url
+      # We need to special case Technology Assessment artifacts since they all link to the same URL
+      # Add the artifact title to the CEDAR ID to differentiate
+      cedar_id += "-#{artifact_title}" if artifact_url.starts_with? TECHNOLOGY_ASSESSMENT_URL
+      cedar_id = "EPC-#{Digest::MD5.hexdigest(cedar_id)}"
       artifact_type = artifact.at_css('div.views-field-field-epc-type span.field-content')&.content&.strip.presence
       artifact_status = to_artifact_status(artifact_uri)
       warning_context = "Encountered EPC entry '#{artifact_title}' with invalid date"
