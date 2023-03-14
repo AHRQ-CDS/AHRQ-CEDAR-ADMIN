@@ -1,3 +1,12 @@
+<% if @flagged_runs.count > 0 %>
+  <span class="float-heading">
+    &#x26A0;&nbsp;Flagged Import Runs: <span class="text-danger"><strong><%= @flagged_runs.count %></strong></span>
+  </span><br/>
+  <hr class="mt-3" />
+  <p class="text-danger">Please review any flagged runs in order to re-enable imports from that repository.</p>
+  <%= render partial: 'import_run_table', locals: { import_runs: @flagged_runs } %>
+<% end %>
+
 <%= render 'general_statistics', title: 'CEDAR Statistics' %>
 
 <a id="artifacts" class="mt-5 mb-5"></a>
@@ -73,7 +82,7 @@
   </div>
 </div>
 
-<div class="row mt-10">
+<div class="row mt-5">
   <div class="col-sm">
     <%= render partial: 'import_run_table', locals: { title: 'Recent Import Statistics', import_runs: @import_runs, show_link: true } %>
   </div>
