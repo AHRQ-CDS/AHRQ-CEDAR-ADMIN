@@ -31,14 +31,11 @@ class HomeController < ApplicationController
     @artifact_returns_per_repository = Artifact.joins(:search_stats, :repository).group(:repository).sum(:returned_count)
 
     # Set up import run data for display; first find the last (up to) 5 distinct calendar days when imports happened
+    # then find all the import runs that happened over those days and group them by day
     start_dates = ImportRun.select('DISTINCT DATE(start_time) AS start_date').order(:start_date).reverse_order.limit(5).map(&:start_date)
-    # Find all the import runs that happened over those days and group them by day
     @import_runs = ImportRun.where('DATE(start_time) >= ?', start_dates.last).order(:start_time).reverse_order.group_by { |ir| ir.start_time.to_date }
-    # Create summaries for each date
-    @import_run_summaries = @import_runs.transform_values do |irs|
-      ImportRun.new(total_count: irs.sum(&:total_count), new_count: irs.sum(&:new_count),
-                    update_count: irs.sum(&:update_count), delete_count: irs.sum(&:delete_count))
-    end
+    # take a similar approach for flagged runs, but don't limit that data to the last five days
+    @flagged_runs = ImportRun.where(status: 'flagged').order(:start_time).reverse_order.group_by { |ir| ir.start_time.to_date }
 
     keywords = Artifact.where.not('keywords <@ ?', '[]').flat_map(&:keywords)
     @top_artifacts_per_keyword = keywords.tally.sort_by { |_, v| -v }[0, 10]

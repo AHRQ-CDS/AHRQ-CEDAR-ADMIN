@@ -30,9 +30,6 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_equal 2, assigns(:import_runs).values.last.length
     assert_equal 2, assigns(:import_runs).values.last.last.total_count
     assert_equal 1, assigns(:import_runs).values.last.last.new_count
-    assert_equal 1, assigns(:import_run_summaries).values.length
-    assert_equal 4, assigns(:import_run_summaries).values.last.total_count
-    assert_equal 1, assigns(:import_run_summaries).values.last.new_count
   end
 
   test 'should get repository' do
