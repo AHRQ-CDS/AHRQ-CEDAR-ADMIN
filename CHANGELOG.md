@@ -1,5 +1,23 @@
 # Changelog
 
+## v0.8.0 - 2023-03-14
+
+* Adds a page that summarizes search statistics
+    - Summarizes searches that have taken place over a selectable time period
+    - Graphs the number of searches by day over that time period
+    - Lists the top IP addresses performing searches over that time period
+    - Allows exclusion of one or more IP addresses from the total tally of results
+    - Allows clicking on an IP address to see the search logs for that IP address
+* Adds feature to display top 10 click thru and top 10 returned artifacts
+* Improves visibility of flagged imports and adds page showing complete import history
+* Improves parsing of dates when indexing EPC artifacts
+* Improves handling of EPC technology assessment artifacts
+* Fixes a URL issue with email notifications
+* Fixes an efficiency issue with displaying search logs
+* Fixes an XML namespace issue when handling NIH bookshelf imports
+* Updates USPSTF indexer to stop indexing blocked JAMA Network pages
+* Refactors complex SQL queries into database views
+
 ## v0.7.2 - 2023-02-22
 
 * Uses NIH bookshelf metadata service for NIH imports instead of scraping HTML
