@@ -6,10 +6,12 @@ require 'date_time_precision/lib'
 module PageScraper
   KEYWORD_SEPARATOR = /[,;]/.freeze
   DATE_FORMATS = ['%Y-%m-%d', '%Y-%m', '%Y', '%F %T', '%FT%H:%M:%S', '%Y-%m-%dT%H:%M:%S%z', '%B %Y'].freeze
+  BLOCKED_SITES = [/jamanetwork\.com/].freeze
 
   # Process an individual HTML page or PDF to extract metadata
   def extract_metadata(page_url)
     return {} if page_url.empty?
+    return {} if BLOCKED_SITES.any? { |site| site.match page_url }
     return extract_nih_bookshelf_metadata(page_url) if page_url.match?(%r{ncbi\.nlm\.nih\.gov/books/NBK})
 
     response = get_url(page_url)

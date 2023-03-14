@@ -93,7 +93,7 @@ class UspstfImporterTest < ActiveSupport::TestCase
     assert(artifact.keywords.include?('uspstf'))
 
     # Check example HTML tool
-    tool_324_id = "USPSTF-#{Digest::MD5.hexdigest('https://jamanetwork.com/journals/jama/fullarticle/2697698')}"
+    tool_324_id = "USPSTF-#{Digest::MD5.hexdigest('https://example.com/journals/jama/fullarticle/2697698')}"
     artifact = artifacts.where(cedar_identifier: tool_324_id).first
     assert artifact.present?
     assert_equal('Cervical Cancer Screening - Patient Page', artifact.title)
