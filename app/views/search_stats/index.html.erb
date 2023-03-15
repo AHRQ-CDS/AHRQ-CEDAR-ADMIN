@@ -3,7 +3,7 @@
 
     <h1>Search Statistics</h1>
 
-    <%= form_with method: :get, local: true, class: 'form-inline date-range-form' do |form| %>
+    <%= form_with method: :get, class: 'form-inline date-range-form' do |form| %>
       <%= form.label :start_date %>
       <%= form.date_field "start_date", value: @start_date, class: 'form-control' %>
       <%= form.label :end_date %>
