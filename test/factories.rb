@@ -6,9 +6,14 @@ FactoryBot.define do
   end
 
   factory :search_log do
-    count { 1 }
-    start_time { '2021-06-03 13:23:44' }
-    end_time { '2021-06-03 13:23:44' }
+    search_params { { '_content' => 'statin', 'artifact-current-state' => 'active' } }
+    count { 10 }
+    total { 27 }
+    returned_artifact_ids { [2565, 2989, 2943, 3086, 3087, 2945, 2944, 2306, 508, 3036] }
+    client_ip { '192.168.1.1' }
+    start_time = Time.zone.now
+    start_time { start_time }
+    end_time { start_time + 1.second }
   end
 
   factory :repository do

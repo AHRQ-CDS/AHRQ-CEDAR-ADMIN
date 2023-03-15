@@ -18,7 +18,8 @@ class SearchStatsController < ApplicationController
     # Update the query with the IP addresses that should not be included
     # TODO: there must be a cleaner way to do this... issue is that conversion to inet doesn't play nice with bound expressions
     @exclude_ips.each do |exclude_ip|
-      @searches = @searches.where('client_ip != inet ?', exclude_ip)
+      # We use the <<= "contained within or equals" operator to allow ranges, e.g., 192.168.1.0/24
+      @searches = @searches.where.not('client_ip <<= inet ?', exclude_ip)
     end
 
     # Generate various counts, averages, and per-day figures
