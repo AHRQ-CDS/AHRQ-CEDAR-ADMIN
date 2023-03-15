@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
+  factory :ip_lookup do
+    
+  end
+
   factory :user do
     username { 'Dummy' }
   end

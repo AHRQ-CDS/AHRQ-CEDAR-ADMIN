@@ -1,0 +1,2 @@
+class IpLookup < ApplicationRecord
+end

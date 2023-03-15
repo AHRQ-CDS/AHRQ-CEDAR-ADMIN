@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   resources :search_logs, only: [:index]
   resources :search_stats, only: [:index]
   resources :import_reports, only: [:index]
+  resources :ip_lookups, only: [:index]
   get '/repository/:id', to: 'home#repository', as: 'repository'
   get '/import_run/:id', to: 'home#import_run', as: 'import_run'
   post '/import_run/:id/accept', to: 'home#accept_run', as: 'accept_run'

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_06_192549) do
+ActiveRecord::Schema.define(version: 2023_03_15_191910) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -84,6 +84,14 @@ ActiveRecord::Schema.define(version: 2023_03_06_192549) do
     t.jsonb "error_msgs", default: []
     t.jsonb "warning_msgs", default: []
     t.index ["repository_id"], name: "index_import_runs_on_repository_id"
+  end
+
+  create_table "ip_lookups", force: :cascade do |t|
+    t.string "ip_address"
+    t.jsonb "rdap_result", default: {}
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["ip_address"], name: "index_ip_lookups_on_ip_address"
   end
 
   create_table "mesh_tree_nodes", force: :cascade do |t|
