@@ -9,9 +9,6 @@ class SearchLogsController < ApplicationController
     @ip = params[:ip] if (IPAddr.new(params[:ip]) rescue false) # rubocop:disable Style/RescueModifier
     return unless @ip
 
-    # Look up the name if we can
-    @name = Resolv.getnames(@ip).first
-
     # Restrict the logs to those matching the provided IP
     @search_logs = @search_logs.where('client_ip = inet ?', @ip)
   end

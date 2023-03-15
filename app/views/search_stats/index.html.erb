@@ -42,7 +42,12 @@
       <tbody>
         <% @top_ip_addresses.each do |ip, count| %>
         <tr>
-          <td><%= link_to ip, search_logs_path(ip: ip.to_s) %></td>
+          <td>
+            <%= link_to ip, search_logs_path(ip: ip.to_s) %><br />
+            <%= turbo_frame_tag ip, src: ip_lookups_path(ip: ip), loading: :lazy do %>
+              Loading organization name...
+            <% end %>
+          </td>
           <td><%= count %></td>
           <td>
             <% exclude_ips = (@exclude_ips + [ip.to_s]).join(',') %>
