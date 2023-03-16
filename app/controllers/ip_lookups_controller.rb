@@ -14,9 +14,7 @@ class IpLookupsController < ApplicationController
         lookup.rdap_result = RDAP.ip(@ip)
       end
 
-      # See if we can find a human readable name; look in two places
-      @name = ip_lookup.rdap_result.dig('entities', 0, 'vcardArray', 1)&.detect { |a| a.first == 'fn' }&.last
-      @name ||= ip_lookup.rdap_result['name']
+      @name = ip_lookup.name
 
     end
   rescue StandardError
