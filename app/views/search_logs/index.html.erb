@@ -2,7 +2,13 @@
   <div class="col-sm">
     <h1>Search Logs</h1>
     <% if @ip %>
-      <h4>IP Address: <%= @ip %><%= " (#{@name})" if @name %></h4>
+      <p>
+        IP Address: <%= @ip %><br/>
+        Organization:
+        <%= turbo_frame_tag @ip, src: ip_lookups_path(ip: @ip) do %>
+          Loading name...
+        <% end %>
+      </p>
     <% end %>
     </br>
     <p><span class="float-heading">Total count: <%= @search_logs.total_count %></span></p>

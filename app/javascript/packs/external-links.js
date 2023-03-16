@@ -2,7 +2,7 @@
 // away from the current site
 
 // When the page is fully loaded
-jQuery(document).on('turbolinks:load', function() {
+jQuery(document).on('turbo:load', function() {
 
   // Find all links that lead away from a federal site (not current site or .gov or .mil)
   let links = jQuery('a').filter(function() {

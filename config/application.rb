@@ -11,6 +11,9 @@ module CedarAdmin
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
+    # Don't use turbolinks style remote forms because we updated to using Turbo
+    config.action_view.form_with_generates_remote_forms = false
+
     # Handle errors using error routes that are part of our regular application rather than the static html error pages that ship with rails
     config.exceptions_app = self.routes
 

@@ -4,7 +4,7 @@
 // that code so it'll be compiled.
 
 require("@rails/ujs").start()
-require("turbolinks").start()
+import "@hotwired/turbo-rails"
 require("@rails/activestorage").start()
 require("channels")
 require("chartkick/chart.js")
@@ -13,7 +13,7 @@ require("packs/search-log.js")
 require("bootstrap")
 require("packs/external-links")
 import "../stylesheets/application";
-document.addEventListener("turbolinks:load", function() {
+document.addEventListener("turbo:load", function() {
     $(function () {
         $('[data-toggle="tooltip"]').tooltip()
         $('[data-toggle="popover"]').popover()
