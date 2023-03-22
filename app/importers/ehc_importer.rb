@@ -17,7 +17,9 @@ class EhcImporter < CedarImporter
       artifact_uri = URI.parse(artifact.at_xpath('Link').content.strip)
       cedar_id = "EHC-#{Digest::MD5.hexdigest(artifact_uri.to_s)}"
       doi = Regexp.last_match(1) if artifact.at_xpath('Citation').content =~ %r{(10.\d{4,9}/[-._;()/:A-Z0-9]+)}
-      artifact_title = artifact.at_xpath('Title').content.presence
+      # The EHC XML feed wraps titles, descriptions and keywords with a CDATA section that
+      # prevents automatic unescaping of character entities in the text so we do that manually
+      artifact_title = CGI.unescapeHTML(artifact.at_xpath('Title').content).presence
       warning_context = "Encountered #{@repository_alias} search entry '#{artifact_title}' with invalid date"
       published_date, warnings, published_on_precision = PageScraper.parse_and_precision(
         artifact.at_xpath('Publish-Date').content.presence, warning_context, []
@@ -28,7 +30,7 @@ class EhcImporter < CedarImporter
         cedar_id,
         remote_identifier: artifact_uri.to_s.presence,
         title: artifact_title,
-        description: artifact.at_xpath('Description').content.presence,
+        description: CGI.unescapeHTML(artifact.at_xpath('Description').content).presence,
         url: artifact_uri.to_s.presence,
         published_on: published_date,
         published_on_precision: published_on_precision,
@@ -44,7 +46,7 @@ class EhcImporter < CedarImporter
   def self.extract_keywords(artifact)
     topics = artifact.at_xpath('Health-Topics').content&.split(',')&.collect(&:strip) || []
     keywords = artifact.at_xpath('Keywords').content&.split(',')&.collect(&:strip) || []
-    topics.concat(keywords)
+    topics.concat(keywords).select(&:present?).map { |keyword| CGI.unescapeHTML(keyword) }
   end
 
   def self.to_artifact_status(status)
