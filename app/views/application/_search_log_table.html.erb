@@ -15,7 +15,7 @@
     <th style="width: 40%">Search Params</th>
     <th style="width: 15.33%">Results Returned / Clicked</th>
     <th style="width: 11.33%">Total Results</th>
-    <th style="width: 8.33%">Client IP</th>
+    <th style="width: 8.33%">Client</th>
     <th style="width: 8.33%">Time (ms)</th>
   </tr>
   </thead>
@@ -62,7 +62,12 @@
           <% end %>
         </ul>
       </td>
-      <td><%= sl.client_ip %></td>
+      <td>
+        <%= sl.client_ip %>
+        <% if sl.client_id.present? %>
+          <br><small>(<%= sl.client_id %>)</small>
+        <% end %>
+      </td>
       <td><%= if sl.end_time.nil? then 'Never Completed' else Integer((sl.end_time - sl.start_time) * 1000) end %></td>
     </tr>
   <% end %>
