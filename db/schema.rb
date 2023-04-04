@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_15_191910) do
+ActiveRecord::Schema.define(version: 2023_04_03_224647) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pg_trgm"
   enable_extension "plpgsql"
 
   create_table "artifacts", force: :cascade do |t|
@@ -105,6 +106,7 @@ ActiveRecord::Schema.define(version: 2023_03_15_191910) do
     t.integer "direct_artifact_count"
     t.integer "indirect_artifact_count"
     t.index ["code"], name: "index_mesh_tree_nodes_on_code"
+    t.index ["name"], name: "index_mesh_tree_nodes_on_name_trigrams", opclass: :gin_trgm_ops, using: :gin
     t.index ["parent_id"], name: "index_mesh_tree_nodes_on_parent_id"
     t.index ["tree_number"], name: "index_mesh_tree_nodes_on_tree_number"
   end
