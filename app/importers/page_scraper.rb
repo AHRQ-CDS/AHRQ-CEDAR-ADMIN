@@ -83,6 +83,7 @@ module PageScraper
       html.at_css('meta[name="citation_date"]') ||
       html.at_css('meta[name="datereviewed"]') ||
       html.at_css('meta[name="datecreated"]') ||
+      html.at_css('time') ||
       html.at_css('div[id="page-created"]') ||
       html.at_css('span[id="lblTitleDate"]') ||
       html.at_css('span[id="lblTitleId"]') ||
@@ -90,7 +91,7 @@ module PageScraper
         parse_by_core_format(p.content, formats: ['%Y-%m-%d', '%B %Y']).present?
       end
 
-    date_content = date_node['content'] || date_node.content unless date_node.nil?
+    date_content = date_node['content'] || date_node['datetime'] || date_node.content unless date_node.nil?
     date_content.delete!('Page originally created ') if date_content&.include?('Page originally created ')
 
     date = parse_by_core_format(date_content) unless date_content.nil?
