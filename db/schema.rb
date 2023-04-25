@@ -135,6 +135,7 @@ ActiveRecord::Schema.define(version: 2023_04_03_224647) do
     t.jsonb "repository_results", default: {}
     t.jsonb "link_clicks", default: []
     t.jsonb "returned_artifact_ids", default: []
+    t.string "client_id"
   end
 
   create_table "users", force: :cascade do |t|
