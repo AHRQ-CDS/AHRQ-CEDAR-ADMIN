@@ -74,7 +74,7 @@ class UspstfImporterTest < ActiveSupport::TestCase
     tool_323_id = "USPSTF-#{Digest::MD5.hexdigest('https://www.uspreventiveservicestaskforce.org/Page/Document/ClinicalSummaryFinal/cervical-cancer-screening2')}"
     artifact = artifacts.where(cedar_identifier: tool_323_id).first
     assert artifact.present?
-    assert_equal('Cervical Cancer Screening - Clinical Summary (PDF)', artifact.title)
+    assert_equal('Sample USPSTF Tool', artifact.title)
     assert(artifact.keywords.include?('hpv'))
     assert_equal('USPSTF', artifact.repository.alias)
     assert_equal('Tool', artifact.artifact_type)

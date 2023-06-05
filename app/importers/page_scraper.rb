@@ -110,6 +110,7 @@ module PageScraper
   def extract_pdf_metadata(pdf)
     metadata = {}
     reader = PDF::Reader.new(StringIO.new(pdf))
+    metadata[:title] = reader.info[:Title] unless reader.info[:Title].nil?
     metadata[:description] = reader.info[:Subject] unless reader.info[:Subject].nil?
     metadata[:keywords] = reader.info[:Keywords].split(KEYWORD_SEPARATOR).collect(&:strip) unless reader.info[:Keywords].nil?
     pdf_date_str = reader.info[:ModDate] || reader.info[:CreationDate]
