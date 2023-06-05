@@ -51,6 +51,16 @@ namespace :import do
     end
   end
 
+  desc 'Download the CDSiC repository content and import it to the database'
+  task cdsic: :environment do
+    puts 'Importing data from CDSiC'
+    if CdsicImporter.run
+      Rake::Task["import:update_counts"].invoke() unless ENV['dont_update_artifact_counts']
+    else
+      puts 'Skipped, importer disabled'
+    end
+  end
+
   desc 'Download the NGC repository content locally'
   task ngc: :environment do
     puts 'Importing data from NGC'
@@ -84,7 +94,7 @@ namespace :import do
   desc 'Download all repository content and import it to the database'
   task all: :environment do
     ENV['dont_update_artifact_counts'] = 'true'
-    %w(uspstf cds_connect ehc epc srdr).each do |task|
+    %w(uspstf cds_connect ehc epc srdr cdsic).each do |task|
       Rake::Task["import:#{task}"].invoke()
     end
     Rake::Task["import:update_counts"].invoke()
