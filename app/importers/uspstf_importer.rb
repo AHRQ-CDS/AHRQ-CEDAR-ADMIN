@@ -138,7 +138,8 @@ class UspstfImporter < CedarImporter
         artifact_type: 'Tool',
         artifact_status: 'active'
       }
-      metadata.merge!(extract_metadata(url))
+      # Use reverse merge to favor USPSTF data rather than artifact data where they overlap
+      metadata.reverse_merge!(extract_metadata(url))
       # merge/deep_merge doesn't concat.uniq arrays so we can't set them in metadata above
       metadata[:keywords] ||= []
       metadata[:keywords].concat(tool['keywords'].split('|')) if tool['keywords'].present?
