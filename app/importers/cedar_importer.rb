@@ -79,9 +79,10 @@ class CedarImporter
         # TODO: consider if we want to store statistics per-artifact rather than per-run
         import_run.update(@import_statistics.merge(end_time: Time.current, status: 'success'))
       rescue StandardError => e
-        # Log the failure and abort the import run for this importer
         # TODO: We can use "retry" if indexing fails; number of retries should be configurable?
-        import_run.update(@import_statistics.merge(end_time: Time.current, status: 'failure', error_message: e.message))
+        # Log the failure and abort the import run for this importer; make sure the logged message doesn't include problem characters
+        message = e.message.force_encoding(Encoding::ISO_8859_1).encode(Encoding::UTF_8)
+        import_run.update(@import_statistics.merge(end_time: Time.current, status: 'failure', error_message: message))
         ImportMailer.with(import_run: import_run).failure_email.deliver_now
       ensure
         changed_count = @import_statistics[:update_count] + @import_statistics[:delete_count]

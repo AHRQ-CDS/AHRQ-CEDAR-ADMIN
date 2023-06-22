@@ -110,9 +110,14 @@ module PageScraper
   def extract_pdf_metadata(pdf)
     metadata = {}
     reader = PDF::Reader.new(StringIO.new(pdf))
-    metadata[:title] = reader.info[:Title] unless reader.info[:Title].nil?
-    metadata[:description] = reader.info[:Subject] unless reader.info[:Subject].nil?
-    metadata[:keywords] = reader.info[:Keywords].split(KEYWORD_SEPARATOR).collect(&:strip) unless reader.info[:Keywords].nil?
+    # Clean up PDF content that sometimes has non-UTF-8 characters in strings that claim to be UTF-8
+    metadata[:title] = reader.info[:Title].force_encoding(Encoding::ISO_8859_1).encode(Encoding::UTF_8) if reader.info[:Title]
+    metadata[:description] = reader.info[:Subject].force_encoding(Encoding::ISO_8859_1).encode(Encoding::UTF_8) if reader.info[:Subject]
+    if reader.info[:Keywords]
+      metadata[:keywords] = reader.info[:Keywords].split(KEYWORD_SEPARATOR).map do |keyword|
+        keyword.force_encoding(Encoding::ISO_8859_1).encode(Encoding::UTF_8).strip
+      end
+    end
     pdf_date_str = reader.info[:ModDate] || reader.info[:CreationDate]
     # PDF date format is "D:20150630104759-04'00'"
     warning_context = 'Encountered pdf with invalid date'
