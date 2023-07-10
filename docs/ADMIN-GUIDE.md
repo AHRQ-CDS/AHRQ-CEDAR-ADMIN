@@ -4,9 +4,7 @@ This document provides a brief guide to using the CEDAR administration web appli
 
 ## Accessing CEDAR Admin
 
-Launch CEDAR admin using a web browser at the following URL:  [https://cds.ahrq.gov/cedar/stats](https://cds.ahrq.gov/cedar/stats).
-
-CEDAR admin requires users to authenticate using their AHRQ UMA credentials^[CEDAR uses the same authentication and authorization mechanism as CDS Connect but it also require CEDAR administrators to be added to the `cedar`??? group.]. Once authenticated, users will be presented with the CEDAR Statistics home page.
+CEDAR admin is accessed using a web browser. Access requires users to authenticate using their AHRQ UMA credentials (CEDAR uses the same authentication and authorization mechanism as CDS Connect but it also require CEDAR administrators to be added to the `cedar-admin` group). Once authenticated, users will be presented with the CEDAR Statistics home page.
 
 ## Statistics
 
