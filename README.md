@@ -13,6 +13,8 @@ CEDAR Admin supports the CEDAR project's indexing and administrative capabilitie
 1. Functionality to index the contents of external evidence repositories and map artifact metadata to the CEDAR data model
 2. A web application for CEDAR administrators
 
+User documentation for CEDAR administrators can be found in the [CEDAR Admininstration Guide](docs/ADMIN-GUIDE.md).
+
 For information about using or contributing to this project, please see
 
 - [Contribution Guide](CONTRIBUTING.md)
