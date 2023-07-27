@@ -3,12 +3,12 @@
 class CdsicImporterTest < ActiveSupport::TestCase
   test 'import sample CDSiC content into the database' do
     # Sample data for mocking
-    html = file_fixture('srf-environmental-scan-report.html')
-    pdf = file_fixture('FINALSRFLevel1EnvironmentalScan1.pdf')
+    index_html = file_fixture('cdsic_index.html')
+    resource_html = file_fixture('cdsic_resource_page.html')
 
     # Stub out requests and return mock data
-    stub_request(:get, /srf-environmental-scan-report/).to_return(status: 200, headers: { 'Content-Type' => 'text/html' }, body: html)
-    stub_request(:get, /pdf/).to_return(status: 200, headers: { 'Content-Type' => 'application/pdf' }, body: pdf)
+    stub_request(:get, /srf-environmental-scan-report/).to_return(status: 200, headers: { 'Content-Type' => 'text/html' }, body: resource_html)
+    stub_request(:get, %r{cdsic/resources}).to_return(status: 200, headers: { 'Content-Type' => 'text/html' }, body: index_html)
 
     # Ensure that none are loaded before the test runs
     assert_equal(0, Repository.where(alias: 'CDSiC').count)
@@ -21,7 +21,7 @@ class CdsicImporterTest < ActiveSupport::TestCase
     artifacts = Repository.where(alias: 'CDSiC').first.artifacts
     assert_equal(1, artifacts.count)
     expected = {
-      remote_identifier: 'https://cdsic.ahrq.gov/sites/default/files/2023-05/FINALSRFLevel1EnvironmentalScan1.pdf',
+      remote_identifier: 'https://cdsic.ahrq.gov/cdsic/srf-environmental-scan-report',
       title: 'Standards and Regulatory Frameworks Workgroup: Environmental Scan',
       description: 'Clinical decision support (CDS) standards and regulatory frameworks make it possible for CDS tools ' \
                    'to be developed, shared, and implemented in various systems. PC CDS provides innovative ways to ' \
@@ -29,12 +29,13 @@ class CdsicImporterTest < ActiveSupport::TestCase
                    'to inform healthcare decision making. Consistent standards are essential to ensure PC CDS is accessible ' \
                    'wherever and whenever clinicians and patients prefer to receive it, and in a manner that is easy for both ' \
                    'groups to understand and act upon in both clinical and non-clinical settings.',
-      url: 'https://cdsic.ahrq.gov/sites/default/files/2023-05/FINALSRFLevel1EnvironmentalScan1.pdf',
+      url: 'https://cdsic.ahrq.gov/cdsic/srf-environmental-scan-report',
       published_on: Date.parse('Sun, 01 Jan 2023'),
       published_on_precision: 6,
-      artifact_type: 'Environmental Scan',
+      artifact_type: 'CDSiC Artifact',
       artifact_status: 'active',
-      keywords: ['patient-centered', 'clinical decision support', 'standards', 'regulations', 'interoperability']
+      keywords: ['clinical decision support systems', 'patient-centered clinical decision support', 'regulation', 'data standards',
+                 'cds implementation', 'cds development', 'cds adoption', 'research report', 'stakeholder center workgroup product']
     }
     artifact = artifacts.first
     expected.each do |key, value|
