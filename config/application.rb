@@ -49,6 +49,9 @@ module CedarAdmin
     # Settings for the NGC importer
     config.ngc_base_url = ENV['CEDAR_NGC_BASE_URL']
 
+    # Settings for the CDSiC importer
+    config.cdsic_index_page = 'https://cdsic.ahrq.gov/cdsic/resources'
+
     # Mailer settings
     config.action_mailer.default_url_options = {
       host: ENV['HOSTNAME'] || 'cds.ahrq.gov',
