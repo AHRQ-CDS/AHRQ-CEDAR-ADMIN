@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.9.0 - 2023-07-28
+
+* Adds an importer for CDS Innovation Collaborative content
+* Adds a user guide for administrators
+* Adds support for excluding ranges of IP addresses on the search statistics page
+* Adds support for dynamically looking up the owners of IP addresses
+* Adds support for viewing an API client id if captured in the search log
+* Improves handling of character entities and non-UTF-8 characters during import
+* Improves support for extracting published date from HTML
+* Improves handling of network errors during import
+
 ## v0.8.0 - 2023-03-14
 
 * Adds a page that summarizes search statistics
