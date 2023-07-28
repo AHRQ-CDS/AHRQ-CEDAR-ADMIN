@@ -5,6 +5,10 @@ require "active_support/core_ext/integer/time"
 # your test database is "scratch space" for the test suite and is wiped
 # and recreated between test runs. Don't rely on the data there!
 
+# Workaround for https://github.com/titusfortner/webdrivers/issues/247
+# The eventual solution should be to update the version of selenium-webdriver
+Webdrivers::Chromedriver.required_version = "114.0.5735.90"
+
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
