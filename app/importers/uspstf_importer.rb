@@ -5,6 +5,8 @@ class UspstfImporter < CedarImporter
   repository_name 'United States Preventive Services Taskforce'
   repository_alias 'USPSTF'
   repository_home_page Rails.configuration.uspstf_home_page
+  repository_description 'The United States Preventive Services Task Force is an independent, volunteer ' \
+                         'panel of experts in prevention and evidence-based medicine.'
 
   include PageScraper
 

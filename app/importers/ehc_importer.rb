@@ -5,6 +5,9 @@ class EhcImporter < CedarImporter
   repository_name 'Effective Health Care Program'
   repository_alias 'EHC'
   repository_home_page Rails.configuration.ehc_home_page
+  repository_description 'The AHRQ EHC Program\'s goal is to improve healthcare quality by enabling ' \
+                         'access to the best available evidence on outcomes and appropriateness ' \
+                         'of healthcare treatments, devices, and services.'
 
   def self.download_and_update!
     # Retrieve all the artifacts

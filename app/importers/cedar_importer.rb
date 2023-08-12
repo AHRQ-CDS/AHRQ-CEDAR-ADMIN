@@ -14,19 +14,37 @@ class CedarImporter
     @repository_home_page = repository_home_page
   end
 
-  # Set up the repository and cache it for access
+  def self.repository_description(repository_description)
+    @repository_description = repository_description
+  end
+
+  # Set up the repository based on the name, change any updated attributes (other than name), and return it
   def self.repository
     raise 'Repository name not set' unless @repository_name
 
+    raise 'Repository alias not set' unless @repository_alias
+
     raise 'Repository home page not set' unless @repository_home_page
+
+    raise 'Repository description not set' unless @repository_description
+
+    attributes = {
+      name: @repository_name,
+      alias: @repository_alias,
+      home_page: @repository_home_page,
+      description: @repository_description,
+      fhir_id: @repository_alias.downcase.gsub(/\W+/, '-')
+    }
 
     # Don't cache this value since it causes problems when running tests if the same importer is used
     # in different test files
-    Repository.where(name: @repository_name).first_or_create!(
-      alias: @repository_alias,
-      home_page: @repository_home_page,
-      fhir_id: @repository_alias.downcase.gsub(/\W+/, '-')
-    )
+    repository = Repository.where(name: @repository_name).first
+    if repository
+      repository.update!(attributes)
+    else
+      repository = Repository.create!(attributes)
+    end
+    repository
   end
 
   # Convenience instance method that just calls the class method

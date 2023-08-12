@@ -6,6 +6,8 @@ class CdsicImporter < CedarImporter
   repository_alias 'CDSiC'
   # NOTE: holding off using configuration for home page until CDSiC import uses a more standard model
   repository_home_page 'https://cdsic.ahrq.gov/cdsic/home-page'
+  repository_description 'The Clinical Decision Support Innovation Collaborative (CDSiC) is a diverse community  ' \
+                         'of experts at the forefront of using technology to better engage patients in their own care.'
 
   include PageScraper
 

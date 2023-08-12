@@ -5,6 +5,8 @@ class SrdrImporter < CedarImporter
   repository_name 'Systematic Review Data Repository'
   repository_alias 'SRDR'
   repository_home_page Rails.configuration.srdr_base_url
+  repository_description 'The SRDR is a collaborative, web-based resource containing systematic review ' \
+                         'data that functions as both a data repository and a data extraction tool.'
 
   def self.download_and_update!
     # Set up our connection object with our API key
