@@ -5,6 +5,9 @@ class EpcImporter < CedarImporter
   repository_name 'Evidence-based Practice Center Program'
   repository_alias 'EPC'
   repository_home_page Rails.configuration.epc_home_page
+  repository_description 'Evidence-based Practice Centers are academic and other research institutions ' \
+                         'contracted by the EHC Program to evaluate and summarize healthcare evidence.' \
+
   TECHNOLOGY_ASSESSMENT_URL = 'https://www.ahrq.gov/research/findings/ta/index.html'
 
   include PageScraper

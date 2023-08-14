@@ -5,6 +5,9 @@ class CdsConnectImporter < CedarImporter
   repository_name 'CDS Connect'
   repository_alias 'CDS Connect'
   repository_home_page Rails.configuration.cds_connect_home_page
+  repository_description 'CDS Connect provides Clinical Decision Support artifacts that are based ' \
+                         'on clinical practice guidelines, peer-reviewed articles, best practices, ' \
+                         'and other content identified via PCOR.'
 
   def self.download_and_update!
     # Set up our connection object to manage cookies and basic auth if needed

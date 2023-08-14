@@ -5,6 +5,10 @@ class NgcImporter < CedarImporter
   repository_name 'National Guideline Clearinghouse'
   repository_alias 'NGC'
   repository_home_page Rails.configuration.ngc_base_url
+  repository_description 'The NGC mission was to provide physicians and other health care professionals, ' \
+                         'health care providers, health plans, integrated delivery systems, purchasers and ' \
+                         'others an accessible mechanism for obtaining objective, detailed information on ' \
+                         'clinical practice guidelines and to further their dissemination, implementation, and use.'
 
   extend PageScraper
 
