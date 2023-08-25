@@ -115,7 +115,8 @@ module PageScraper
     metadata[:title] = reader.info[:Title].force_encoding(Encoding::ISO_8859_1).encode(Encoding::UTF_8) if reader.info[:Title]
     metadata[:description] = reader.info[:Subject].force_encoding(Encoding::ISO_8859_1).encode(Encoding::UTF_8) if reader.info[:Subject]
     if reader.info[:Keywords]
-      metadata[:keywords] = reader.info[:Keywords].split(KEYWORD_SEPARATOR).map do |keyword|
+      keywords = reader.info[:Keywords].force_encoding(Encoding::ISO_8859_1).encode(Encoding::UTF_8)
+      metadata[:keywords] = keywords.split(KEYWORD_SEPARATOR).map do |keyword|
         keyword.force_encoding(Encoding::ISO_8859_1).encode(Encoding::UTF_8).strip
       end
     end
