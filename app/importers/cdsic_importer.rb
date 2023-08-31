@@ -16,6 +16,9 @@ class CdsicImporter < CedarImporter
     artifacts = []
     page = Rails.configuration.cdsic_index_page
     page = importer.scrape_index_page(page, artifacts) until page.nil?
+    page = Rails.configuration.cdsic_viewpoints_page
+    page = importer.scrape_viewpoints_page(page, artifacts) until page.nil?
+
     artifacts.each { |artifact| importer.process_artifact!(artifact) }
   end
 
@@ -28,7 +31,7 @@ class CdsicImporter < CedarImporter
     html.css('div.view-cdsic-resources div.view-content div.views-row').each do |artifact_node|
       artifact_link_node = artifact_node.at_css('div.views-field-title span.field-content a')
       if artifact_link_node.nil?
-        Rails.logger.warn 'Encountered CDSiC search entry with missing title and link'
+        Rails.logger.warn 'Encountered CDSiC entry with missing title and link'
         next
       end
 
@@ -37,17 +40,13 @@ class CdsicImporter < CedarImporter
 
       artifact_url = artifact_link_node['href']
       if artifact_url.nil?
-        Rails.logger.warn "Encountered CDSiC search entry '#{artifact_title}' with missing link"
+        Rails.logger.warn "Encountered CDSiC entry '#{artifact_title}' with missing link"
         next
       end
 
-      artifact_uri = URI.parse(artifact_url)
-      if artifact_uri.host.nil?
-        artifact_uri.host = page_uri.host
-        artifact_uri.scheme = page_uri.scheme
-        artifact_url = artifact_uri.to_s
-      end
-      warning_context = "Encountered EPC entry '#{artifact_title}' with invalid date"
+      artifact_url = get_absolute_url(artifact_url, page_uri)
+
+      warning_context = "Encountered CDSiC entry '#{artifact_title}' with invalid date"
       published_date, warnings, published_on_precision = PageScraper.parse_and_precision(
         artifact_node.at_css('span.views-field-field-cdsic-resource-date span.field-content')&.content, warning_context, []
       )
@@ -64,6 +63,60 @@ class CdsicImporter < CedarImporter
     return nil if next_page_node.nil? || next_page_node['href'].empty?
 
     page_uri.merge(next_page_node['href']).to_s
+  end
+
+  def scrape_viewpoints_page(url, artifacts)
+    response = Faraday.get url
+    raise "CDSiC page retrieval (#{url}) failed with status #{response.status}" unless response.status == 200
+
+    page_uri = URI.parse(url)
+    html = Nokogiri::HTML(response.body)
+    html.css('div.view-cdsic-viewpoint div.view-content div.views-row').each do |artifact_node|
+      artifact_link_node = artifact_node.at_css('div.views-field-title h2.field-content a')
+      if artifact_link_node.nil?
+        Rails.logger.warn 'Encountered CDSiC entry with missing title and link'
+        next
+      end
+
+      artifact_title = artifact_link_node.content
+
+      artifact_url = artifact_link_node['href']
+      if artifact_url.nil?
+        Rails.logger.warn "Encountered CDSiC entry '#{artifact_title}' with missing link"
+        next
+      end
+
+      artifact_url = get_absolute_url(artifact_url, page_uri)
+
+      warning_context = "Encountered CDSiC entry '#{artifact_title}' with invalid date"
+      published_date, warnings, published_on_precision = PageScraper.parse_and_precision(
+        artifact_node.at_css('span.views-label views-label-field-cdsic-blog-post-date span.field-content')&.content, warning_context, []
+      )
+
+      artifacts << {
+        title: artifact_title,
+        url: artifact_url,
+        published_on: published_date,
+        published_on_precision: published_on_precision,
+        warnings: warnings
+      }
+    end
+
+    next_page_node = html.at_css('nav.pager-nav li.pager__item--next a')
+    return nil if next_page_node.nil? || next_page_node['href'].empty?
+
+    page_uri.merge(next_page_node['href']).to_s
+  end
+
+  def get_absolute_url(artifact_url, index_page_uri)
+    absolute_url = artifact_url
+    artifact_uri = URI.parse(absolute_url)
+    if artifact_uri.host.nil?
+      artifact_uri.host = index_page_uri.host
+      artifact_uri.scheme = index_page_uri.scheme
+      absolute_url = artifact_uri.to_s
+    end
+    absolute_url
   end
 
   def process_artifact!(artifact)

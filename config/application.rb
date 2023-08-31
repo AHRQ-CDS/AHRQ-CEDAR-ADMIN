@@ -51,6 +51,7 @@ module CedarAdmin
 
     # Settings for the CDSiC importer
     config.cdsic_index_page = 'https://cdsic.ahrq.gov/cdsic/resources'
+    config.cdsic_viewpoints_page = 'https://cdsic.ahrq.gov/cdsic/cdsic-leadership-viewpoints'
 
     # Mailer settings
     config.action_mailer.default_url_options = {
