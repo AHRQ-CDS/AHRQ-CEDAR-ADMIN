@@ -22,7 +22,7 @@ class CdsicImporterTest < ActiveSupport::TestCase
 
     # Ensure that all the expected data is loaded
     assert_equal(1, Repository.where(alias: 'CDSiC').count)
-    artifacts = Repository.where(alias: 'CDSiC').first.artifacts.sort_by &:created_at
+    artifacts = Repository.where(alias: 'CDSiC').first.artifacts.sort_by(&:created_at)
 
     assert_equal(2, artifacts.count)
     expected = {
