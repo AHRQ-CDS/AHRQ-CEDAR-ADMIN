@@ -63,6 +63,8 @@ After installing and testing, to run the CEDAR Admin application:
 rails server
 ```
 
+Documentation for the CEDAR Admin user interface can be found in the [CEDAR Administration Guide](docs/ADMIN-GUIDE.md).
+
 ### Importing UMLS Concepts
 
 Download the MRCONSO.RRF file from: [https://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html](https://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html) and move it to the CEDAR directory. Run
@@ -165,54 +167,14 @@ If the database needs to be created and migrations need to run, in a separate te
 docker-compose run web rails db:create db:migrate RAILS_ENV=production
 ```
 
-## Unmerged Branches
+### Unmerged Branches
 
-Several branches contain pilot or experimental work that was never deployed to production but may be
-of interest for future development of CEDAR.
-
-### FEvIR Importer
-
-The CEDAR project conducted a pilot with [Computable Publishing](https://computablepublishing.com/)
-exploring bi-directional data exchange between CEDAR and the [FEvIR Platform](https://fevir.net/).
-The CEDAR importer supporting indexing of FEvIR content is available on the `fevir_importer` git
-branch. This branch contains a CEDAR importer defined in `app/importers/fevir_importer.rb` that
-pulls artifacts from a single FEvIR project currently specified in the `PROJECT_FOI` constant
-defined in the importer code.
-
-Using the FEvIR importer requires specifying the `FEVIR_API_BASE_URL` and a valid `FEVIR_API_TOKEN`
-in the CEDAR Admin .env configuration file. Please contact Computable Publishing for the relevant
-API information.
-
-### Similarity Calculation
-
-The CEDAR project explored the use of the
-[Bidirectional Encoder Representations from Transformers (BERT)](https://arxiv.org/abs/1810.04805)
-language model for calculating the similarity between pairs of artifacts and
-[agglomerative hierarchical clustering](https://online.stat.psu.edu/stat555/node/86/)
-to group CEDAR artifacts into similar clusters. Calculating the similarity between artifacts
-supports functionality such as providing users with additional content related to their search
-results. Clustering artifacts based on their similarity supports functionality such as determining
-how AHRQ content is related across different repositories.
-
-Support for similarity calculation and artifact clustering is available on the `similarity`
-branch. Similarity calculation can be performed by running the `calculate_similarity` task:
-
-```
-rails utilities:calculate_similarity
-```
-
-This populates the CEDAR Admin database with the similarity calculation results. Similarity scores
-can be viewed in the "Similar Artifacts by Title" section of individual artifact pages within CEDAR
-Admin. For example (when running CEDAR Admin locally in development), see
-[http://localhost:3000/artifact/2577].
-
-![Similar Artifacts by Title Example](screenshots/similar_artifacts_by_title.png "Similar Artifacts by Title Example")
-
-Once similarity scores have been calculated, clusters of similar artifacts can be viewed on the
-clusters page within CEDAR Admin. For example (when running CEDAR Admin locally in development), see
-[http://localhost:3000/clusters].
-
-![Artifact Clusters Example](screenshots/artifact_clusters.png "Artifact Clusters Example")
+Two git branches contain pilot or experimental work that was never deployed to production but may be
+of interest for future development of CEDAR: the `fevir_importer` branch contains work conducted
+while piloting bi-directional data exchange between CEDAR and the[FEvIR Platform](https://fevir.net/)
+and the `similarity` branch contains work exploring the use of a language model for calculating
+similarirty between artifacts. These branches are documented in more detail in the [unmerged
+branches documentation](docs/UNMERGED-BRANCHES.md).
 
 ## LICENSE
 
