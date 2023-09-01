@@ -63,6 +63,8 @@ After installing and testing, to run the CEDAR Admin application:
 rails server
 ```
 
+Documentation for the CEDAR Admin user interface can be found in the [CEDAR Administration Guide](docs/ADMIN-GUIDE.md).
+
 ### Importing UMLS Concepts
 
 Download the MRCONSO.RRF file from: [https://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html](https://www.nlm.nih.gov/research/umls/licensedcontent/umlsknowledgesources.html) and move it to the CEDAR directory. Run
@@ -164,6 +166,15 @@ If the database needs to be created and migrations need to run, in a separate te
 ```
 docker-compose run web rails db:create db:migrate RAILS_ENV=production
 ```
+
+### Unmerged Branches
+
+Two git branches contain pilot or experimental work that was never deployed to production but may be
+of interest for future development of CEDAR: the `fevir_importer` branch contains work conducted
+while piloting bi-directional data exchange between CEDAR and the[FEvIR Platform](https://fevir.net/)
+and the `similarity` branch contains work exploring the use of a language model for calculating
+similarirty between artifacts. These branches are documented in more detail in the [unmerged
+branches documentation](docs/UNMERGED-BRANCHES.md).
 
 ## LICENSE
 
