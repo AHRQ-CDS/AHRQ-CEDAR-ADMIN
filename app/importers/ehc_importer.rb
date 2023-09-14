@@ -47,8 +47,9 @@ class EhcImporter < CedarImporter
   end
 
   def self.extract_keywords(artifact)
-    topics = artifact.at_xpath('Health-Topics').content&.split(',')&.collect(&:strip) || []
-    keywords = artifact.at_xpath('Keywords').content&.split(',')&.collect(&:strip) || []
+    # Keywords are typically separated using commas, but sometimes HTML linefeeds show up
+    topics = artifact.at_xpath('Health-Topics').content&.split(%r{,|<br\s*/>\s*})&.collect(&:strip) || []
+    keywords = artifact.at_xpath('Keywords').content&.split(%r{,|<br\s*/>\s*})&.collect(&:strip) || []
     topics.concat(keywords).select(&:present?).map { |keyword| CGI.unescapeHTML(keyword) }
   end
 
