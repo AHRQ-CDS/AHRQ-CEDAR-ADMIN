@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.9.1 - 2023-09-22
+
+* Extends Innovation Collaborative importer to include leadership viewpoints
+* Further improves handling of non-UTF-8 characters during import
+* Adds support for updating repository properties by updating the importer
+* Addresses an issue handling keywords containing HTML linefeeds
+* Addresses issues with selenium testing
+
 ## v0.9.0 - 2023-07-28
 
 * Adds an importer for CDS Innovation Collaborative content
