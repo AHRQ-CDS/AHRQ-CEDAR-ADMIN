@@ -1,3 +1,5 @@
+<center><strong>Note: development of CEDAR will enter hiatus starting on Sept 30th, 2023.</strong></center><br>
+
 # The CEDAR Project
 
 The [CEDAR project](https://cds.ahrq.gov/cedar/) provides a standards-based API that supports search, access, and use of patient centered outcomes research and other research findings across multiple repositories and programs within [AHRQ's Center for Evidence and Practice Improvement (CEPI)](https://www.ahrq.gov/cpi/centers/cepi/index.html).
